@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import AppLayout from './layout/AppLayout.vue';
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <nav>
+      <!-- <nav>
         <RouterLink to="/home">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-      </nav>
+      </nav> -->
+      <component :is="AppLayout" />
     </div>
   </header>
 
