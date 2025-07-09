@@ -1,11 +1,10 @@
 <template>
   <aside class="h-screen w-64 bg-gray-900 text-white flex flex-col">
-    <!-- Logo -->
+
     <div class="px-6 py-5 text-xl font-bold border-b border-gray-700">
       <span>📊 GestionPro</span>
     </div>
 
-    <!-- Navigation -->
     <nav class="flex flex-col px-4 py-4 space-y-2">
       <SidebarItem icon="🏠" label="Dashboard" to="/" />
       <SidebarItem icon="👥" label="Utilisateurs" to="/users" />
@@ -13,7 +12,6 @@
       <SidebarItem icon="⚙️" label="Paramètres" to="/settings" />
     </nav>
 
-    <!-- Bottom Section -->
     <div class="px-4 py-4 border-t border-gray-700">
       <SidebarItem icon="🚪" label="Déconnexion" to="/logout" />
     </div>
