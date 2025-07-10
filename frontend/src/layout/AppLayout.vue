@@ -3,17 +3,18 @@ import { computed, ref } from 'vue';
 
 import Sidebar from '@/layout/Sidebar.vue';
 import Topbar from '@/layout/Topbar.vue';
-import Footer from '@/layout/Footer.vue';
+import Content from '@/layout/Content.vue';
 
 </script>
 
 <template>
     <div class="app-layout">
-        <Sidebar />
+        <div class="sidebar">
+            <Sidebar />
+        </div>
         <div class="main-content">
             <Topbar />
-            <slot />
-            <Footer />
+            <Content />
         </div>
     </div>
 </template>
