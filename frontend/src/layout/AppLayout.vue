@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import Sidebar from '@/layout/Sidebar.vue';
 import Topbar from '@/layout/Topbar.vue';
-import Content from '@/layout/Content.vue';
+import Dashboard from '@/layout/Dashboard.vue';
 
 </script>
 
@@ -14,7 +14,7 @@ import Content from '@/layout/Content.vue';
         </div>
         <div class="main-content">
             <Topbar />
-            <Content />
+            <Dashboard />
         </div>
     </div>
 </template>
