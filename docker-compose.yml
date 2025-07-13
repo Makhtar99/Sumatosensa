@@ -1,33 +1,91 @@
+version: '3.8'
+
 services:
-  db:
-    image: postgres:15
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: sumatosensa_db
     environment: 
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-sumatosensa}
+      POSTGRES_USER: ${POSTGRES_USER:-sumatosensa_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sumatosensa_password}
+      TIMESCALEDB_TELEMETRY: off
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
     ports:
       - "5432:5432"
+    networks:
+      - sumatosensa_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sumatosensa_user} -d ${POSTGRES_DB:-sumatosensa}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  mosquitto:
+    build: ./mqtt
+    container_name: sumatosensa_mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_logs:/mosquitto/log
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - sumatosensa_network
+    restart: unless-stopped
 
   backend:
     build:
       context: ./backend
+    container_name: sumatosensa_backend
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-sumatosensa_user}:${POSTGRES_PASSWORD:-sumatosensa_password}@timescaledb:5432/${POSTGRES_DB:-sumatosensa}
+      MQTT_BROKER_HOST: mosquitto
+      MQTT_BROKER_PORT: 1883
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-super-secret-jwt-key-change-this-in-production}
+      JWT_ALGORITHM: HS256
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 480
     volumes:
       - ./backend:/app
+      - backend_reports:/app/reports
     ports:  
       - "8000:8000"
     depends_on:
-      - db
+      timescaledb:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+    networks:
+      - sumatosensa_network
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./frontend
+    container_name: sumatosensa_frontend
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+      VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:8000/ws}
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - sumatosensa_network
+    restart: unless-stopped
 
 volumes:
-  pgdata:
+  timescaledb_data:
+  mosquitto_data:
+  mosquitto_logs:
+  backend_reports:
+
+networks:
+  sumatosensa_network:
+    driver: bridge
