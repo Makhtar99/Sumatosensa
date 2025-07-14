@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    admin BOOLEAN DEFAULT false,
-    is_active BOOLEAN DEFAULT false,
+    role VARCHAR(20) DEFAULT 'admin' CHECK (role IN ('admin', 'manager')),
+    is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS sensors (
     id SERIAL PRIMARY KEY,
     mac_address VARCHAR(17) UNIQUE NOT NULL, 
     name VARCHAR(100) NOT NULL,
-    description TEXT,
     is_active BOOLEAN DEFAULT true,
     battery_level FLOAT, 
     firmware_version VARCHAR(20),
@@ -39,34 +38,6 @@ CREATE TABLE IF NOT EXISTS measurements (
 SELECT create_hypertable('measurements', 'time', if_not_exists => TRUE);
 CREATE TABLE IF NOT EXISTS alert_thresholds (
     id SERIAL PRIMARY KEY,
-    location_id INTEGER REFERENCES locations(id),
-    sensor_id INTEGER REFERENCES sensors(id), 
-    parameter VARCHAR(20) NOT NULL CHECK (parameter IN ('temperature', 'humidity', 'pressure')),
-    min_value FLOAT,
-    max_value FLOAT,
-    is_active BOOLEAN DEFAULT true,
-    severity VARCHAR(20) DEFAULT 'warning' CHECK (severity IN ('info', 'warning', 'critical')),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-CREATE TABLE IF NOT EXISTS measurements_daily (
-    time TIMESTAMP WITH TIME ZONE NOT NULL,
-    sensor_id INTEGER NOT NULL REFERENCES sensors(id),
-    temperature FLOAT NOT NULL, 
-    humidity FLOAT NOT NULL, 
-    pressure FLOAT NOT NULL, 
-    acceleration_x FLOAT, 
-    acceleration_y FLOAT, 
-    acceleration_z FLOAT, 
-    rssi INTEGER, 
-    battery_voltage FLOAT, 
-    movement_counter INTEGER, 
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-SELECT create_hypertable('measurements_daily', 'time', if_not_exists => TRUE);
-CREATE TABLE IF NOT EXISTS alert_thresholds (
-    id SERIAL PRIMARY KEY,
-    location_id INTEGER REFERENCES locations(id),
     sensor_id INTEGER REFERENCES sensors(id), 
     parameter VARCHAR(20) NOT NULL CHECK (parameter IN ('temperature', 'humidity', 'pressure')),
     min_value FLOAT,
@@ -106,7 +77,6 @@ CREATE INDEX IF NOT EXISTS idx_measurements_time ON measurements (time DESC);
 CREATE INDEX IF NOT EXISTS idx_measurements_sensor_id ON measurements (sensor_id);
 CREATE INDEX IF NOT EXISTS idx_measurements_sensor_time ON measurements (sensor_id, time DESC);
 CREATE INDEX IF NOT EXISTS idx_sensors_mac_address ON sensors (mac_address);
-CREATE INDEX IF NOT EXISTS idx_sensors_location ON sensors (location_id);
 CREATE INDEX IF NOT EXISTS idx_alerts_sensor_id ON alerts (sensor_id);
 CREATE INDEX IF NOT EXISTS idx_alerts_created_at ON alerts (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
@@ -142,9 +112,29 @@ SELECT
     COUNT(*) as measurement_count
 FROM measurements
 GROUP BY bucket, sensor_id;
+CREATE MATERIALIZED VIEW IF NOT EXISTS measurements_monthly
+WITH (timescaledb.continuous) AS
+SELECT 
+    time_bucket('1 month', time) AS bucket,
+    sensor_id,
+    AVG(temperature) as avg_temperature,
+    AVG(humidity) as avg_humidity,
+    AVG(pressure) as avg_pressure,
+    MIN(temperature) as min_temperature,
+    MAX(temperature) as max_temperature,
+    MIN(humidity) as min_humidity,
+    MAX(humidity) as max_humidity,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY temperature) as median_temperature,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY humidity) as median_humidity,
+    STDDEV(temperature) as stddev_temperature,
+    STDDEV(humidity) as stddev_humidity,
+    COUNT(*) as measurement_count
+FROM measurements
+GROUP BY bucket, sensor_id;
 SELECT add_retention_policy('measurements', INTERVAL '1 year', if_not_exists => true);
-SELECT add_retention_policy('measurements_daily', INTERVAL '1 year', if_not_exists => true);
-SELECT add_retention_policy('measurements_hourly', INTERVAL '1 years', if_not_exists => true);
+SELECT add_retention_policy('measurements_hourly', INTERVAL '2 years', if_not_exists => true);
+SELECT add_retention_policy('measurements_daily', INTERVAL '3 years', if_not_exists => true);
+SELECT add_retention_policy('measurements_monthly', INTERVAL '5 years', if_not_exists => true);
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
