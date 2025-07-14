@@ -8,8 +8,8 @@
 
     <nav class="flex flex-col px-4 py-4 space-y-2">
       <SidebarItem :icon="Dashboard" label="Dashboard" to="/" />
-      <SidebarItem :icon="Export" label="Export" to="/reports" />
-      <SidebarItem :icon="Config" label="Paramètres" to="/settings" />
+      <SidebarItem :icon="Export" label="Export" to="/" />
+      <SidebarItem :icon="Config" label="Paramètres" to="/" />
       <SidebarItem :icon="WhiteBoard" label="Amphithéatre" to="/" />
       <SidebarItem :icon="Restaurant" label="salle de Restauration" to="/" />
       <SidebarItem :icon="Meeting" label="Salle de Réunions" to="/" />
