@@ -41,9 +41,10 @@ services:
     build:
       context: ./backend
     container_name: sumatosensa_backend
+    network_mode: host
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-sumatosensa_user}:${POSTGRES_PASSWORD:-sumatosensa_password}@timescaledb:5432/${POSTGRES_DB:-sumatosensa}
-      MQTT_BROKER_HOST: mosquitto
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-sumatosensa_user}:${POSTGRES_PASSWORD:-sumatosensa_password}@localhost:5432/${POSTGRES_DB:-sumatosensa}
+      MQTT_BROKER_HOST: 192.168.50.1
       MQTT_BROKER_PORT: 1883
       JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-super-secret-jwt-key-change-this-in-production}
       JWT_ALGORITHM: HS256
@@ -51,15 +52,11 @@ services:
     volumes:
       - ./backend:/app
       - backend_reports:/app/reports
-    ports:  
-      - "8000:8000"
     depends_on:
       timescaledb:
         condition: service_healthy
       mosquitto:
         condition: service_started
-    networks:
-      - sumatosensa_network
     restart: unless-stopped
 
   frontend:
