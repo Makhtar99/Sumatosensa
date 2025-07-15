@@ -1,5 +1,15 @@
-<<<<<<< Updated upstream
-=======
+<script setup>
+import SidebarItem from './SidebarItem.vue'
+
+import Home from '../assets/svg/home.svg'
+import Config from '../assets/svg/configuration.svg'
+import Export from '../assets/svg/export.svg'
+import Devices from '../assets/svg/devices.svg'
+import History from '../assets/svg/history.svg'
+import Management from '../assets/svg/management.svg'
+</script>
+
+
 <template>
   <aside class="flex flex-col items-center bg-color-background text-color-black h-screen border-r border-r-red">
 
@@ -19,17 +29,4 @@
     </nav>
   </aside>
 </template>
-
->>>>>>> Stashed changes
-<script setup>
-import SidebarItem from './SidebarItem.vue'
-
-import Home from '../assets/svg/home.svg'
-import Config from '../assets/svg/configuration.svg'
-import Export from '../assets/svg/export.svg'
-import Devices from '../assets/svg/devices.svg'
-import History from '../assets/svg/history.svg'
-import Management from '../assets/svg/management.svg'
-</script>
-
 
