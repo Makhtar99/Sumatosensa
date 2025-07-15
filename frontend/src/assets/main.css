@@ -27,6 +27,9 @@
 .sidebar {
     width: 20%;
 }
+/* .sidebarItem:hover { */
+  /* background-color: #fbe3c0 !important;
+} */
 
 .avatar-background {
   background-color: #fbe3c0;
@@ -38,9 +41,61 @@
   height: 30px;
 }
 
-.temp, .humidity, .pression, .outsi {
+.temp, .humidity, .pressure, .outsi {
   width: 25%;
   padding: 10px;
   text-align: center;
 }
 
+.temp {
+  background-color: #fbe3c0;
+  border-radius: 10px;
+}
+
+.outside {
+  background-color: #F1E9C6;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+
+
+/* WRITING */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Inter, sans-serif;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: #222;
+}
+
+h1 {
+  font-size: 2.5em;
+  padding-bottom: 0.3em;
+}
+
+h2 {
+  font-size: 2em;
+  padding-left: 10px;
+}
+
+h3 {
+  font-size: 1.75em;
+}
+
+h4 {
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+h5 {
+  font-size: 1.25em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+h6 {
+  font-size: 1em;
+  font-weight: normal;
+}

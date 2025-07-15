@@ -9,7 +9,6 @@ import History from '../assets/svg/history.svg'
 import Management from '../assets/svg/management.svg'
 </script>
 
-
 <template>
   <aside class="flex flex-col items-center bg-color-background text-color-black h-screen border-r border-r-red">
 
@@ -29,4 +28,3 @@ import Management from '../assets/svg/management.svg'
     </nav>
   </aside>
 </template>
-
