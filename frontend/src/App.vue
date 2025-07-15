@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import AppLayout from './layout/AppLayout.vue';
+import { onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+
+onMounted(async () => {
+  await authStore.initializeAuth()
+})
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <!-- <nav>
-        <RouterLink to="/home">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav> -->
-      <component :is="AppLayout" />
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app">
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
