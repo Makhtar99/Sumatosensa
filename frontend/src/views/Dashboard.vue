@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
     <div class="flex flex-col">
         <div>
@@ -11,9 +14,3 @@
         </div>
     </div>
 </template>
-
-<script setup>
-</script>
-
-<style setup>
-</style>

@@ -1,3 +1,40 @@
+<script setup>
+import { reactive } from 'vue'
+import { z } from 'zod'
+
+const loginSchema = z.object({
+  email: z.string().email("Email invalide"),
+  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères")
+})
+
+const form = reactive({
+  email: '',
+  password: ''
+})
+
+const errors = reactive({
+  email: '',
+  password: ''
+})
+
+const onSubmit = () => {
+  errors.email = ''
+  errors.password = ''
+
+  const result = loginSchema.safeParse(form)
+
+  if (!result.success) {
+    result.error.errors.forEach((err) => {
+      const field = err.path[0]
+      errors[field] = err.message
+    })
+    return
+  }
+
+  console.log('Connexion réussie avec :', result.data)
+}
+</script>
+
 <template>
   <div class="flex h-screen items-center justify-center" style="max-height:-webkit-fill-available;">
     <div class="flex flex-col gap-2 items-center justify-center max-w-[40%] bg-white p-4 rounded-xl">
@@ -40,39 +77,3 @@
   </div>
 </template>
 
-<script setup>
-import { reactive } from 'vue'
-import { z } from 'zod'
-
-const loginSchema = z.object({
-  email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères")
-})
-
-const form = reactive({
-  email: '',
-  password: ''
-})
-
-const errors = reactive({
-  email: '',
-  password: ''
-})
-
-const onSubmit = () => {
-  errors.email = ''
-  errors.password = ''
-
-  const result = loginSchema.safeParse(form)
-
-  if (!result.success) {
-    result.error.errors.forEach((err) => {
-      const field = err.path[0]
-      errors[field] = err.message
-    })
-    return
-  }
-
-  console.log('Connexion réussie avec :', result.data)
-}
-</script>
