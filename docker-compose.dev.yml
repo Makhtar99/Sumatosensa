@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: sumatosensa_db_dev
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-sumatosensa_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-dev_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
+      TIMESCALEDB_TELEMETRY: off
+    volumes:
+      - timescaledb_dev_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - sumatosensa_dev_network
+    restart: unless-stopped
+
+  mosquitto:
+    build: ./mqtt
+    container_name: sumatosensa_mqtt_dev
+    ports:
+      - "1884:1883"
+      - "9002:9001"
+    volumes:
+      - mosquitto_dev_data:/mosquitto/data
+      - mosquitto_dev_logs:/mosquitto/log
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    networks:
+      - sumatosensa_dev_network
+    restart: unless-stopped
+
+volumes:
+  timescaledb_dev_data:
+  mosquitto_dev_data:
+  mosquitto_dev_logs:
+
+networks:
+  sumatosensa_dev_network:
+    driver: bridge
