@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException
+from app.database import get_db
 
 from app.database import engine
 from app.models import Base
