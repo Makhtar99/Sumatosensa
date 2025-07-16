@@ -80,3 +80,14 @@ async def get_current_admin_user(current_user: User = Depends(get_current_active
             detail="Not enough permissions"
         )
     return current_user
+
+async def register_user(userName: str, password:str, email, db: AsyncSession) -> User:    
+    new_user = User(
+        username=userName,
+        email=email,
+        password_hash=get_password_hash(password)
+    )
+    db.add(new_user)
+    await db.commit()
+    await db.refresh(new_user)
+    return new_user
