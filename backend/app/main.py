@@ -12,11 +12,11 @@ from app.models import Base
 from app.mqtt_client import start_mqtt_client, stop_mqtt_client
 from app.routes import auth, admin
 from app.config import settings
-from app.user_services import User
+from app.auth import register_user
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-user = User
+user = register_user
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting Sumātosensā backend...")
