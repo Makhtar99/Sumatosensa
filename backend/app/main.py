@@ -1,51 +1,35 @@
 import logging
 from typing import List
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends, HTTPException
 
-from app.database import get_db
-from app.mqtt_client import start_mqtt_client, stop_mqtt_client
-from app.models import Base
 from app.database import engine
+from app.models import Base
+from app.mqtt_client import start_mqtt_client, stop_mqtt_client
+from app.routes import auth, admin
+from app.config import settings
 from app.user_services import User
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 user = User
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Handle application startup and shutdown."""
     logger.info("Starting Sumātosensā backend...")
-    
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    logger.info("Database tables created/verified")
-    
     await start_mqtt_client()
-    logger.info("MQTT client started")
-    
     yield
-    
-    logger.info("Shutting down Sumātosensā backend...")
     await stop_mqtt_client()
-    logger.info("MQTT client stopped")
 
-app = FastAPI(
-    title="Sumātosensā API",
-    description="Smart Sensors Solution for Workplace Environment",
-    version="1.0.0",
-    lifespan=lifespan
-)
+app = FastAPI(title="Sumātosensā API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,15 +37,14 @@ app.add_middleware(
 
 @app.get("/")
 async def read_root():
-    return {
-        "message": "Sumātosensā API", 
-        "description": "Smart Sensors Solution for Workplace Environment",
-        "version": "1.0.0"
-    }
+    return {"message": "Sumātosensā API", "version": "1.0.0"}
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "service": "sumatosensa-backend"}
+    return {"status": "healthy"}
+
+app.include_router(auth.router)
+app.include_router(admin.router)
 
 
 
