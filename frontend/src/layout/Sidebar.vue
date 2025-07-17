@@ -22,7 +22,7 @@ import Management from '../assets/svg/management.svg'
       <SidebarItem :icon="History" label="History" to="/history" />
       <SidebarItem :icon="Devices" label="Devices" to="/devices" />
       <SidebarItem :icon="Management" label="Management" to="/management" />
-      <SidebarItem :icon="Export" label="Export" to="/exort" />
+      <SidebarItem :icon="Export" label="Export" to="/export" />
       <SidebarItem :icon="Config" label="Settings" to="/settings" />
 
     </nav>
