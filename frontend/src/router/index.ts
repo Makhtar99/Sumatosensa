@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { isAuthenticated } from '@/services/AuthService'
+import AppLayout from '@/layout/AppLayout.vue'
+import Dashboard from '@/views/Dashboard.vue'
+import LoginForm from '@/views/LoginForm.vue'
+import RegisterForm from '@/views/RegisterForm.vue'
+
 import HomeExampleView from '@/views/HomeExampleView.vue'
 import LoginExampleView from '@/views/LoginExampleView.vue'
 import AdminExampleView from '@/views/AdminExampleView.vue'
@@ -8,22 +14,41 @@ import testRegister from '@/views/testRegisterView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeExampleView,
-    },
+  {
+    path: '/',
+    component: AppLayout,
+    children: [
+      {
+        path: '',
+        name: 'dashboard',
+        component: Dashboard,
+        meta: { requiresAuth: false }
+      },
+      // {
+      //   path: 'admin',
+      //   name: 'admin',
+      //   component: AdminPanel,
+      //   meta: { requiresAuth: true, requiresAdmin: true }
+      // }
+    ]
+  },
     {
       path: '/login',
       name: 'login',
-      component: LoginExampleView,
-      meta: { requiresGuest: true },
+      component: LoginForm,
+      meta: { requiresGuest: true},
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterForm,
+      meta: { requiresGuest: true},
     },
     {
       path: '/admin',
       name: 'admin',
       component: AdminExampleView,
-      meta: { requiresAuth: true, requiresAdmin: true },
+      meta: { requiresAuth: false, requiresAdmin: false },
     },
     {
       path: '/test',
@@ -35,43 +60,17 @@ const router = createRouter({
 })
 
 // Navigation guards
-router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
-  
-  // Initialize auth if not done yet
-  if (!authStore.isAuthenticated && localStorage.getItem('access_token')) {
-    try {
-      await authStore.initializeAuth()
-    } catch (error) {
-      console.error('Auth initialization failed:', error)
-    }
+router.beforeEach((to, from, next) => {
+  console.log("➡️ Navigation vers :", to.path)
+  console.log("🔐 Auth requis ?", to.meta.requiresAuth)
+  console.log("🧾 Authentifié ?", isAuthenticated())
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !isAuthenticated()) {
+    next('/login')
+  } else {
+    next()
   }
-  
-  // Check if route requires authentication
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!authStore.isAuthenticated) {
-      next('/login')
-      return
-    }
-    
-    // Check if route requires admin
-    if (to.matched.some(record => record.meta.requiresAdmin)) {
-      if (!authStore.isAdmin) {
-        next('/')
-        return
-      }
-    }
-  }
-  
-  // Redirect authenticated users away from login
-  if (to.matched.some(record => record.meta.requiresGuest)) {
-    if (authStore.isAuthenticated) {
-      next('/')
-      return
-    }
-  }
-  
-  next()
 })
 
 export default router

@@ -1,5 +1,5 @@
+const API_URL = 'http://localhost:8000'
 
-const API_URL = 'http://localhost:8000/api'
 
 export async function login(email: string, password: string) {
   const res = await fetch(`${API_URL}/login`, {
@@ -12,6 +12,25 @@ export async function login(email: string, password: string) {
 
   const data = await res.json()
   localStorage.setItem('token', data.token)
+  console.log("📡 Envoi vers /login avec :", email)
+  console.log("✅ Token reçu après login :", data.token)
+  return data
+}
+
+export async function register(username: string, email: string, password: string) {
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+  })
+  console.log(`➡️ POST vers ${API_URL}/auth/register`)
+
+  if (!res.ok) throw new Error('Échec de l\'inscription')
+
+  const data = await res.json()
+  localStorage.setItem('token', data.token)
+  console.log("✅ Réponse backend register :", data)
+  console.log("💾 Token stocké :", data.token)
   return data
 }
 
