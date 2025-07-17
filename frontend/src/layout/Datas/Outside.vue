@@ -3,14 +3,14 @@ import { ref, onMounted } from 'vue';
 import { fetchWeatherData } from '../../services/weatherService';
 
 const city = "Paris";
-const temperature = ref<Number | null>(null);
+const temperature = ref(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(true);
 
 onMounted(async () => {
     try {
         const data = await fetchWeatherData(city);
-        temperature.value = data.main.temp;
+        temperature.value = data;
     } catch (err) {
         error.value = "Failed to fetch weather data.";
     } finally {
