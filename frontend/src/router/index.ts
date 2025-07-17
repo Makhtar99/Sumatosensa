@@ -1,16 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { isAuthenticated } from '@/services/AuthService'
+
 import AppLayout from '@/layout/AppLayout.vue'
-import Dashboard from '@/views/Dashboard.vue'
+
 import LoginForm from '@/views/LoginForm.vue'
 import RegisterForm from '@/views/RegisterForm.vue'
+
 import Dashboard from '@/views/Dashboard.vue'
 import Settings from '@/views/Settings.vue'
 import ExportView from '@/views/ExportView.vue'
 import Management from '@/views/Management.vue'
 import History from '@/views/History.vue'
 import devices from '@/views/Devices.vue'
+
+import AdminExampleView from '@/views/AdminExampleView.vue'
 
 
 
@@ -71,6 +75,14 @@ const routes = [
     component: RegisterForm,
     meta: { requiresAuth: false },
   },
+  
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminExampleView,
+    meta: { requiresAuth: false },
+  },
+
 
 ]
 
