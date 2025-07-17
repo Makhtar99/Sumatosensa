@@ -7,6 +7,8 @@ const temperature = ref(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(true);
 
+import Garage from '../../assets/svg/garage.svg';
+
 onMounted(async () => {
     try {
         const data = await fetchWeatherData(city);
@@ -21,6 +23,8 @@ onMounted(async () => {
 
 <template>
     <div class="outside">
+
+        <img :src="Garage" alt="Garage svg" style="width: 100px; height: 100px;" />
         <h2>Température à {{ city }}</h2>
         <div v-if="loading">Loading...</div>
         <div v-else-if="error">{{ error }}</div>

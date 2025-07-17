@@ -2,6 +2,10 @@
 import { ref, onMounted } from 'vue';
 import { fetchSensorData } from '../../services/sensorService';
 
+import HighTemp from '../../assets/svg/high_temp.png'
+import NormalTemp from '../../assets/svg/normal_temp.png'
+import LowTemp from '../../assets/svg/low_temp.png'
+
 const temperature = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
@@ -22,12 +26,13 @@ onMounted(async () => {
 
 <template>
     <div class="temp">
-        <h2>Température</h2>
+        <img v-if="temperature > 30" :src="HighTemp" alt="High Temperature" style="width: 100px; height: 100px;" />
+        <img v-else-if="temperature > 20" :src="NormalTemp" alt="Normal Temperature" style="width: 100px; height: 100px;" />
+        <img v-else :src="LowTemp" alt="Low Temperature" style="width: 100px; height: 100px;" />
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <p>Température: {{ temperature }}°C</p>
-            <p>Dernière mise à jour: {{ timestamp }}</p>
+            <h2>Température: {{ temperature }}°C</h2>
         </div>
     </div>
 </template>
