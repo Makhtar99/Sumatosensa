@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { isAuthenticated } from '@/services/AuthService'
 import AppLayout from '@/layout/AppLayout.vue'
+import Dashboard from '@/views/Dashboard.vue'
 import LoginForm from '@/views/LoginForm.vue'
 import RegisterForm from '@/views/RegisterForm.vue'
 import Dashboard from '@/views/Dashboard.vue'
@@ -77,12 +80,15 @@ const router = createRouter({
   routes,
 })
 
+// Navigation guards
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!localStorage.getItem('token')
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  console.log("➡️ Navigation vers :", to.path)
+  console.log("🔐 Auth requis ?", to.meta.requiresAuth)
+  console.log("🧾 Authentifié ?", isAuthenticated())
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !isAuthenticated()) {
     next('/login')
-  } else if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
-    next('/')
   } else {
     next()
   }

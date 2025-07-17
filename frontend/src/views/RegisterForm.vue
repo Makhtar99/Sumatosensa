@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
-
+import { apiService } from '@/services/api'
 import { z } from 'zod'
+import { register } from '@/services/authservice'
 
 const router = useRouter()
 
+// Schéma de validation Zod
 const registerSchema = z.object({
+  username: z.string().min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
   email: z.string().email("Email invalide"),
   password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
   confirmPassword: z.string()
@@ -16,62 +18,87 @@ const registerSchema = z.object({
   path: ["confirmPassword"]
 })
 
+
+// Formulaire réactif
 const form = reactive({
+  username: '',
   email: '',
   password: '',
   confirmPassword: ''
 })
 
+// 3. Gestion des erreurs
 const errors = reactive({
+  username: '',
   email: '',
   password: '',
   confirmPassword: '',
   general: ''
 })
 
+
+// 4. Fonction soumise à l'envoi
 const onSubmit = async () => {
+  // Réinitialiser les erreurs
+  errors.username = ''
   errors.email = ''
   errors.password = ''
-  errors.confirmPassword = '',
+  errors.confirmPassword = ''
   errors.general = ''
 
+  // Validation avec Zod
   const result = registerSchema.safeParse(form)
+  console.log(result)
 
   if (!result.success) {
+    console.log("❌ Erreurs de validation Zod :", result.error.issues)
     result.error.errors.forEach(err => {
       const field = err.path[0]
-      errors[field] = err.message
+      if (field in errors) {
+        errors[field] = err.message
+      }
     })
     return
   }
-  try {
-    await registerUser(result.data)
-    // console.log('Inscription réussie avec :', result.data)
-    router.push('/login')
-  } catch (error) {
-    if (error.response && error.response.data && error.response.data.message) {
-      errors.general = error.response.data.message
-    } else {
-      errors.general = "Une erreur est survenue. Veuillez réessayer."
+
+  // 6. Requête vers le backend
+    try {
+      await register(result.data.username, result.data.email, result.data.password)
+
+      
+      // Redirige vers zone privée (admin par exemple)
+      router.push('/')
+    } catch (error: any) {
+      errors.general = error.message || 'Erreur lors de l’inscription.'
     }
+
+    console.log("📤 Formulaire soumis :", form)
+    console.log("✅ Validation réussie :", result.data)
+    console.log("📡 Envoi vers /register")
+    console.log("✅ Utilisateur inscrit, redirection vers dashboard")
   }
-}
-
-const registerUser = (data) => {
-  return axios.post('/api/register', {
-    email: data.email,
-    password: data.password
-  })
-}
 </script>
-
 
 <template>
   <div class="flex h-screen items-center justify-center" style="max-height:-webkit-fill-available;">
     <div class="flex flex-col gap-2 items-center justify-center max-w-[40%] bg-white p-4 rounded-xl">
       <img src="../assets/img/Logo_auth.png" alt="Logo" />
-      <form action="/" @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
+
+      <form @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
         <div class="flex flex-col gap-4">
+          
+          <!-- Champ username -->
+          <div>
+            <input
+              v-model="form.username"
+              type="text"
+              class="w-full p-2 rounded-xl"
+              style="border: 1px solid lightgray"
+              placeholder="Nom d'utilisateur"
+            />
+            <p v-if="errors.username" class="text-red-500 text-sm mt-1">{{ errors.username }}</p>
+          </div>
+          <!-- Champ email -->
           <div>
             <input
               v-model="form.email"
@@ -83,6 +110,7 @@ const registerUser = (data) => {
             <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
           </div>
 
+          <!-- Mot de passe -->
           <div>
             <input
               v-model="form.password"
@@ -94,6 +122,7 @@ const registerUser = (data) => {
             <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
           </div>
 
+          <!-- Confirmation -->
           <div>
             <input
               v-model="form.confirmPassword"
@@ -105,14 +134,20 @@ const registerUser = (data) => {
             <p v-if="errors.confirmPassword" class="text-red-500 text-sm mt-1">{{ errors.confirmPassword }}</p>
           </div>
 
-          <button @click="registerUser" type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
+          <!-- Bouton -->
+          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
             Créer un compte
           </button>
+
           <RouterLink to="/login" class="block text-center mt-4">
             Déjà inscrit ? <span class="underline">Connectez-vous</span>
           </RouterLink>
         </div>
-        <p v-if="errors.general" class="text-red-500 text-sm text-center">{{ errors.general }}</p>
+
+        <!-- Erreur serveur -->
+        <p v-if="errors.general" class="text-red-500 text-sm text-center mt-4">
+          {{ errors.general }}
+        </p>
       </form>
     </div>
   </div>
