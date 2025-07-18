@@ -14,7 +14,7 @@ defineProps({
         isActive ? 'sidebar-is-active' : ''
       ]"
     >
-      <img :src="icon" :alt="label" class="w-6 h-6" :class="isActive ? 'filter brightness-0 invert' : ''" />
+      <img :src="icon" :alt="label" class="w-6 h-6 hover:filter hover:brightness-0 hover:invert" :class="isActive ? 'filter brightness-0 invert' : ''" />
       <span class="text-sm font-medium">{{ label }}</span>
     </div>
   </router-link>

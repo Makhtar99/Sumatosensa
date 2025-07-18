@@ -40,10 +40,11 @@ body {
   --color-sumato-anthracite: #2E2E2E; /* writing */
   --color-sumato-comfort: #62C370; /* green */
   --color-sumato-alert: #F25C54; /* red */
-  --color-sumato-neutral: #58A4B0; /* blue */
+  --color-sumato-neutral: #ACD0CD; /* blue */
   --color-sumato-light-orange: #F9E0BD; /* avatar */
   --color-sumato-background: #FFF2D6; /* background */
   --color-sumato-orange: #E25B2A; /* orange */
   --color-sumato-orange-hover: #F07A4D; /* orange hover */
   --color-sumato-pressure: #FCD490; /* pressure */
+  --color-sumato-connected-devices: #F5DEB4; /* connected devices */
 }

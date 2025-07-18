@@ -17,7 +17,7 @@ export default {
         'sumato-anthracite': '#2E2E2E', // writing
         'sumato-comfort': '#62C370', // green
         'sumato-alert': '#F25C54', // red
-        'sumato-neutral': '#58A4B0', // blue
+        'sumato-neutral': '#ACD0CD', // blue
         'sumato-light-orange': '#F9E0BD', // avatar
         'sumato-background': '#FFF2D6', // background
         'sumato-orange': '#E25B2A', // orange

@@ -28,15 +28,17 @@ onMounted(async () => {
 
 <template>
     <div class="temp text-white p-4 rounded-lg" style="background-color: var(--color-sumato-comfort);">
-        <h3>Température:</h3>
-        <img v-if="temperature > 30" :src="HighTemp" alt="High Temperature" style="width: 100px; height: 100px;" />
-        <img v-else-if="temperature > 20" :src="NormalTemp" alt="Normal Temperature" style="width: 100px; height: 100px;" />
-        <img v-else :src="LowTemp" alt="Low Temperature" style="width: 100px; height: 100px;" />
-        <div v-if="loading">Chargement...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <p>{{ temperature }} °C</p>
-            <p>Dernière mise à jour: {{ timestamp }}</p>
+        <img v-if="temperature > 30" :src="HighTemp" alt="High Temperature" />
+        <img v-else-if="temperature > 20" :src="NormalTemp" alt="Normal Temperature" />
+        <img v-else :src="LowTemp" alt="Low Temperature" />
+        <div class="temperature-data">
+            <h4>Température:</h4>
+            <div v-if="loading">Chargement...</div>
+            <div v-else-if="error">{{ error }}</div>
+            <div v-else>
+                <p>{{ temperature }} °C</p>
+                <p>Dernière mise à jour: {{ timestamp }}</p>
+            </div>
         </div>
     </div>
 </template>

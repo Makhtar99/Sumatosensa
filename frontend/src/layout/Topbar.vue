@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { RouterLink } from 'vue-router';
 
 function getFormattedDateTime() {
   const now = new Date();
@@ -35,21 +36,23 @@ const date = ref(getFormattedDateTime());
       <div>
         <span>{{ date }}</span>
       </div>
-    <div class="flex items-center gap-4">
+    <div class="flex justify-center items-center gap-4">
       <div class="flex justify-center items-center rounded-full w-[30px] h-[30px] bg-[#F9E0BD]">
         <button title="Messages" class="relative">
         📧
-        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">5</span>
+        <!-- <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">5</span> -->
       </button>
       </div>
       <div class="flex justify-center items-center rounded-full w-[30px] h-[30px] bg-[#F9E0BD]">
         <button title="Notifications" class="relative">
           🔔
-          <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">3</span>
+          <!-- <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">3</span> -->
         </button>
       </div>  
       <button title="Profil">
-        <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full" style="height: 50px; width: 50px;" />
+        <RouterLink to="/settings">
+          <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full" style="height: 50px; width: 50px;" />
+        </RouterLink>
       </button>
     </div>
   </header>

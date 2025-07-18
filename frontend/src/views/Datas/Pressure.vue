@@ -24,13 +24,15 @@ onMounted(async () => {
 
 <template>
     <div class="pressure" style="background-color: var(--color-sumato-pressure); padding: 1rem; border-radius: 8px;">
-        <img :src="Nano" alt="Nano svg" style="width: 100px; height: 100px;" />
-        <h3>Pression</h3>
-        <div v-if="loading">Chargement...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <p>Pression: {{ pressure }} hPa</p>
-            <p>Dernière mise à jour: {{ timestamp }}</p>
+        <img :src="Nano" alt="Nano svg" />
+        <div class="pressure-data">
+            <h4>Pression</h4>
+            <div v-if="loading">Chargement...</div>
+            <div v-else-if="error">{{ error }}</div>
+            <div v-else>
+                <p>Pression: {{ pressure }} hPa</p>
+                <p>Dernière mise à jour: {{ timestamp }}</p>
+            </div>
         </div>
     </div>
 </template>

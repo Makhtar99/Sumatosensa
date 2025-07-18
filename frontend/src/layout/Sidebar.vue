@@ -10,7 +10,7 @@ import Management from '../assets/svg/management.svg'
 </script>
 
 <template>
-  <aside class="flex flex-col items-center bg-color-background text-color-black h-screen border-r border-r-red">
+  <aside class="flex flex-col items-center bg-color-background text-color-black h-screen" >
 
     <div class="flex flex-col m-auto justify-center items-center py-4">
       <img src="../assets/img/Logo.png" alt="SumãtoSensã Logo" style="width: 100px; height: 100px;" />

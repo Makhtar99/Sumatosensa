@@ -24,13 +24,15 @@ onMounted(async () => {
 
 <template>
     <div class="humidity p-4" style="background-color: var(--color-sumato-neutral);">
-        <img src="../../assets/svg/drop.png" alt="Drop" style="width: 100px; height: 100px;" />
-        <h3>Humidité</h3>
-        <div v-if="loading">Chargement...</div>
-        <div v-else-if="error">{{ error }}</div>
-        <div v-else>
-            <p>Humidité: {{ humidity }}%</p>
-            <p>Dernière mise à jour: {{ timestamp }}</p>
+        <img src="../../assets/svg/drop.png" alt="Drop" />
+        <div class="humidity-data">
+            <h4>Humidité</h4>
+            <div v-if="loading">Chargement...</div>
+            <div v-else-if="error">{{ error }}</div>
+            <div v-else>
+                <p>Humidité: {{ humidity }}%</p>
+                <p>Dernière mise à jour: {{ timestamp }}</p>
+            </div>
         </div>
     </div>
 </template>
