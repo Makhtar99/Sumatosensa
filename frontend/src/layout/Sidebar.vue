@@ -13,7 +13,7 @@ import Management from '../assets/svg/management.svg'
   <aside class="flex flex-col items-center bg-color-background text-color-black h-screen border-r border-r-red">
 
     <div class="flex flex-col m-auto justify-center items-center py-4">
-      <img src="../assets/img/Logo.png" alt="SumãtoSensã Logo" class="w-16 h-16 mb-2 ">
+      <img src="../assets/img/Logo.png" alt="SumãtoSensã Logo" style="width: 100px; height: 100px;" />
       <span class="font-bold">SumãtoSensã</span>
     </div>
 

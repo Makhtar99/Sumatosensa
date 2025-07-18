@@ -1,16 +1,19 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchWeatherData } from '../../services/weatherService';
 
 const city = "Paris";
-const temperature = ref<Number | null>(null);
+const temperature = ref(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(true);
+const timestamp = ref<String | null>(null);
+
+import Garage from '../../assets/svg/garage.svg';
 
 onMounted(async () => {
     try {
         const data = await fetchWeatherData(city);
-        temperature.value = data.main.temp;
+        temperature.value = data;
     } catch (err) {
         error.value = "Failed to fetch weather data.";
     } finally {
@@ -21,11 +24,14 @@ onMounted(async () => {
 
 <template>
     <div class="outside">
-        <h2>Température à {{ city }}</h2>
+
+        <img :src="Garage" alt="Garage svg" style="width: 100px; height: 100px;" />
+        <h3>Extérieur</h3>
         <div v-if="loading">Loading...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <p>Temperature: {{ temperature }}°C</p>
+            <p>Temperature: {{ temperature !== null ? Math.round(temperature) + '°C' : 'N/A' }}</p>
+            <p>Dernière mise à jour: {{ timestamp }}</p>
         </div>
     </div>
 </template>

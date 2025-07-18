@@ -1,19 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchSensorData } from '../../services/sensorService';
 
-const temperature = ref<Number | null>(null);
+const humidity = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
-const loading = ref<Boolean>(true);
+const loading = ref<Boolean>(false);
 
 onMounted(async () => {
     try {
         const data = await fetchSensorData();
-        temperature.value = data.temperature;
+        loading.value = true;
+        humidity.value = data.humidity;
         timestamp.value = data.timestamp;
     } catch (err) {
-        error.value = "Erreur lors de la récupération de la température.";
+        loading.value = false;
+        error.value = "Erreur lors de la récupération de l'humidité.";
     } finally {
         loading.value = false;
     }
@@ -21,21 +23,14 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="temp">
-        <h2>Température</h2>
+    <div class="humidity p-4" style="background-color: var(--color-sumato-neutral);">
+        <img src="../../assets/svg/drop.png" alt="Drop" style="width: 100px; height: 100px;" />
+        <h3>Humidité</h3>
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <p>Température: {{ temperature }}°C</p>
+            <p>Humidité: {{ humidity }}%</p>
             <p>Dernière mise à jour: {{ timestamp }}</p>
         </div>
     </div>
 </template>
-
-<style scoped>
-.temp {
-    background-color: #62C370;
-    color: white;
-    padding: 1rem;
-}
-</style>

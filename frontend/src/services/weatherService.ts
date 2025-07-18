@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+const BASE_URL = import.meta.env.VITE_WEATHER_BASE_URL;
 
 export const fetchWeatherData = async (city: string): Promise<any> => {
   try {
@@ -12,7 +12,6 @@ export const fetchWeatherData = async (city: string): Promise<any> => {
         units: "metric",
         },
     });
-
     return response.data.main.temp
 } catch (error) {
     console.error("Erreur lors de la récupération de la température:", error);

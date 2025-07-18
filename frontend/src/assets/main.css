@@ -27,9 +27,16 @@
 .sidebar {
     width: 20%;
 }
-/* .sidebarItem:hover { */
-  /* background-color: #fbe3c0 !important;
-} */
+
+.sidebarItem:hover {
+  background-color: var(--color-sumato-orange-hover);
+  color: white;
+}
+
+.sidebar-is-active {
+  background-color: var(--color-sumato-orange);
+  color: white;
+}
 
 .avatar-background {
   background-color: #fbe3c0;
@@ -41,10 +48,25 @@
   height: 30px;
 }
 
-.temp, .humidity, .pressure, .outsi {
-  width: 25%;
+.dashboard_data {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+}
+
+.dashboard_data h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.temp, .humidity, .pressure, .outside {
+  width: 20%;
   padding: 10px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
 }
 
 .temp {

@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiService } from '@/services/api'
 import { z } from 'zod'
-import { register } from '@/services/authservice'
+import { register } from '../services/AuthService'
 
 const router = useRouter()
 
