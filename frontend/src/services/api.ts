@@ -34,6 +34,16 @@ export interface AdminDashboard {
   total_users: number
 }
 
+export interface RegisterRequest {
+  username: string
+  email: string
+  password: string
+}
+
+export interface RegisterResponse {
+  message: string
+}
+
 class ApiService {
   private baseUrl: string
   private token: string | null = null
@@ -111,6 +121,13 @@ class ApiService {
 
   async checkHealth(): Promise<{ status: string }> {
     return this.request<{ status: string }>('/health')
+  }
+
+  async register(data: RegisterRequest): Promise<RegisterResponse> {
+    return this.request<RegisterResponse>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
   }
 }
 

@@ -72,7 +72,7 @@ const credentials = ref({
 const handleLogin = async () => {
   try {
     await authStore.login(credentials.value)
-    router.push('/admin')
+    router.push('/')
   } catch (error) {
     console.error('Erreur de connexion:', error)
   }

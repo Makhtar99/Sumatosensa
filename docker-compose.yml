@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sumatosensa}
       POSTGRES_USER: ${POSTGRES_USER:-sumatosensa_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sumatosensa_password}
-      TIMESCALEDB_TELEMETRY: off
+      TIMESCALEDB_TELEMETRY: "off"
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
