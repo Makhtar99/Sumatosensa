@@ -5,8 +5,6 @@ const BASE_URL = import.meta.env.VITE_WEATHER_BASE_URL;
 
 export const fetchWeatherData = async (city: string): Promise<any> => {
   try {
-    console.log("API KEY:", API_KEY)
-    console.log("BASE URL:", BASE_URL)
     const response = await axios.get(BASE_URL, {
       params: {
         q: city,
