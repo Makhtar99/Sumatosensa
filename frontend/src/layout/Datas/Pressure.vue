@@ -25,7 +25,7 @@ onMounted(async () => {
 <template>
     <div class="pressure">
         <img :src="Nano" alt="Nano svg" style="width: 100px; height: 100px;" />
-        <h2>Pression</h2>
+        <h3>Pression</h3>
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>

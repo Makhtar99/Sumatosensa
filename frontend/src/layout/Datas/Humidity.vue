@@ -23,7 +23,7 @@ onMounted(async () => {
 <template>
     <div class="humidity">
         <img src="../../assets/svg/drop.png" alt="Drop" style="width: 100px; height: 100px;" />
-        <h2>Humidité</h2>
+        <h3>Humidité</h3>
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>

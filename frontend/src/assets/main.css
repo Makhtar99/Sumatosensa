@@ -48,12 +48,12 @@
   gap: 20px;
 }
 
-.dashboard_data h2 {
+.dashboard_data h3 {
   margin: 0;
   padding: 0;
 }
 
-.temp, .humidity, .pressure, .outsi {
+.temp, .humidity, .pressure, .outside {
   width: 20%;
   padding: 10px;
   display: flex;

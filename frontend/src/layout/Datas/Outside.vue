@@ -25,11 +25,12 @@ onMounted(async () => {
     <div class="outside">
 
         <img :src="Garage" alt="Garage svg" style="width: 100px; height: 100px;" />
-        <h2>Température à {{ city }}</h2>
+        <h3>Extérieur</h3>
         <div v-if="loading">Loading...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
             <p>Temperature: {{ temperature }}°C</p>
+            <p>Dernière mise à jour: {{ timestamp }}</p>
         </div>
     </div>
 </template>

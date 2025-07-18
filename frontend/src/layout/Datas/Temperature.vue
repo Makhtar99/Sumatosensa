@@ -32,7 +32,8 @@ onMounted(async () => {
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <h2>Température: {{ temperature }}°C</h2>
+            <h3>Température: {{ temperature }}°C</h3>
+            <p>Dernière mise à jour: {{ timestamp }}</p>
         </div>
     </div>
 </template>
