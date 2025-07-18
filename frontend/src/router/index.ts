@@ -14,7 +14,7 @@ import Management from '@/views/Management.vue'
 import History from '@/views/History.vue'
 import devices from '@/views/Devices.vue'
 
-import AdminExampleView from '@/views/AdminExampleView.vue'
+import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
 
 
 

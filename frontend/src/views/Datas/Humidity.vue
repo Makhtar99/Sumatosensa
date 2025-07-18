@@ -1,18 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchSensorData } from '../../services/sensorService';
 
 const humidity = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
-const loading = ref<Boolean>(true);
+const loading = ref<Boolean>(false);
 
 onMounted(async () => {
     try {
         const data = await fetchSensorData();
+        loading.value = true;
         humidity.value = data.humidity;
         timestamp.value = data.timestamp;
     } catch (err) {
+        loading.value = false;
         error.value = "Erreur lors de la récupération de l'humidité.";
     } finally {
         loading.value = false;
@@ -21,7 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="humidity">
+    <div class="humidity p-4" style="background-color: var(--color-sumato-neutral);">
         <img src="../../assets/svg/drop.png" alt="Drop" style="width: 100px; height: 100px;" />
         <h3>Humidité</h3>
         <div v-if="loading">Chargement...</div>
@@ -32,10 +34,3 @@ onMounted(async () => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.humidity {
-    background-color: #58A4B0;
-    padding: 1rem;
-}
-</style>

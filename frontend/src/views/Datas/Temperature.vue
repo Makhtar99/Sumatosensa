@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { fetchSensorData } from '../../services/sensorService';
 
@@ -9,14 +9,16 @@ import LowTemp from '../../assets/svg/low_temp.png'
 const temperature = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
-const loading = ref<Boolean>(true);
+const loading = ref<Boolean>(false);
 
 onMounted(async () => {
     try {
+        loading.value = true;
         const data = await fetchSensorData();
         temperature.value = data.temperature;
         timestamp.value = data.timestamp;
     } catch (err) {
+        loading.value = false;
         error.value = "Erreur lors de la récupération de la température.";
     } finally {
         loading.value = false;
@@ -25,23 +27,16 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="temp">
+    <div class="temp text-white p-4 rounded-lg" style="background-color: var(--color-sumato-comfort);">
+        <h3>Température:</h3>
         <img v-if="temperature > 30" :src="HighTemp" alt="High Temperature" style="width: 100px; height: 100px;" />
         <img v-else-if="temperature > 20" :src="NormalTemp" alt="Normal Temperature" style="width: 100px; height: 100px;" />
         <img v-else :src="LowTemp" alt="Low Temperature" style="width: 100px; height: 100px;" />
         <div v-if="loading">Chargement...</div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
-            <h3>Température: {{ temperature }}°C</h3>
+            <p>{{ temperature }} °C</p>
             <p>Dernière mise à jour: {{ timestamp }}</p>
         </div>
     </div>
 </template>
-
-<style scoped>
-.temp {
-    background-color: #62C370;
-    color: white;
-    padding: 1rem;
-}
-</style>
