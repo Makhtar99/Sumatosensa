@@ -13,8 +13,12 @@ import ExportView from '@/views/ExportView.vue'
 import Management from '@/views/Management.vue'
 import History from '@/views/History.vue'
 import devices from '@/views/Devices.vue'
+import Alertes from '@/views/Alertes.vue'
+import Notifications from '@/views/Notifications.vue'
 
 import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
+import LoginExampleView from '@/views/TestBack/LoginExampleView.vue'
+import testRegisterView from '@/views/TestBack/testRegisterView.vue'
 
 
 
@@ -26,7 +30,7 @@ const routes = [
     component: AppLayout,
     children: [
       {
-        path: '',
+        path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard,
         meta: { requiresAuth: false },
@@ -61,6 +65,18 @@ const routes = [
         component: devices,
         meta: { requiresAuth: false },
       },
+      {
+        path: 'alerts',
+        name: 'Alertes',
+        component: Alertes,
+        meta: { requiresAuth: false },
+      },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: Notifications,
+        meta: { requiresAuth: false },
+      }
     ],
   },
   {
@@ -75,7 +91,12 @@ const routes = [
     component: RegisterForm,
     meta: { requiresAuth: false },
   },
-  
+  {
+    path: '/test-register',
+    name: 'TestRegister',
+    component: testRegisterView,
+    meta: { requiresAuth: false },
+  },
   {
     path: '/admin',
     name: 'Admin',
