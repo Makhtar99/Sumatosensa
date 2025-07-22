@@ -32,3 +32,6 @@ coverage
 package-lock.json
 package.json
 .env
+
+# putains de fichiers python de makhtar
+*.pyc

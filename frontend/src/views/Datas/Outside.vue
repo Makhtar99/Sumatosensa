@@ -44,7 +44,7 @@ const onCityChange = () => {
 
         <div v-else class="outside-data">
             <p>Température : {{ temperature !== null ? Math.round(temperature) + '°C' : 'N/A' }}</p>
-            <p>Dernière mise à jour : {{ timestamp }}</p>
+            <!-- <p>Dernière mise à jour : {{ timestamp }}</p> -->
 
             <select v-model="selectedCity" @change="onCityChange">
                 <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>

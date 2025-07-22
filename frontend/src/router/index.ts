@@ -15,22 +15,19 @@ import History from '@/views/History.vue'
 import devices from '@/views/Devices.vue'
 import Alertes from '@/views/Alertes.vue'
 import Notifications from '@/views/Notifications.vue'
+import Energy from '@/views/Energy.vue'
 
 import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
-import LoginExampleView from '@/views/TestBack/LoginExampleView.vue'
-import testRegisterView from '@/views/TestBack/testRegisterView.vue'
-
-
-
 
 // Routes de l'application
 const routes = [
   {
     path: '/',
+    redirect: '/dashboard',
     component: AppLayout,
     children: [
       {
-        path: '/dashboard',
+        path: '/',
         name: 'Dashboard',
         component: Dashboard,
         meta: { requiresAuth: false },
@@ -39,43 +36,49 @@ const routes = [
         path: 'settings',
         name: 'Settings',
         component: Settings,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'export',
         name: 'Export',
         component: ExportView,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'management',
         name: 'Management',
         component: Management,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'history',
         name: 'History',
         component: History,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'devices',
         name: 'Devices',
         component: devices,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'alerts',
         name: 'Alertes',
         component: Alertes,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'notifications',
         name: 'Notifications',
         component: Notifications,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'energy',
+        name: 'Energy',
+        component: Energy,
+        meta: { requiresAuth: true },
       }
     ],
   },
@@ -89,12 +92,6 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: RegisterForm,
-    meta: { requiresAuth: false },
-  },
-  {
-    path: '/test-register',
-    name: 'TestRegister',
-    component: testRegisterView,
     meta: { requiresAuth: false },
   },
   {
@@ -115,7 +112,6 @@ const router = createRouter({
 
 // Navigation guards
 router.beforeEach((to, from, next) => {
-  console.log("➡️ Navigation vers :", to.path)
   console.log("🔐 Auth requis ?", to.meta.requiresAuth)
   console.log("🧾 Authentifié ?", isAuthenticated())
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)

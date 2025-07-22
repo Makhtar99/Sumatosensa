@@ -1,29 +1,31 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { fetchSensorData } from '../../services/sensorService';
+// import { fetchSensorData } from '../../services/sensorService';
 
 import HighTemp from '../../assets/svg/high_temp.png'
 import NormalTemp from '../../assets/svg/normal_temp.png'
 import LowTemp from '../../assets/svg/low_temp.png'
 
-const temperature = ref<Number | null>(null);
+const temperature = ref(15); // Default temperature for initial rendering
+
+// const temperature = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(false);
 
-onMounted(async () => {
-    try {
-        loading.value = true;
-        const data = await fetchSensorData();
-        temperature.value = data.temperature;
-        timestamp.value = data.timestamp;
-    } catch (err) {
-        loading.value = false;
-        error.value = "Erreur lors de la récupération de la température.";
-    } finally {
-        loading.value = false;
-    }
-});
+// onMounted(async () => {
+//     try {
+//         loading.value = true;
+//         const data = await fetchSensorData();
+//         temperature.value = data.temperature;
+//         timestamp.value = data.timestamp;
+//     } catch (err) {
+//         loading.value = false;
+//         error.value = "Erreur lors de la récupération de la température.";
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <template>

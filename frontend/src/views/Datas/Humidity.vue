@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { fetchSensorData } from '../../services/sensorService';
+// import { fetchSensorData } from '../../services/sensorService';
 
 const humidity = ref<Number | null>(null);
 const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(false);
 
-onMounted(async () => {
-    try {
-        const data = await fetchSensorData();
-        loading.value = true;
-        humidity.value = data.humidity;
-        timestamp.value = data.timestamp;
-    } catch (err) {
-        loading.value = false;
-        error.value = "Erreur lors de la récupération de l'humidité.";
-    } finally {
-        loading.value = false;
-    }
-});
+// onMounted(async () => {
+//     try {
+//         const data = await fetchSensorData();
+//         loading.value = true;
+//         humidity.value = data.humidity;
+//         timestamp.value = data.timestamp;
+//     } catch (err) {
+//         loading.value = false;
+//         error.value = "Erreur lors de la récupération de l'humidité.";
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <template>

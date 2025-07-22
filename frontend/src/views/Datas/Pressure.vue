@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { fetchSensorData } from '../../services/sensorService';
+// import { fetchSensorData } from '../../services/sensorService';
 
 import Nano from '../../assets/svg/nanometre.svg';
 
@@ -9,17 +9,17 @@ const timestamp = ref<String | null>(null);
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(true);
 
-onMounted(async () => {
-    try {
-        const data = await fetchSensorData();
-        pressure.value = data.pressure;
-        timestamp.value = data.timestamp;
-    } catch (err) {
-        error.value = "Erreur lors de la récupération de la pression.";
-    } finally {
-        loading.value = false;
-    }
-});
+// onMounted(async () => {
+//     try {
+//         const data = await fetchSensorData();
+//         pressure.value = data.pressure;
+//         timestamp.value = data.timestamp;
+//     } catch (err) {
+//         error.value = "Erreur lors de la récupération de la pression.";
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <template>

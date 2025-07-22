@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import { isAuthenticated, logout } from '@/services/AuthService'
+import { apiService } from '@/services/api';
+
 
 function getFormattedDateTime() {
   const now = new Date();
@@ -28,6 +31,11 @@ onMounted(() => {
 })
 
 const date = ref(getFormattedDateTime());
+const isAdmin = ref(false);
+onMounted(async () => {
+  isAdmin.value = await apiService.isAdmin();
+  // console.log("État de l'admin :", isAdmin.value);
+});
 
 </script>
 
@@ -54,6 +62,11 @@ const date = ref(getFormattedDateTime());
           <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full" style="height: 50px; width: 50px;" />
         </RouterLink>
       </button>
+      <span v-if="isAuthenticated()">Connecté</span>
+      <button v-if="isAuthenticated()" @click="logout()" class="bg-red-500 text-white rounded px-2 py-1 cursor-pointer">Déconnexion</button>
+      <RouterLink v-if="isAuthenticated() && isAdmin" to="/admin" class="bg-blue-500 text-white rounded px-2 py-1 cursor-pointer">Admin</RouterLink>
+      <RouterLink v-if="!isAuthenticated()" to="/login" class="bg-green-500 text-white rounded px-2 py-1 cursor-pointer">Connexion</RouterLink>
+      <RouterLink v-if="!isAuthenticated()" to="/register" class="bg-yellow-500 text-white rounded px-2 py-1 cursor-pointer">Inscription</RouterLink>
     </div>
   </header>
 </template>
