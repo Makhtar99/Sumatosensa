@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { apiService } from '@/services/api'
 import { z } from 'zod'
 import { register } from '../services/AuthService'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 
@@ -37,46 +37,44 @@ const errors = reactive({
 })
 
 
-// 4. Fonction soumise à l'envoi
 const onSubmit = async () => {
-  // Réinitialiser les erreurs
-  errors.username = ''
-  errors.email = ''
-  errors.password = ''
-  errors.confirmPassword = ''
-  errors.general = ''
+  Object.keys(errors).forEach((key) => errors[key as keyof typeof errors] = '')
 
-  // Validation avec Zod
   const result = registerSchema.safeParse(form)
-  console.log(result)
 
   if (!result.success) {
-    console.log("❌ Erreurs de validation Zod :", result.error.issues)
     result.error.errors.forEach(err => {
       const field = err.path[0]
       if (field in errors) {
-        errors[field] = err.message
+        errors[field as keyof typeof errors] = err.message
       }
     })
     return
   }
 
-  // 6. Requête vers le backend
-    try {
-      await register(result.data.username, result.data.email, result.data.password)
+  try {
+    // ✅ Étape 1 : Enregistrement
+    await register(result.data.username, result.data.email, result.data.password)
 
-      
-      // Redirige vers zone privée (admin par exemple)
-      router.push('/')
-    } catch (error: any) {
-      errors.general = error.message || 'Erreur lors de l’inscription.'
+    // ✅ Étape 2 : Connexion automatique
+    const authStore = useAuthStore()
+    const credentials = {
+      username: result.data.username,
+      password: result.data.password
     }
+    await authStore.login(credentials)
 
-    console.log("📤 Formulaire soumis :", form)
-    console.log("✅ Validation réussie :", result.data)
-    console.log("📡 Envoi vers /register")
-    console.log("✅ Utilisateur inscrit, redirection vers dashboard")
+    // ✅ Étape 3 : Redirection vers dashboard
+    router.push('/')
+  } catch (error: any) {
+    errors.general = error.message || 'Erreur lors de l’inscription.'
   }
+
+  console.log("📤 Formulaire soumis :", form)
+  console.log("✅ Validation réussie :", result.data)
+}
+
+
 </script>
 
 <template>

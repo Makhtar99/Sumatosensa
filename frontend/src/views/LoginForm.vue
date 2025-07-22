@@ -1,24 +1,24 @@
 <script setup>
 // 1. Import des outils
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { z } from 'zod'
 
 // 2. Schéma de validation Zod
 const loginSchema = z.object({
-  email: z.string().email("Email invalide"),
+  username: z.string().min(2, "Le nom d'utilisateur doit contenir au moins 2 caractères").max(100, "Le nom d'utilisateur ne peut pas dépasser 100 caractères"),
   password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères")
 })
 
 // 3. Définition du formulaire et des erreurs
 const form = reactive({
-  email: '',
+  username: '',
   password: ''
 })
 
 const errors = reactive({
-  email: '',
+  username: '',
   password: '',
   server: ''
 })
@@ -29,7 +29,7 @@ const router = useRouter()
 // 4. Fonction déclenchée à la soumission du formulaire
 const onSubmit = async () => {
   // On réinitialise les erreurs
-  errors.email = ''
+  errors.username = ''
   errors.password = ''
   errors.server = ''
 
@@ -44,12 +44,15 @@ const onSubmit = async () => {
     return
   }
 
+const credentials = ref({
+  username: form.username,
+  password: form.password
+})
+
   // 6. Requête backend via le store
   try {
-    await authStore.login({
-      username: form.email,
-      password: form.password
-    })
+    await authStore.login(credentials.value)
+    // Redirection après connexion réussie
     router.push('/')
   } catch (error) {
     // 7. Gestion des erreurs backend
@@ -62,21 +65,21 @@ const onSubmit = async () => {
 <template>
   <div class="flex h-screen items-center justify-center" style="max-height:-webkit-fill-available;">
     <div class="flex flex-col gap-2 items-center justify-center max-w-[40%] bg-white p-4 rounded-xl">
-      <img src="../assets/img/Logo_auth.png" alt="Logo">
+      <img src="../assets/img/Logo_auth.png" alt="Logo" class="max-w-[200px]" />
 
       <form @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
         <div class="flex flex-col gap-4">
 
-          <!-- Champ email -->
+          <!-- Champ username -->
           <div>
             <input
-              v-model="form.email"
-              type="email"
+              v-model="form.username"
+              type="username"
               class="w-full p-2 rounded-xl"
               style="border: 1px solid lightgray"
-              placeholder="Renseignez votre email"
+              placeholder="Renseignez votre username"
             />
-            <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
+            <p v-if="errors.username" class="text-red-500 text-sm mt-1">{{ errors.username }}</p>
           </div>
 
           <!-- Champ mot de passe -->
