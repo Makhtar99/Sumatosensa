@@ -129,6 +129,16 @@ class ApiService {
       body: JSON.stringify(data),
     })
   }
+  
+  async isAdmin(): Promise<boolean> {
+    try {
+      const user = await this.getCurrentUser()
+      return user.role === 'admin'
+    } catch (error) {
+      console.error("❌ Erreur lors de la vérification du rôle admin :", error)
+      return false
+    }
+  }
 }
 
 export const apiService = new ApiService()
