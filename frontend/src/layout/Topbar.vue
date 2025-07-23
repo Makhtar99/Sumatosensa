@@ -34,7 +34,7 @@ window.addEventListener('resize', () => {
 </script>
 
 <template>
-  <header class="p-4 flex items-center justify-between bg-white shadow-md">
+  <header class="p-4 flex items-center justify-between bg-white shadow-md max-w-screen">
     <div class="text-sm text-gray-600">{{ date }}</div>
 
     <div v-if="!isMobile" class="flex items-center gap-4">
