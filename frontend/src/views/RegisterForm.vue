@@ -85,7 +85,6 @@ const onSubmit = async () => {
       <form @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
         <div class="flex flex-col gap-4">
           
-          <!-- Champ username -->
           <div>
             <input
               v-model="form.username"
@@ -96,7 +95,6 @@ const onSubmit = async () => {
             />
             <p v-if="errors.username" class="text-red-500 text-sm mt-1">{{ errors.username }}</p>
           </div>
-          <!-- Champ email -->
           <div>
             <input
               v-model="form.email"
@@ -108,7 +106,6 @@ const onSubmit = async () => {
             <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
           </div>
 
-          <!-- Mot de passe -->
           <div>
             <input
               v-model="form.password"
@@ -120,7 +117,6 @@ const onSubmit = async () => {
             <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
           </div>
 
-          <!-- Confirmation -->
           <div>
             <input
               v-model="form.confirmPassword"
@@ -132,7 +128,6 @@ const onSubmit = async () => {
             <p v-if="errors.confirmPassword" class="text-red-500 text-sm mt-1">{{ errors.confirmPassword }}</p>
           </div>
 
-          <!-- Bouton -->
           <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
             Créer un compte
           </button>
@@ -142,7 +137,6 @@ const onSubmit = async () => {
           </RouterLink>
         </div>
 
-        <!-- Erreur serveur -->
         <p v-if="errors.general" class="text-red-500 text-sm text-center mt-4">
           {{ errors.general }}
         </p>

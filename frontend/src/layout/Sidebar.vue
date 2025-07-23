@@ -32,13 +32,11 @@ onMounted(async () => {
     class="fixed top-0 left-0 z-50 h-screen bg-white shadow-lg transition-all duration-300 ease-in-out"
     :class="[isSidebarCollapsed ? 'w-25' : 'w-64']"
   >
-    <!-- Logo -->
     <div class="py-6 px-4 flex flex-col items-center space-y-1">
       <img src="../assets/img/Logo.png" alt="SumãtoSensã" class="w-16 h-16" />
       <span v-if="!isSidebarCollapsed" class="text-lg font-bold hidden md:block">SumãtoSensã</span>
     </div>
     
-    <!-- Toggle button -->
     <button
       @click="emit('toggleSidebar')"
       class="absolute top-4 right-4 w-8 h-8 rounded-full bg-sumato-primary text-white flex items-center justify-center hover:bg-sumato-primary-hover transition"
@@ -47,7 +45,6 @@ onMounted(async () => {
       <img v-else :src="ArrowLeft" alt="Arrow Left" class="w-4 h-4" />
     </button>
 
-    <!-- Navigation -->
     <nav class="flex-1 w-full px-4 space-y-2">
       <SidebarItem :icon="Home" label="Ma Maison" to="/" />
       <SidebarItem :icon="History" label="Historique" to="/history" />

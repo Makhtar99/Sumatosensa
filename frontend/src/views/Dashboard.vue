@@ -32,7 +32,6 @@ onMounted(async () => {
 
 <template>
   <div class="grid grid-cols-1 xl:grid-cols-4 gap-6 p-6 w-full">
-    <!-- Zone utilisateur + image -->
     <div class="xl:col-span-3 flex flex-col gap-6">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <h1 class="title">
@@ -41,7 +40,6 @@ onMounted(async () => {
         <!-- <img src="../assets/svg/smart-house.png" alt="Maison connectée" class="hidden md:block w-64 h-64 object-contain" /> -->
       </div>
 
-      <!-- Données -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <Temp />
         <Humidity />
@@ -50,7 +48,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- Appareils connectés -->
     <div class="h-fit">
       <ConnectedDevices />
     </div>

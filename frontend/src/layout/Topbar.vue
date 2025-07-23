@@ -54,7 +54,6 @@ window.addEventListener('resize', () => {
       </template>
     </div>
 
-    <!-- Mobile -->
     <div v-else class="relative">
       <template v-if="isAuthenticated()">
         <button @click="showDropdown = !showDropdown">
