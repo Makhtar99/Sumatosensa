@@ -1,34 +1,24 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Fan from '../../assets/svg/fan.svg'
 import Heat from '../../assets/svg/heat.svg'
 import Deshumidifier from '../../assets/svg/deshumidifier.svg'
+
+const devices = ref([
+  {name: "Ventilateur", icon: Fan, status: "Non connecté"},
+  {name: "Chauffage", icon: Heat, status: "Non connecté"},
+  {name: "Déshumidificateur", icon: Deshumidifier, status: "Non connecté"}
+])
 </script>
 
 <template>
-  <div class="connected-devices flex flex-col gap-3 rounded-xl">
-    <div
-      class="flex flex-col items-center p-4 rounded-xl w-60 h-48"
-      style="border: 1px solid var(--color-sumato-connected-devices)"
-    >
-      <img :src="Fan" alt="Fan" />
-      <h4>Ventilateur</h4>
-      <p>Non connecté</p>
-    </div>
-    <div
-      class="flex flex-col items-center p-4 rounded-xl w-60 h-48"
-      style="border: 1px solid var(--color-sumato-connected-devices)"
-    >
-      <img :src="Heat" alt="Heat" />
-      <h4>Chauffage</h4>
-      <p>Non connecté</p>
-    </div>
-    <div
-      class="flex flex-col items-center p-4 rounded-xl w-60 h-48"
-      style="border: 1px solid var(--color-sumato-connected-devices)"
-    >
-      <img :src="Deshumidifier" alt="Dehumidifier" />
-      <h4>Déshumidificateur</h4>
-      <p>Non connecté</p>
-    </div>
+  <div class="connected-devices">
+    <li v-for="device in devices" :key="device.name">
+      <div class="connected-device">
+        <img :src="device.icon" alt="Device Icon" class="w-25 h-25" />
+        <h4>{{ device.name }}</h4>
+        <p>{{ device.status }}</p>
+      </div>
+    </li>
   </div>
 </template>

@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import DataCard from '../Components/DataCard.vue';
 // import { fetchSensorData } from '../../services/sensorService';
 
 import Nano from '../../assets/svg/nanometre.svg';
 
 const pressure = ref<Number | null>(null);
-const timestamp = ref<String | null>(null);
+const timestamp = ref<String | null>("12/10/2023 14:30");
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(true);
+
+const getIcon = () => {
+    return Nano;
+}
 
 // onMounted(async () => {
 //     try {
@@ -23,17 +28,16 @@ const loading = ref<Boolean>(true);
 </script>
 
 <template>
-    <div class="pressure" style="background-color: var(--color-sumato-pressure); padding: 1rem; border-radius: 8px;">
-        <img :src="Nano" alt="Nano svg" />
-        <div class="pressure-data">
-            <h4>Pression</h4>
-            <div v-if="loading">Chargement...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <p>Pression: {{ pressure }} hPa</p>
-                <p>Dernière mise à jour: {{ timestamp }}</p>
-            </div>
-        </div>
+    <DataCard
+        v-if="!error"
+        :title="'Pression'"
+        :icon="getIcon()"
+        :value="pressure"
+        unit="hPa"
+        :timestamp="timestamp"
+        color="var(--color-sumato-pressure)"
+    />
+    <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
+        {{ error }}
     </div>
 </template>
-

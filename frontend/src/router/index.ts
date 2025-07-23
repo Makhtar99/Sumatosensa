@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { isAuthenticated } from '@/services/AuthService'
 
 import AppLayout from '@/layout/AppLayout.vue'
@@ -110,10 +109,8 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guards
 router.beforeEach((to, from, next) => {
-  console.log("🔐 Auth requis ?", to.meta.requiresAuth)
-  console.log("🧾 Authentifié ?", isAuthenticated())
+  console.log("Authentifié ?", isAuthenticated())
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth && !isAuthenticated()) {

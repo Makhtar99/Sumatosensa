@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import DataCard from '../Components/DataCard.vue';
 // import { fetchSensorData } from '../../services/sensorService';
 
-const humidity = ref<Number | null>(null);
-const timestamp = ref<String | null>(null);
+const humidity = ref<Number | null>(58);
+const timestamp = ref<String | null>("12/10/2023 14:30");
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(false);
+
+import Drop from '../../assets/svg/drop.png';
+
+const getIcon = () => {
+    return Drop;
+}
 
 // onMounted(async () => {
 //     try {
@@ -23,16 +30,16 @@ const loading = ref<Boolean>(false);
 </script>
 
 <template>
-    <div class="humidity p-4" style="background-color: var(--color-sumato-neutral);">
-        <img src="../../assets/svg/drop.png" alt="Drop" />
-        <div class="humidity-data">
-            <h4>Humidité</h4>
-            <div v-if="loading">Chargement...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <p>Humidité: {{ humidity }}%</p>
-                <p>Dernière mise à jour: {{ timestamp }}</p>
-            </div>
-        </div>
+    <DataCard
+    v-if="!error"
+        :title="'Humidité'"
+        :icon="getIcon()"
+        :value="humidity"
+        unit="%"
+        :timestamp="timestamp"
+        color="var(--color-sumato-neutral)"
+    />
+    <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
+        {{ error }}
     </div>
 </template>

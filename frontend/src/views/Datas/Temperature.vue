@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import DataCard from '../Components/DataCard.vue';
 // import { fetchSensorData } from '../../services/sensorService';
 
 import HighTemp from '../../assets/svg/high_temp.png'
 import NormalTemp from '../../assets/svg/normal_temp.png'
 import LowTemp from '../../assets/svg/low_temp.png'
+import { fa } from 'zod/locales';
 
-const temperature = ref(15); // Default temperature for initial rendering
-
-// const temperature = ref<Number | null>(null);
-const timestamp = ref<String | null>(null);
+const temperature = ref(18);
+const timestamp = ref<String | null>("12/10/2023 14:30");
 const error = ref<String | null>(null);
 const loading = ref<Boolean>(false);
+
+const getIcon = () => {
+    if (temperature.value > 30) return HighTemp;
+    if (temperature.value > 20) return NormalTemp;
+    return LowTemp;
+}
 
 // onMounted(async () => {
 //     try {
@@ -29,18 +35,16 @@ const loading = ref<Boolean>(false);
 </script>
 
 <template>
-    <div class="temp text-white p-4 rounded-lg" style="background-color: var(--color-sumato-comfort);">
-        <img v-if="temperature > 30" :src="HighTemp" alt="High Temperature" />
-        <img v-else-if="temperature > 20" :src="NormalTemp" alt="Normal Temperature" />
-        <img v-else :src="LowTemp" alt="Low Temperature" />
-        <div class="temperature-data">
-            <h4>Température:</h4>
-            <div v-if="loading">Chargement...</div>
-            <div v-else-if="error">{{ error }}</div>
-            <div v-else>
-                <p>{{ temperature }} °C</p>
-                <p>Dernière mise à jour: {{ timestamp }}</p>
-            </div>
-        </div>
+   <DataCard
+    v-if="!error"
+        :title="'Température'"
+        :icon="getIcon()"
+        :value="temperature"
+        unit="°C"
+        :timestamp="timestamp"
+        color="var(--color-sumato-comfort)"
+    />
+    <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
+        {{ error }}
     </div>
 </template>
