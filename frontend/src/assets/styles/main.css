@@ -1,5 +1,6 @@
 @import './base.css';
 @import "tailwindcss";
+@import "./datatable.css";
 
 #app {
   margin: 0 auto 2rem auto;
@@ -129,6 +130,13 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
+.title {
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
 
 
 /* WRITING */
@@ -185,14 +193,15 @@ li {
 }
 
 button {
-    color: white;
+    color: var(--color-sumato-text);
+    border: 1px solid var(--color-sumato-neutral);
+    /* background: transparent; */
     padding: 5px;
     border-radius: 10px;
-    border: none;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
-svg {
-  fill: black !important;
+button:hover {
+  filter: brightness(1.1);
 }

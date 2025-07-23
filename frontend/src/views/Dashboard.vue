@@ -35,7 +35,7 @@ onMounted(async () => {
     <!-- Zone utilisateur + image -->
     <div class="xl:col-span-3 flex flex-col gap-6">
       <div class="flex flex-col md:flex-row justify-between items-center">
-        <h1 class="text-2xl font-bold text-sumato-700">
+        <h1 class="title">
           Bienvenue <span v-if="username"> {{ username }}</span> !
         </h1>
         <!-- <img src="../assets/svg/smart-house.png" alt="Maison connectée" class="hidden md:block w-64 h-64 object-contain" /> -->

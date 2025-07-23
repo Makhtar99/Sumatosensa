@@ -15,7 +15,7 @@ provide('isSidebarCollapsed', isSidebarCollapsed)
          :class="[isSidebarCollapsed ? 'ml-27' : 'ml-66']">
       <Topbar />
 
-      <main class="w-full p-4 flex-1 overflow-y-auto">
+      <main class="w-full p-4 flex-1 overflow-y-auto max-h-full">
         <RouterView />
       </main>
     </div>
