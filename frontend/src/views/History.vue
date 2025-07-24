@@ -27,7 +27,7 @@ const filteredData = computed(() => {
 
 <template>
   <div class="p-6">
-    <h1 class="title">📚 Historique des données</h1>
+    <h2 class="title">Historique des données</h2>
 
     <div class="flex justify-between items-center my-6">
         <div class="flex flex-wrap gap-4">

@@ -37,24 +37,24 @@ const routes = [
         component: Settings,
         meta: { requiresAuth: true },
       },
-      {
-        path: 'export',
-        name: 'Export',
-        component: ExportView,
-        meta: { requiresAuth: true },
-      },
+      // {
+      //   path: 'export',
+      //   name: 'Export',
+      //   component: ExportView,
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: 'management',
         name: 'Management',
         component: Management,
         meta: { requiresAuth: true },
       },
-      {
-        path: 'history',
-        name: 'History',
-        component: History,
-        meta: { requiresAuth: true },
-      },
+      // {
+      //   path: 'history',
+      //   name: 'History',
+      //   component: History,
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: 'devices',
         name: 'Devices',
@@ -97,7 +97,7 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: AdminExampleView,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true, isAdmin: true },
   },
 
 

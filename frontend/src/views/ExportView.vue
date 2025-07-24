@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { saveAs } from 'file-saver'
-import * as XLSX from 'xlsx'
+
 import { Chart, registerables } from 'chart.js'
 import { Line } from 'vue-chartjs'
 
+import { exportToCSV } from '../assets/functions/ExportSCV'
+import { exportToExcel } from '../assets/functions/ExportExcel'
 
 Chart.register(...registerables)
 
@@ -24,33 +25,41 @@ const dataMap: Record<TabName, { date: string; room: string; value: number }[]> 
   Pression: pressureData,
 }
 
+const selectedTimeFilter = ref('all')
+
+function matchesTimeFilter(dateString: string): boolean {
+  const date = new Date(dateString)
+  const hour = date.getHours()
+  const day = date.getDay() // 0 = dimanche, 6 = samedi
+
+  switch (selectedTimeFilter.value) {
+    case 'morning':
+      return hour >= 6 && hour < 12
+    case 'afternoon':
+      return hour >= 12 && hour < 18
+    case 'evening':
+      return hour >= 18 && hour < 24
+    case 'night':
+      return hour >= 0 && hour < 6
+    case 'weekday':
+      return day >= 1 && day <= 5
+    case 'weekend':
+      return day === 0 || day === 6
+    default:
+      return true
+  }
+}
+
 const filteredData = computed(() => {
-  return dataMap[selectedTab.value].filter(d => d.room === selectedPlace.value)
+  return dataMap[selectedTab.value].filter(d =>
+    d.room === selectedPlace.value && matchesTimeFilter(d.date)
+  )
 })
-
-function exportToCSV(dataset: any[], name: string) {
-  if (!dataset.length) return
-  const csv = [
-    Object.keys(dataset[0]).join(','),
-    ...dataset.map(row => Object.values(row).join(','))
-  ].join('\n')
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
-  saveAs(blob, `${name}.csv`)
-}
-
-function exportToExcel(dataset: any[], name: string) {
-  const worksheet = XLSX.utils.json_to_sheet(dataset)
-  const workbook = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
-  const blob = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
-  saveAs(new Blob([blob]), `${name}.xlsx`)
-}
 </script>
 
 <template>
   <div class="p-6">
-    <h1 class="title">📦 Export de données</h1>
+    <h2 class="title">Export de données</h2>
 
     <div class="flex flex-col gap-4 my-6">
       <div class="flex justify-between">
@@ -100,6 +109,19 @@ function exportToExcel(dataset: any[], name: string) {
           {{ place }}
         </button>
       </div>
+
+      <!-- <div class="flex gap-4">
+  <label class="text-[var(--color-text)] font-medium">Filtrer par :</label>
+  <select v-model="selectedTimeFilter" class="border border-[var(--color-sumato-border)] rounded-lg px-3 py-1">
+    <option value="all">Tous</option>
+    <option value="morning">Matin (6h–12h)</option>
+    <option value="afternoon">Après-midi (12h–18h)</option>
+    <option value="evening">Soirée (18h–00h)</option>
+    <option value="night">Nuit (00h–6h)</option>
+    <option value="weekday">Semaine (lun–ven)</option>
+    <option value="weekend">Week-end (sam–dim)</option>
+  </select>
+</div> -->
 
     </div>
 
