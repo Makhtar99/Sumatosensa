@@ -7,7 +7,6 @@ import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 
-// Schéma de validation Zod
 const registerSchema = z.object({
   username: z.string().min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
   email: z.string().email("Email invalide"),
@@ -18,8 +17,6 @@ const registerSchema = z.object({
   path: ["confirmPassword"]
 })
 
-
-// Formulaire réactif
 const form = reactive({
   username: '',
   email: '',
@@ -27,7 +24,6 @@ const form = reactive({
   confirmPassword: ''
 })
 
-// 3. Gestion des erreurs
 const errors = reactive({
   username: '',
   email: '',
@@ -35,7 +31,6 @@ const errors = reactive({
   confirmPassword: '',
   general: ''
 })
-
 
 const onSubmit = async () => {
   Object.keys(errors).forEach((key) => errors[key as keyof typeof errors] = '')
@@ -53,10 +48,8 @@ const onSubmit = async () => {
   }
 
   try {
-    // ✅ Étape 1 : Enregistrement
     await register(result.data.username, result.data.email, result.data.password)
 
-    // ✅ Étape 2 : Connexion automatique
     const authStore = useAuthStore()
     const credentials = {
       username: result.data.username,
@@ -64,14 +57,10 @@ const onSubmit = async () => {
     }
     await authStore.login(credentials)
 
-    // ✅ Étape 3 : Redirection vers dashboard
     router.push('/')
   } catch (error: any) {
     errors.general = error.message || 'Erreur lors de l’inscription.'
   }
-
-  console.log("📤 Formulaire soumis :", form)
-  console.log("✅ Validation réussie :", result.data)
 }
 
 

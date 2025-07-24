@@ -56,7 +56,7 @@ const credentials = ref({
 <template>
   <div class="flex h-screen items-center justify-center" style="max-height:-webkit-fill-available;">
     <div class="flex flex-col gap-2 items-center justify-center max-w-[40%] bg-white p-4 rounded-xl">
-      <img src="../assets/img/Logo_auth.png" alt="Logo" class="max-w-[200px]" />
+      <img src="../assets/img/Logo_auth.png" alt="Logo" />
 
       <form @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
         <div class="flex flex-col gap-4">

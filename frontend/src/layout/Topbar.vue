@@ -4,21 +4,12 @@ import { RouterLink } from 'vue-router';
 import { isAuthenticated, logout } from '@/services/AuthService';
 import { apiService } from '@/services/api';
 
+import { getFormattedDateTime } from '../assets/functions/FormatedDate';
+
 const date = ref('');
 const showDropdown = ref(false);
 const isAdmin = ref(false);
 const isMobile = ref(window.innerWidth < 768);
-
-function getFormattedDateTime() {
-  const now = new Date();
-  const date = now.toLocaleDateString('fr-FR', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-  const time = now.toLocaleTimeString('fr-FR', {
-    hour: '2-digit', minute: '2-digit', hour12: false
-  });
-  return `${date.replace(/^\w/, c => c.toUpperCase())} - ${time}`;
-}
 
 onMounted(async () => {
   date.value = getFormattedDateTime();
