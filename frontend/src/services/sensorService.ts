@@ -9,7 +9,7 @@ export interface SensorData {
 
 export const fetchSensorData = async (): Promise<SensorData> => {
     try {
-        const response = await axios.get('http://localhost:3000/sensors/data');
+        const response = await axios.get('http://localhost:8000/sensors/data');
         return response.data;
     } catch (error) {
         console.error("Erreur lors de la récupération des données du capteur:", error);

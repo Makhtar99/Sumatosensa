@@ -29,7 +29,9 @@ coverage
 
 *.tsbuildinfo
 
-frontend/package-lock.json
-frontend/package.json
-frontend/node_modules
+package-lock.json
+package.json
+.env
 
+# putains de fichiers python de makhtar
+*.pyc

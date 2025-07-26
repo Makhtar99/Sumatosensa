@@ -1,3 +1,10 @@
+<script setup>
+import { ref } from 'vue'
+
+const username = ref('username')
+const email = ref('username@example.com')
+</script>
+
 <template>
   <div class="p-8 text-gray-800 bg-[#fef3d7] min-h-screen">
     <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">⚙️ Paramètres</h2>
@@ -49,10 +56,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-
-const username = ref('username')
-const email = ref('username@example.com')
-</script>
