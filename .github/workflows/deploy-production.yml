@@ -115,28 +115,12 @@ jobs:
           VITE_API_URL=https://api.sumatosensa.com
           VITE_WS_URL=wss://api.sumatosensa.com/ws
     
-    - name: Install Railway CLI
+    - name: Deploy to Render Production
       run: |
-        curl -fsSL https://railway.app/install.sh | sh
-        echo "$HOME/.railway/bin" >> $GITHUB_PATH
-    
-    - name: Deploy Backend to Railway Production
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
-      run: |
-        cd backend
-        railway login --token $RAILWAY_TOKEN
-        railway link ${{ secrets.RAILWAY_BACKEND_SERVICE_ID_PRODUCTION }}
-        railway up --detach
-    
-    - name: Deploy Frontend to Railway Production  
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
-      run: |
-        cd frontend
-        railway login --token $RAILWAY_TOKEN
-        railway link ${{ secrets.RAILWAY_FRONTEND_SERVICE_ID_PRODUCTION }}
-        railway up --detach
+        echo "Déploiement automatique vers Render production..."
+        echo "Version: ${{ steps.version.outputs.version }}"
+        echo "Les services sont déployés automatiquement via le fichier render.yaml"
+        echo "Production URLs seront disponibles dans le dashboard Render"
     
     - name: Create deployment record
       uses: actions/github-script@v7

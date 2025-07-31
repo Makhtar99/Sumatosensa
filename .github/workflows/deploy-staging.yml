@@ -77,25 +77,8 @@ jobs:
           VITE_API_URL=https://api-staging.sumatosensa.com
           VITE_WS_URL=wss://api-staging.sumatosensa.com/ws
     
-    - name: Install Railway CLI
+    - name: Deploy to Render Staging
       run: |
-        curl -fsSL https://railway.app/install.sh | sh
-        echo "$HOME/.railway/bin" >> $GITHUB_PATH
-    
-    - name: Deploy Backend to Railway Staging
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-      run: |
-        cd backend
-        railway login --token $RAILWAY_TOKEN
-        railway link ${{ secrets.RAILWAY_BACKEND_SERVICE_ID_STAGING }}
-        railway up --detach
-    
-    - name: Deploy Frontend to Railway Staging  
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-      run: |
-        cd frontend
-        railway login --token $RAILWAY_TOKEN
-        railway link ${{ secrets.RAILWAY_FRONTEND_SERVICE_ID_STAGING }}
-        railway up --detach
+        echo "Déploiement automatique vers Render staging..."
+        echo "Les services sont déployés automatiquement via le fichier render.yaml"
+        echo "Staging URLs seront disponibles dans le dashboard Render"
