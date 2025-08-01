@@ -37,7 +37,6 @@ onMounted(async () => {
         <h1 class="title">
           Bienvenue <span v-if="username"> {{ username }}</span> !
         </h1>
-        <!-- <img src="../assets/svg/smart-house.png" alt="Maison connectée" class="hidden md:block w-64 h-64 object-contain" /> -->
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

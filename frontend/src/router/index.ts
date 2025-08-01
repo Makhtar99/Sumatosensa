@@ -12,7 +12,7 @@ import ExportView from '@/views/ExportView.vue'
 import Management from '@/views/Management.vue'
 import History from '@/views/History.vue'
 import devices from '@/views/Devices.vue'
-import Alertes from '@/views/Alertes.vue'
+// import Alertes from '@/views/Alertes.vue'
 import Notifications from '@/views/Notifications.vue'
 import Energy from '@/views/Energy.vue'
 
@@ -61,12 +61,12 @@ const routes = [
         component: devices,
         meta: { requiresAuth: true },
       },
-      {
-        path: 'alerts',
-        name: 'Alertes',
-        component: Alertes,
-        meta: { requiresAuth: true },
-      },
+      // {
+      //   path: 'alerts',
+      //   name: 'Alertes',
+      //   component: Alertes,
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: 'notifications',
         name: 'Notifications',

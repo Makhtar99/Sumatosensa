@@ -53,7 +53,7 @@ onMounted(async () => {
       <!-- <SidebarItem :icon="History" label="Historique" to="/history" /> -->
       <SidebarItem :icon="Devices" label="Mes capteurs" to="/devices" />
       <!-- <SidebarItem :icon="Export" label="Export" to="/export" /> -->
-      <SidebarItem :icon="Alertes" label="Alertes" to="/alerts" />
+      <!-- <SidebarItem :icon="Alertes" label="Alertes" to="/alerts" /> -->
       <SidebarItem :icon="Notif" label="Notifications" to="/notifications" />
       <SidebarItem :icon="Config" label="Paramètres" to="/settings" />
       <SidebarItem :icon="Energie" label="Énergie" to="/energy" />
