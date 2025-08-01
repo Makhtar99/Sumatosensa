@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { isAuthenticated, logout } from '@/services/AuthService';
 import { apiService } from '@/services/api';
 
@@ -10,14 +10,19 @@ const date = ref('');
 const showDropdown = ref(false);
 const isAdmin = ref(false);
 const isMobile = ref(window.innerWidth < 768);
+const router = useRouter();
 
-onMounted(async () => {
-  date.value = getFormattedDateTime();
-  setInterval(() => {
-    date.value = getFormattedDateTime();
-  }, 1000);
-  isAdmin.value = await apiService.isAdmin();
-});
+// onMounted(async () => {
+//   date.value = getFormattedDateTime();
+//   setInterval(() => {
+//     date.value = getFormattedDateTime();
+//   }, 1000);
+//   isAdmin.value = await apiService.isAdmin();
+// });
+
+const goback = () => {
+  router.go(-1);
+};
 
 window.addEventListener('resize', () => {
   isMobile.value = window.innerWidth < 768;
@@ -25,7 +30,11 @@ window.addEventListener('resize', () => {
 </script>
 
 <template>
-  <header class="p-4 flex items-center justify-between bg-white shadow-md max-w-screen">
+  <header class="p-4 flex items-center justify-between max-w-screen">
+    <button v-if="!isMobile" @click="goback" class="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+        <img src="../assets/svg/arrow-left.svg" alt="Back" class="w-4 h-4" />
+        <span>Retour</span>
+      </button>
     <div class="text-sm text-gray-600">{{ date }}</div>
 
     <div v-if="!isMobile" class="flex items-center gap-4">

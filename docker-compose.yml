@@ -65,6 +65,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        CACHE_BUSTER: ${CACHE_BUSTER:-1}
     container_name: sumatosensa_frontend
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
@@ -79,6 +81,7 @@ services:
     networks:
       - sumatosensa_network
     restart: unless-stopped
+
 
 volumes:
   timescaledb_data:
