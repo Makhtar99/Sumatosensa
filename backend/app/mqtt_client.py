@@ -282,3 +282,12 @@ async def start_mqtt_client():
 
 async def stop_mqtt_client():
     await mqtt_client.disconnect()
+
+def request_refresh(self):
+    try:
+        topic = "wirepas/request/sensor-data"
+        message = json.dumps({"action": "refresh_all"})
+        self.client.publish(topic, message)
+        logger.info(f"Sent refresh request to MQTT topic {topic}")
+    except Exception as e:
+        logger.error(f"Failed to publish refresh request: {e}")
