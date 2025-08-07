@@ -18,7 +18,6 @@ async def get_all_sensors(
     active_only: bool = Query(True, description="Filtrer uniquement les capteurs actifs"),
     session: AsyncSession = Depends(get_db)
 ):
-    """Récupère la liste de tous les capteurs"""
     try:
         query = select(Sensor)
         if active_only:
@@ -27,10 +26,8 @@ async def get_all_sensors(
         result = await session.execute(query.order_by(Sensor.name))
         sensors = result.scalars().all()
         
-        # Enrichir avec les dernières mesures
         sensor_data = []
         for sensor in sensors:
-            # Récupérer la dernière mesure
             last_measurement_query = select(Measurement).where(
                 Measurement.sensor_id == sensor.id
             ).order_by(desc(Measurement.time)).limit(1)
@@ -69,7 +66,6 @@ async def get_sensor(
     sensor_id: int,
     session: AsyncSession = Depends(get_db)
 ):
-    """Récupère les détails d'un capteur spécifique"""
     try:
         query = select(Sensor).where(Sensor.id == sensor_id)
         result = await session.execute(query)
@@ -95,9 +91,7 @@ async def get_sensor_measurements(
     end_date: Optional[datetime] = Query(None, description="Date de fin (ISO format)"),
     session: AsyncSession = Depends(get_db)
 ):
-    """Récupère les mesures d'un capteur avec filtres temporels"""
     try:
-        # Vérifier que le capteur existe
         sensor_query = select(Sensor).where(Sensor.id == sensor_id)
         sensor_result = await session.execute(sensor_query)
         sensor = sensor_result.scalar_one_or_none()
@@ -105,10 +99,8 @@ async def get_sensor_measurements(
         if not sensor:
             raise HTTPException(status_code=404, detail="Capteur introuvable")
         
-        # Construire la requête de mesures
         query = select(Measurement).where(Measurement.sensor_id == sensor_id)
         
-        # Filtres temporels
         if hours:
             cutoff_time = datetime.utcnow() - timedelta(hours=hours)
             query = query.where(Measurement.time >= cutoff_time)
@@ -118,13 +110,11 @@ async def get_sensor_measurements(
             if end_date:
                 query = query.where(Measurement.time <= end_date)
         
-        # Ordonner par temps décroissant et limiter
         query = query.order_by(desc(Measurement.time)).limit(limit)
         
         result = await session.execute(query)
         measurements = result.scalars().all()
         
-        # Formater les données
         formatted_measurements = []
         for measurement in measurements:
             measurement_dict = {
@@ -160,9 +150,7 @@ async def get_latest_measurement(
     sensor_id: int,
     session: AsyncSession = Depends(get_db)
 ):
-    """Récupère la dernière mesure d'un capteur"""
     try:
-        # Vérifier que le capteur existe
         sensor_query = select(Sensor).where(Sensor.id == sensor_id)
         sensor_result = await session.execute(sensor_query)
         sensor = sensor_result.scalar_one_or_none()
@@ -170,7 +158,6 @@ async def get_latest_measurement(
         if not sensor:
             raise HTTPException(status_code=404, detail="Capteur introuvable")
         
-        # Récupérer la dernière mesure
         query = select(Measurement).where(
             Measurement.sensor_id == sensor_id
         ).order_by(desc(Measurement.time)).limit(1)
@@ -218,11 +205,9 @@ async def get_sensor_stats(
     hours: int = Query(24, ge=1, le=8760, description="Période pour les statistiques en heures"),
     session: AsyncSession = Depends(get_db)
 ):
-    """Calcule les statistiques d'un capteur sur une période donnée"""
     try:
         from sqlalchemy import func
         
-        # Vérifier que le capteur existe
         sensor_query = select(Sensor).where(Sensor.id == sensor_id)
         sensor_result = await session.execute(sensor_query)
         sensor = sensor_result.scalar_one_or_none()
@@ -230,7 +215,6 @@ async def get_sensor_stats(
         if not sensor:
             raise HTTPException(status_code=404, detail="Capteur introuvable")
         
-        # Calculer les statistiques
         cutoff_time = datetime.utcnow() - timedelta(hours=hours)
         
         stats_query = select(
