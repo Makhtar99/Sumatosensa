@@ -28,3 +28,10 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+package-lock.json
+package.json
+.env
+
+# Fichiers python de makhtar
+*.pyc

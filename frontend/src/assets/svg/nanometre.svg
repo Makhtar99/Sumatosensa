@@ -1,0 +1,26 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#2e1d0e" stroke-width="4" fill="#ea933c" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Cercle extérieur (corps du manomètre) -->
+    <circle cx="60" cy="60" r="40" fill="#ea933c" stroke="#2e1d0e"/>
+
+    <!-- Cadran intérieur -->
+    <circle cx="60" cy="60" r="30" fill="none" stroke="#2e1d0e" stroke-width="2"/>
+
+    <!-- Graduation principale -->
+    <line x1="60" y1="30" x2="60" y2="38" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="84" y1="36" x2="78" y2="42" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="90" y1="60" x2="82" y2="60" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="84" y1="84" x2="78" y2="78" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="60" y1="90" x2="60" y2="82" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="36" y1="84" x2="42" y2="78" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="30" y1="60" x2="38" y2="60" stroke="#2e1d0e" stroke-width="3"/>
+    <line x1="36" y1="36" x2="42" y2="42" stroke="#2e1d0e" stroke-width="3"/>
+
+    <!-- Aiguille de pression -->
+    <line x1="60" y1="60" x2="80" y2="45" stroke="#2e1d0e" stroke-width="4"/>
+
+    <!-- Petit cercle au centre -->
+    <circle cx="60" cy="60" r="4" fill="#2e1d0e" stroke="none"/>
+  </g>
+</svg>

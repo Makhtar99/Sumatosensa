@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sumatosensa}
       POSTGRES_USER: ${POSTGRES_USER:-sumatosensa_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sumatosensa_password}
-      TIMESCALEDB_TELEMETRY: off
+      TIMESCALEDB_TELEMETRY: "off"
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
@@ -66,6 +66,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        CACHE_BUSTER: ${CACHE_BUSTER:-1}
     container_name: sumatosensa_frontend
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
@@ -81,6 +83,7 @@ services:
     networks:
       - sumatosensa_network
     restart: unless-stopped
+
 
 volumes:
   timescaledb_data:

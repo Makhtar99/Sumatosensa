@@ -6,6 +6,8 @@ on:
     paths-ignore:
       - 'docs/**'
       - '*.md'
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 env:
@@ -41,14 +43,14 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}
         tags: |
           type=ref,event=branch
-          type=sha,prefix={{branch}}-
+          type=sha,prefix={{branch}}
           type=raw,value=staging
     
     - name: Build and push backend image
       uses: docker/build-push-action@v5
       with:
         context: ./backend
-        push: true
+        push: ${{ github.event_name == 'push' }}
         tags: ${{ steps.meta-backend.outputs.tags }}
         labels: ${{ steps.meta-backend.outputs.labels }}
         cache-from: type=gha
@@ -61,14 +63,14 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}
         tags: |
           type=ref,event=branch
-          type=sha,prefix={{branch}}-
+          type=sha,prefix={{branch}}
           type=raw,value=staging
     
     - name: Build and push frontend image
       uses: docker/build-push-action@v5
       with:
         context: ./frontend
-        push: true
+        push: ${{ github.event_name == 'push' }}
         tags: ${{ steps.meta-frontend.outputs.tags }}
         labels: ${{ steps.meta-frontend.outputs.labels }}
         cache-from: type=gha
@@ -78,6 +80,7 @@ jobs:
           VITE_WS_URL=wss://api-staging.sumatosensa.com/ws
     
     - name: Deploy to Render Staging
+      if: github.event_name == 'push'
       run: |
         echo "Déploiement automatique vers Render staging..."
         echo "Les services sont déployés automatiquement via le fichier render.yaml"

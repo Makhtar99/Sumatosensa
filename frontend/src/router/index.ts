@@ -1,70 +1,120 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import HomeExampleView from '@/views/HomeExampleView.vue'
-import LoginExampleView from '@/views/LoginExampleView.vue'
-import AdminExampleView from '@/views/AdminExampleView.vue'
+import { isAuthenticated } from '@/services/AuthService'
+
+import AppLayout from '../layout/AppLayout.vue'
+
+import LoginForm from '../views/LoginForm.vue'
+import RegisterForm from '../views/RegisterForm.vue'
+
+import Dashboard from '../views/ViewDashboard.vue'
+import Settings from '../views/ViewSettings.vue'
+import Management from '../views/ViewManagement.vue'
+import devices from '../views/ViewDevices.vue'
+import Notifications from '../views/ViewNotifications.vue'
+import Energy from '../views/ViewEnergy.vue'
+
+import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
+
+// Routes de l'application
+const routes = [
+  {
+    path: '/',
+    redirect: '/dashboard',
+    component: AppLayout,
+    children: [
+      {
+        path: '/',
+        name: 'Dashboard',
+        component: Dashboard,
+        meta: { requiresAuth: false },
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: Settings,
+        meta: { requiresAuth: true },
+      },
+      // {
+      //   path: 'export',
+      //   name: 'Export',
+      //   component: ExportView,
+      //   meta: { requiresAuth: true },
+      // },
+      {
+        path: 'management',
+        name: 'Management',
+        component: Management,
+        meta: { requiresAuth: true },
+      },
+      // {
+      //   path: 'history',
+      //   name: 'History',
+      //   component: History,
+      //   meta: { requiresAuth: true },
+      // },
+      {
+        path: 'devices',
+        name: 'Devices',
+        component: devices,
+        meta: { requiresAuth: true },
+      },
+      // {
+      //   path: 'alerts',
+      //   name: 'Alertes',
+      //   component: Alertes,
+      //   meta: { requiresAuth: true },
+      // },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: Notifications,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'energy',
+        name: 'Energy',
+        component: Energy,
+        meta: { requiresAuth: true },
+      }
+    ],
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginForm,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterForm,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminExampleView,
+    meta: { requiresAuth: true, isAdmin: true },
+  },
+
+
+]
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeExampleView,
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginExampleView,
-      meta: { requiresGuest: true },
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: AdminExampleView,
-      meta: { requiresAuth: true, requiresAdmin: true },
-    },
-  ],
+  routes,
 })
 
-// Navigation guards
-router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
-  
-  // Initialize auth if not done yet
-  if (!authStore.isAuthenticated && localStorage.getItem('access_token')) {
-    try {
-      await authStore.initializeAuth()
-    } catch (error) {
-      console.error('Auth initialization failed:', error)
-    }
+router.beforeEach((to, from, next) => {
+  console.log("Authentifié ?", isAuthenticated())
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  if (requiresAuth && !isAuthenticated()) {
+    next('/login')
+  } else {
+    next()
   }
-  
-  // Check if route requires authentication
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!authStore.isAuthenticated) {
-      next('/login')
-      return
-    }
-    
-    // Check if route requires admin
-    if (to.matched.some(record => record.meta.requiresAdmin)) {
-      if (!authStore.isAdmin) {
-        next('/')
-        return
-      }
-    }
-  }
-  
-  // Redirect authenticated users away from login
-  if (to.matched.some(record => record.meta.requiresGuest)) {
-    if (authStore.isAuthenticated) {
-      next('/')
-      return
-    }
-  }
-  
-  next()
 })
 
 export default router
