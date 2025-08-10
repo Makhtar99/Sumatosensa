@@ -43,7 +43,7 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_BACKEND }}
         tags: |
           type=ref,event=branch
-          type=sha,prefix={{branch}}-
+          type=sha,prefix={{branch}}
           type=raw,value=staging
     
     - name: Build and push backend image
@@ -63,7 +63,7 @@ jobs:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_FRONTEND }}
         tags: |
           type=ref,event=branch
-          type=sha,prefix={{branch}}-
+          type=sha,prefix={{branch}}
           type=raw,value=staging
     
     - name: Build and push frontend image
