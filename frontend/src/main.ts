@@ -14,8 +14,8 @@ import router from './router'
 const app = createApp(App)
 
 app.component('DataTable', DataTable)
-app.component('Column', Column)
-app.component('Button', Button)
+app.component('PrimevueColumn', Column)
+app.component('PrimevueButton', Button)
 
 app
     .use(createPinia())

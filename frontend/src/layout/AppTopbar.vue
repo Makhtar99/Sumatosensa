@@ -1,10 +1,10 @@
-<script setup>
-import { ref, onMounted } from 'vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { isAuthenticated, logout } from '@/services/AuthService';
-import { apiService } from '@/services/api';
+// import { apiService } from '@/services/api';
 
-import { getFormattedDateTime } from '../assets/functions/FormatedDate';
+// import { getFormattedDateTime } from '../assets/functions/FormatedDate';
 
 const date = ref('');
 const showDropdown = ref(false);
@@ -17,7 +17,7 @@ const router = useRouter();
 //   setInterval(() => {
 //     date.value = getFormattedDateTime();
 //   }, 1000);
-//   isAdmin.value = await apiService.isAdmin();
+//   isAdmin.value = await apiServicscriptmin();
 // });
 
 const goback = () => {

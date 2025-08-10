@@ -26,6 +26,7 @@ const loadWeather = async () => {
         timestamp.value = new Date().toLocaleString();
     } catch (err) {
         error.value = "Failed to fetch weather data.";
+        console.error(err);
     } finally {
         loading.value = false;
     }
@@ -44,9 +45,9 @@ const onCityChange = () => {
     <DataCard
         :title="'Météo à ' + selectedCity"
         :icon="getIcon()"
-        :value="temperature"
+        :value="temperature ?? 'N/A'"
         unit="°C"
-        :timestamp="timestamp"
+        :timestamp="timestamp ?? ''"
         color="var(--color-sumato-weather)"
     />
 

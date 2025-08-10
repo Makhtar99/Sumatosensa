@@ -1,8 +1,8 @@
-<script setup>
-import Temp from '../views/Datas/Temperature.vue'
-import Humidity from '../views/Datas/Humidity.vue'
-import Pressure from '../views/Datas/Pressure.vue'
-import Outside from '../views/Datas/Outside.vue'
+<script setup lang="ts">
+import Temp from './Datas/DataTemperature.vue'
+import Humidity from './Datas/DataHumidity.vue'
+import Pressure from './Datas/DataPressure.vue'
+import Outside from './Datas/DataOutside.vue'
 </script>
 
 <template>

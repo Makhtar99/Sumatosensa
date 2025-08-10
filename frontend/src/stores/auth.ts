@@ -58,21 +58,21 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function deleteUser(userId: number) {
-    isLoading.value = true
-    error.value = null
-    try {
-      await apiService.deleteUser(userId)
-      if (user.value?.id === userId) {
-        user.value = null // Déconnexion si l'utilisateur supprimé est l'utilisateur courant
-      }
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Erreur de suppression utilisateur'
-      throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
+  // async function deleteUser(userId: number) {
+  //   isLoading.value = true
+  //   error.value = null
+  //   try {
+  //     await apiService.deleteUser(userId)
+  //     if (user.value?.id === userId) {
+  //       user.value = null
+  //     }
+  //   } catch (err) {
+  //     error.value = err instanceof Error ? err.message : 'Erreur de suppression utilisateur'
+  //     throw err
+  //   } finally {
+  //     isLoading.value = false
+  //   }
+  // }
 
   async function initializeAuth() {
     const token = localStorage.getItem('access_token')
@@ -81,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
         await getCurrentUser()
       } catch (err) {
         console.error('Token invalide, déconnexion automatique')
+        console.error(err)
         apiService.removeToken()
       }
     }

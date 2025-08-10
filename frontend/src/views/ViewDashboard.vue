@@ -4,14 +4,14 @@ import { ref, onMounted } from 'vue'
 import { apiService } from '../services/api'
 
 
-import Temp from '../views/Datas/Temperature.vue'
-import Humidity from '../views/Datas/Humidity.vue'
-import Pressure from '../views/Datas/Pressure.vue'
-import Outside from '../views/Datas/Outside.vue'
-import ConnectedDevices from './Datas/ConnectedDevices.vue'
+import Temp from './Datas/DataTemperature.vue'
+import Humidity from './Datas/DataHumidity.vue'
+import Pressure from './Datas/DataPressure.vue'
+import Outside from './Datas/DataOutside.vue'
+import ConnectedDevices from './Datas/DataConnectedDevices.vue'
 
 const isConnected = ref(false)
-const username = ref(<String | null>(null))
+const username = ref(<string | null>(null))
 
 onMounted(async () => {
     const token = localStorage.getItem('access_token')

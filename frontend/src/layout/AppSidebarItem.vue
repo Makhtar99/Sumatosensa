@@ -1,9 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { ref, inject } from 'vue';
 defineProps({
   icon: String,
   label: String,
-  to: String
+  to: {
+    type: String,
+    default: '/'
+  }
 });
 
 const isSidebarCollapsed = inject('isSidebarCollapsed', ref(false));

@@ -38,12 +38,7 @@ const onSubmit = async () => {
   const result = registerSchema.safeParse(form)
 
   if (!result.success) {
-    result.error.errors.forEach(err => {
-      const field = err.path[0]
-      if (field in errors) {
-        errors[field as keyof typeof errors] = err.message
-      }
-    })
+   console.error('Validation error:', result.error)
     return
   }
 
@@ -58,8 +53,12 @@ const onSubmit = async () => {
     await authStore.login(credentials)
 
     router.push('/')
-  } catch (error: any) {
-    errors.general = error.message || 'Erreur lors de l’inscription.'
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      errors.general = error.message || 'Erreur lors de l’inscription.'
+    } else {
+      errors.general = 'Erreur lors de l’inscription.'
+    }
   }
 }
 

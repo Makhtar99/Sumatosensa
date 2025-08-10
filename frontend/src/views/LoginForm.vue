@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
@@ -31,10 +31,7 @@ const onSubmit = async () => {
   const result = loginSchema.safeParse(form)
 
   if (!result.success) {
-    result.error.errors.forEach((err) => {
-      const field = err.path[0]
-      errors[field] = err.message
-    })
+    console.error('Validation error:', result.error)
     return
   }
 

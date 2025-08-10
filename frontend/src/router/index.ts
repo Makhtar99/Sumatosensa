@@ -1,20 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { isAuthenticated } from '@/services/AuthService'
 
-import AppLayout from '@/layout/AppLayout.vue'
+import AppLayout from '../layout/AppLayout.vue'
 
-import LoginForm from '@/views/LoginForm.vue'
-import RegisterForm from '@/views/RegisterForm.vue'
+import LoginForm from '../views/LoginForm.vue'
+import RegisterForm from '../views/RegisterForm.vue'
 
-import Dashboard from '@/views/Dashboard.vue'
-import Settings from '@/views/Settings.vue'
-import ExportView from '@/views/ExportView.vue'
-import Management from '@/views/Management.vue'
-import History from '@/views/History.vue'
-import devices from '@/views/Devices.vue'
-// import Alertes from '@/views/Alertes.vue'
-import Notifications from '@/views/Notifications.vue'
-import Energy from '@/views/Energy.vue'
+import Dashboard from '../views/ViewDashboard.vue'
+import Settings from '../views/ViewSettings.vue'
+import Management from '../views/ViewManagement.vue'
+import devices from '../views/ViewDevices.vue'
+import Notifications from '../views/ViewNotifications.vue'
+import Energy from '../views/ViewEnergy.vue'
 
 import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
 

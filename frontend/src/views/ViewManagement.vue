@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterView } from 'vue-router';
 
-import ExportView from './ExportView.vue';
-import History from './History.vue';
+import ExportView from './ViewExport.vue';
+import History from './ViewHistory.vue';
 
 const selectedView = ref<'history' | 'export'>('history')
 </script>

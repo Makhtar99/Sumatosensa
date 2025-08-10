@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref, provide, computed } from 'vue'
-import Sidebar from '@/layout/Sidebar.vue'
-import Topbar from '@/layout/Topbar.vue'
+import Sidebar from './AppSidebar.vue'
+import Topbar from './AppTopbar.vue'
 
 import { useMediaQuery } from '@vueuse/core'
 
