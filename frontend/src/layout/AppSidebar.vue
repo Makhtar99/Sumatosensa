@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { apiService } from '@/services/api'
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useMediaQuery } from '@vueuse/core'
 import SidebarItem from './AppSidebarItem.vue'
@@ -20,12 +19,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['toggleSidebar'])
 
-const isAdmin = ref(false)
 const isTelephone = useMediaQuery('(max-width: 768px)')
-
-onMounted(async () => {
-  isAdmin.value = await apiService.isAdmin()
-})
 
 const sidebarWidthClass = computed(() => {
   if (isTelephone.value) return 'w-[80px]'

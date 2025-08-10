@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
+    "@types/file-saver": "^2.0.7",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.15.32",
     "@vitejs/plugin-vue": "^6.0.0",

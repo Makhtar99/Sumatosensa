@@ -11,13 +11,13 @@ const filteredNotifList = computed(() => {
   return notifList.value.filter(n => n.importance === importanceFilter.value)
 })
 
-const importanceStyle = {
+const importanceStyle: Record<string, string> = {
   info: 'border-[var(--color-sumato-info)] bg-[var(--color-sumato-light)] text-[var(--color-sumato-info)]',
   warning: 'border-[var(--color-sumato-warning)] bg-yellow-50 text-[var(--color-sumato-warning)]',
   critical: 'border-[var(--color-sumato-danger)] bg-red-50 text-[var(--color-sumato-danger)]'
 }
 
-const typeStyle = {
+const typeStyle: Record<string, string> = {
   Système: 'bg-[var(--color-sumato-neutral)] text-[var(--color-text)]',
   Température: 'bg-[var(--color-sumato-card-temp)] text-[var(--color-sumato-danger)]',
   Humidité: 'bg-[var(--color-sumato-card-humidity)] text-blue-700',
