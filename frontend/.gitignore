@@ -33,5 +33,5 @@ package-lock.json
 package.json
 .env
 
-# putains de fichiers python de makhtar
+# Fichiers python de makhtar
 *.pyc

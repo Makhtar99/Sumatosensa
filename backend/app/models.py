@@ -38,9 +38,9 @@ class Measurement(Base):
     
     time = Column(DateTime(timezone=True), nullable=False, primary_key=True)
     sensor_id = Column(Integer, ForeignKey("sensors.id"), nullable=False, primary_key=True)
-    temperature = Column(Float, nullable=False)
-    humidity = Column(Float, nullable=False)
-    pressure = Column(Float, nullable=False)
+    temperature = Column(Float, nullable=True)
+    humidity = Column(Float, nullable=True)
+    pressure = Column(Float, nullable=True)
     acceleration_x = Column(Float)
     acceleration_y = Column(Float)
     acceleration_z = Column(Float)

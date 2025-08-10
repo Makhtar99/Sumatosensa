@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:22 AS builder
 
 WORKDIR /app
 
@@ -15,8 +15,13 @@ RUN echo "Reinstalling node modules - $CACHE_BUSTER" && npm install
 
 # Ensuite le reste du code
 COPY . .
+RUN npm run build
 
-EXPOSE 5173
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf.template
+
+EXPOSE $PORT
 
 CMD ["npm", "run", "dev"]
 

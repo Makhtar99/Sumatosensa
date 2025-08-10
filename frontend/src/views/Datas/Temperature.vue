@@ -6,7 +6,7 @@ import DataCard from '../Components/DataCard.vue';
 import HighTemp from '../../assets/svg/high_temp.png'
 import NormalTemp from '../../assets/svg/normal_temp.png'
 import LowTemp from '../../assets/svg/low_temp.png'
-import { fa } from 'zod/locales';
+// import { fa } from 'zod/locales';
 
 const temperature = ref(18);
 const timestamp = ref<String | null>("12/10/2023 14:30");

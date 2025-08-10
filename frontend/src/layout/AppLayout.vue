@@ -11,7 +11,7 @@ const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const contentMargin = computed(() => {
   if (isTelephone.value) return 'ml-[80px]'
-  return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-66'
+  return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-[px]'
 })
 
 </script>
