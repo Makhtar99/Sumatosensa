@@ -60,7 +60,7 @@ class MQTTClient:
             topic = msg.topic
             payload = msg.payload.decode('utf-8')
             
-            asyncio.create_task(self.process_message(topic, payload))
+            asyncio.run(self.process_message(topic, payload))
             
         except Exception as e:
             logger.error(f"Error processing MQTT message: {e}")

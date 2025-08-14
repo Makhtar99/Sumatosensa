@@ -9,7 +9,7 @@ from sqlalchemy import select, desc
 from app.database import get_async_session
 from app.models import Sensor, Measurement
 from app.mqtt_client import mqtt_client
-from app.schemas.sensor import SensorResponse, SensorRenameRequest
+from app.schemas import SensorResponse, SensorRenameRequest
 
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/sensors", tags=["sensors"])
@@ -18,7 +18,7 @@ router = APIRouter(prefix="/sensors", tags=["sensors"])
 async def get_latest_measurements(session: AsyncSession = Depends(get_async_session)):
     logger.info("Route /sensors/infos called")
 
-    mqtt_client.request_refresh() 
+    await mqtt_client.request_refresh()
     await asyncio.sleep(2)
 
     sensors = await session.execute(select(Sensor))
@@ -71,3 +71,11 @@ async def delete_sensor(sensor_id: int, session: AsyncSession = Depends(get_asyn
     await session.delete(sensor)
     await session.commit()
     return Response(status_code=204)
+
+@router.get("/debug")
+async def debug_measurements(session: AsyncSession = Depends(get_async_session)):
+    results = await session.execute(select(Measurement).order_by(desc(Measurement.time)).limit(10))
+    measurements = results.scalars().all()
+    for m in measurements:
+        logger.info(f"{m.time} - Sensor {m.sensor_id}: temp={m.temperature}, hum={m.humidity}, pres={m.pressure}")
+    return {"count": len(measurements)}

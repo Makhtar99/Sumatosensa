@@ -48,3 +48,14 @@ class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     user: UserResponse
+    
+class SensorResponse(BaseModel):
+    sensor_id: int
+    mac_address: str
+    name: Optional[str] = None
+    temperature: Optional[float] = None
+    humidity: Optional[float] = None
+    pressure: Optional[float] = None
+    
+class SensorRenameRequest(BaseModel):
+    name: str

@@ -10,7 +10,7 @@ from app.database import get_db
 from app.database import engine
 from app.models import Base
 from app.mqtt_client import start_mqtt_client, stop_mqtt_client
-from app.routes import auth, admin, sensors
+from app.routes import admin, sensors, auth
 from app.config import settings
 from app.auth import register_user
 
@@ -47,6 +47,7 @@ async def health_check():
 app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(sensors.router)
+
 
 @app.post("/", response_model=dict)
 async def create_user(username: str, email: str, password: str, db: AsyncSession = Depends(get_db)):
