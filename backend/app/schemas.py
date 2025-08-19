@@ -59,3 +59,8 @@ class SensorResponse(BaseModel):
     
 class SensorRenameRequest(BaseModel):
     name: str
+    
+class SensorCreateRequest(BaseModel):
+    mac_address: str
+    firmware_version: Optional[str] = None
+    name: Optional[str] = None
