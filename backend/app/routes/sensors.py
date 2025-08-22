@@ -63,7 +63,7 @@ async def get_latest_measurements(session: AsyncSession = Depends(get_async_sess
         stmt = (
             select(Measurement)
             .where(Measurement.sensor_id == sensor.id)
-            .order_by(desc(Measurement.timestamp))   
+            .order_by(desc(Measurement.time))   
             .limit(1)
         )
         measurement = await session.execute(stmt)
@@ -75,7 +75,9 @@ async def get_latest_measurements(session: AsyncSession = Depends(get_async_sess
             "humidity": measurement.humidity if measurement else None,
             "pressure": measurement.pressure if measurement else None,
         })
-
+        last_result = results[-1]  # le dictionnaire que tu viens d'ajouter
+    logger.info(f"Storing measurement: temp={last_result['temperature']}, hum={last_result['humidity']}, pres={last_result['pressure']} for sensor {last_result['sensor_id']}")
+    
     return results
 
 
