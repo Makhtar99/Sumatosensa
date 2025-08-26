@@ -6,12 +6,20 @@ const selectedRoom = ref('Grenier')
 const sensorList = ref(sensors)
 
 const currentSensor = computed(() =>
-  sensorList.value.find(sensor => sensor.piece === selectedRoom.value)
-);
+  sensorList.value.find(sensor => sensor.piece === selectedRoom.value) ?? {
+    piece: '',
+    temperature: 0,
+    humidite: 0,
+    pression: 0,
+    batterie: 0,
+    statut: 'hors ligne',
+    last_update: ''
+  }
+)
 
-const getBatteryColor = () => {
-  if (currentSensor.value.batterie > 50) return 'text-green-600'
-  if (currentSensor.value.batterie > 20) return 'text-yellow-600'
+const getBatteryColor = (batterie: number) => {
+  if (batterie > 50) return 'text-green-600'
+  if (batterie > 20) return 'text-yellow-600'
   return 'text-red-600'
 }
 </script>
