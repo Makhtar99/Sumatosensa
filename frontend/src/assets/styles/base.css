@@ -59,7 +59,6 @@ body {
 
   --color-sumato-light: #F9FAFB;
 
-  /* Accents / Marque (inchangés ou ajustés au besoin) */
   --color-primary: #3B82F6;
   --color-sumato-comfort: #62C370;
   --color-sumato-alert: #F25C54;
@@ -68,22 +67,22 @@ body {
   --color-sumato-orange-hover: #F07A4D;
 
 
---color-sumato-ivory: #FAF8F4;
+  --color-sumato-ivory: #FAF8F4;
 
---color-sumato-primary-hover: #2563EB;
---color-sumato-success: #10B981;
---color-sumato-danger: #EF4444;
---color-sumato-warning: #F59E0B;
---color-sumato-info: #0EA5E9;
+  --color-sumato-primary-hover: #2563EB;
+  --color-sumato-success: #10B981;
+  --color-sumato-danger: #EF4444;
+  --color-sumato-warning: #F59E0B;
+  --color-sumato-info: #0EA5E9;
 
---color-sumato-card-temp: #FEE2E2;
---color-sumato-card-humidity: #DBEAFE;
---color-sumato-card-pressure: #FCD490;
---color-sumato-card-exterior: #DCFCE7;
---color-sumato-card-default: #F3F4F6;
---color-sumato-connected: #F5DEB4;
+  --color-sumato-card-temp: #FEE2E2;
+  --color-sumato-card-humidity: #DBEAFE;
+  --color-sumato-card-pressure: #FCD490;
+  --color-sumato-card-exterior: #DCFCE7;
+  --color-sumato-card-default: #F3F4F6;
+  --color-sumato-connected: #F5DEB4;
 
---notif-info-bg:    #E0F2FE; /* sky-100 */
+  --notif-info-bg:    #E0F2FE; /* sky-100 */
   --notif-info-border:#38BDF8; /* sky-400 */
   --notif-info-text:  #075985; /* sky-800 */
 

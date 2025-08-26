@@ -24,7 +24,7 @@ const isSidebarCollapsed = inject('isSidebarCollapsed', ref(false));
       <img
         :src="icon"
         :alt="label"
-        class="w-5 h-5"
+        class="w-5 h-5 sidebarItem"
       />
        <transition name="fade">
         <span

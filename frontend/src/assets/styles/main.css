@@ -209,3 +209,6 @@ button {
 button:hover {
   background: var(--color-sumato-ivory);
 }
+
+[data-theme="dark"] .sidebarItem { filter: invert(1); }
+[data-theme="light"] .sidebarItem { filter: invert(0); }
