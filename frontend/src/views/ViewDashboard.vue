@@ -1,8 +1,6 @@
 <script setup lang="ts">
-
 import { ref, onMounted } from 'vue'
 import { apiService } from '../services/api'
-
 
 import Temp from './Datas/DataTemperature.vue'
 import Humidity from './Datas/DataHumidity.vue'
@@ -11,21 +9,22 @@ import Outside from './Datas/DataOutside.vue'
 import ConnectedDevices from './Datas/DataConnectedDevices.vue'
 
 const isConnected = ref(false)
-const username = ref(<string | null>(null))
+const username = ref(<string | null>null)
 
 onMounted(async () => {
-    const token = localStorage.getItem('access_token')
-    isConnected.value = !!token
-  if (token) {
+  const token = localStorage.getItem('access_token')
+  isConnected.value = !!token
+  if (!token) {
+    console.log('Aucune session utilisateur trouvée.')
+    return
+  } else {
     try {
       const user = await apiService.getCurrentUser()
       username.value = user.username
-      console.log("Utilisateur connecté :", user)
+      console.log('Utilisateur connecté :', user)
     } catch (error) {
       console.error("Impossible de récupérer l'utilisateur :", error)
     }
-  } else {
-    console.log("Aucune session utilisateur trouvée.")
   }
 })
 </script>

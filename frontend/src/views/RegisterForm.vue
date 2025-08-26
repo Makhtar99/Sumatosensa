@@ -116,7 +116,7 @@ const onSubmit = async () => {
             <p v-if="errors.confirmPassword" class="text-red-500 text-sm mt-1">{{ errors.confirmPassword }}</p>
           </div>
 
-          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
+          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-sumato-text); background: var(--color-coral);">
             Créer un compte
           </button>
 

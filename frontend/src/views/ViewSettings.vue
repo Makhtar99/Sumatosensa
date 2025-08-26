@@ -26,9 +26,9 @@ const alertFrequency = ref('Une fois par heure')
       <div class="md:col-span-2 space-y-6">
 
         <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
-          <h3 class="text-lg font-semibold mb-4 text-[var(--color-text)]">👤 Profil utilisateur</h3>
-          <p class="mb-2 text-[var(--color-text)]"><span class="font-medium">Nom :</span> {{ username }}</p>
-          <p class="mb-4 text-[var(--color-text)]"><span class="font-medium">Email :</span> {{ email }}</p>
+          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">👤 Profil utilisateur</h3>
+          <p class="mb-2 text-[var(--color-sumato-text)]"><span class="font-medium">Nom :</span> {{ username }}</p>
+          <p class="mb-4 text-[var(--color-sumato-text)]"><span class="font-medium">Email :</span> {{ email }}</p>
           <div class="flex flex-col sm:flex-row gap-4 mt-4">
             <button class="px-4 py-2 bg-[var(--color-sumato-primary)] hover:bg-[var(--color-sumato-primary-hover)] text-white rounded-lg">
               Modifier le profil
@@ -40,7 +40,7 @@ const alertFrequency = ref('Une fois par heure')
         </section>
 
         <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
-          <h3 class="text-lg font-semibold mb-4 text-[var(--color-text)]">🌐 Préférences générales</h3>
+          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">🌐 Préférences générales</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block font-medium mb-1">Thème :</label>
@@ -60,7 +60,7 @@ const alertFrequency = ref('Une fois par heure')
         </section>
 
         <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
-          <h3 class="text-lg font-semibold mb-4 text-[var(--color-text)]">📊 Affichage & données</h3>
+          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">📊 Affichage & données</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label class="block font-medium mb-1">Unité de température :</label>
@@ -94,7 +94,7 @@ const alertFrequency = ref('Une fois par heure')
         </section>
 
         <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
-          <h3 class="text-lg font-semibold mb-4 text-[var(--color-text)]">🔔 Notifications & alertes</h3>
+          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">🔔 Notifications & alertes</h3>
           <div class="space-y-4">
             <div>
               <label class="block font-medium mb-1">Recevoir des alertes par email :</label>

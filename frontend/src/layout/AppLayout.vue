@@ -11,7 +11,7 @@ const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const contentMargin = computed(() => {
   if (isTelephone.value) return 'ml-[80px]'
-  return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-[px]'
+  return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-[256px]'
 })
 
 </script>
@@ -24,7 +24,7 @@ const contentMargin = computed(() => {
     />
 
     <div
-      class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
+      class="flex-1 flex flex-col bg-[var(--color-surface)] text-[var(--color-sumato-text)] transition-all duration-300 ease-in-out"
       :class="contentMargin"
     >
       <Topbar />

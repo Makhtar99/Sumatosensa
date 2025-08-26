@@ -1,5 +1,9 @@
 import './assets/styles/main.css'
 
+const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+const theme = savedTheme ?? 'light'
+document.documentElement.setAttribute('data-theme', theme)
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 

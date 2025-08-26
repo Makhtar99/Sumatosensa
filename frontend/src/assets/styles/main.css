@@ -131,7 +131,7 @@
 }
 
 .title {
-  color: var(--color-text);
+  color: var(--color-sumato-text);
   margin-bottom: 1rem;
   margin: 0;
   padding: 0;
@@ -179,6 +179,10 @@ h6 {
   font-weight: normal;
 }
 
+h1, h2, h3, h4, h5, h6, span {
+  color: var(--color-sumato-text);
+}
+
 /* FORM ELEMENTS */
 select {
   padding: 0.5rem;
@@ -203,5 +207,8 @@ button {
 }
 
 button:hover {
-  filter: brightness(1.1);
+  background: var(--color-sumato-ivory);
 }
+
+[data-theme="dark"] .sidebarItem { filter: invert(1); }
+[data-theme="light"] .sidebarItem { filter: invert(0); }

@@ -82,7 +82,7 @@ const credentials = ref({
 
           <p v-if="errors.server" class="text-red-500 text-sm text-center">{{ errors.server }}</p>
 
-          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
+          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-sumato-text); background: var(--color-coral);">
             Se connecter
           </button>
 
