@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import DataCard from '../Components/DataCard.vue';
-import { fetchSensorData } from '../../services/sensorService';
+// import { fetchSensorData } from '../../services/sensorService';
 
 import Nano from '../../assets/svg/nanometre.svg';
 
 const pressure = ref<number | null>(1000);
 const timestamp = ref<string | null>("12/10/2023 14:30");
 const error = ref<string | null>(null);
-const loading = ref<boolean>(true);
+// const loading = ref<boolean>(true);
 
 const getIcon = () => {
     return Nano;
