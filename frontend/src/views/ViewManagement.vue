@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 import ExportView from './ViewExport.vue';
-import History from './ViewHistory.vue';
+import HistoryView from './ViewHistory.vue';
 
 const selectedView = ref<'history' | 'export'>('history')
 </script>
@@ -18,7 +18,7 @@ const selectedView = ref<'history' | 'export'>('history')
             'px-4 py-2 rounded-lg font-medium transition-all',
             selectedView === 'history'
                 ? 'bg-[var(--color-primary)] text-white'
-                : 'bg-[var(--color-sumato-border)] text-[var(--color-text)] hover:bg-[var(--color-sumato-light)]'
+                : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
             ]"
         >
             Historique
@@ -29,14 +29,14 @@ const selectedView = ref<'history' | 'export'>('history')
             'px-4 py-2 rounded-lg font-medium transition-all',
             selectedView === 'export'
                 ? 'bg-[var(--color-primary)] text-white'
-                : 'bg-[var(--color-sumato-border)] text-[var(--color-text)] hover:bg-[var(--color-sumato-light)]'
+                : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
             ]"
         >
             Exporter
         </button>
     </div>
 
-        <History v-if="selectedView === 'history'" />
+        <HistoryView v-if="selectedView === 'history'" />
         <ExportView v-else/>
     </div>
 </template>

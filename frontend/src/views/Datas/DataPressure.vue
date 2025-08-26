@@ -14,18 +14,18 @@ const getIcon = () => {
     return Nano;
 }
 
-onMounted(async () => {
-    try {
-        const data = await fetchSensorData();
-        pressure.value = data.pressure;
-        timestamp.value = data.timestamp;
-    } catch (err) {
-        error.value = "Erreur lors de la récupération de la pression.";
-        console.error(err);
-    } finally {
-        loading.value = false;
-    }
-});
+// onMounted(async () => {
+//     try {
+//         const data = await fetchSensorData();
+//         pressure.value = data.pressure;
+//         timestamp.value = data.timestamp;
+//     } catch (err) {
+//         error.value = "Erreur lors de la récupération de la pression.";
+//         console.error(err);
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <template>
@@ -36,7 +36,7 @@ onMounted(async () => {
         :value="pressure ?? 'N/A'"
         unit="hPa"
         :timestamp="timestamp ?? ''"
-        color="var(--color-sumato-pressure)"
+        color="var(--color-sumato-card-pressure)"
     />
     <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
         {{ error }}

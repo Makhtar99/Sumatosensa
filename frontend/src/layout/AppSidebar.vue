@@ -23,17 +23,24 @@ const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const sidebarWidthClass = computed(() => {
   if (isTelephone.value) return 'w-[80px]'
-  return props.isSidebarCollapsed ? 'md:w-[80px]' : 'md:w-64'
+  return props.isSidebarCollapsed ? 'md:w-[80px]' : 'md:w-[256px]'
 })
 </script>
 
 <template>
   <aside
-    class="fixed top-0 left-0 z-50 h-screen bg-white shadow-lg transition-all duration-300 ease-in-out overflow-y-auto"
+    class="fixed top-0 left-0 z-50 h-screen bg-[var(--color-surface)] text-[var(--color-sumato-text)] shadow-lg transition-all duration-300 ease-in-out overflow-y-auto"
     :class="sidebarWidthClass"
   >
 
-    <div class="py-6 px-4 flex flex-col items-center space-y-1">
+  <button
+      @click="emit('toggleSidebar')"
+      class="absolute top-4 right-2 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-sumato-text)] items-center justify-center hover:bg-sumato-primary-hover transition duration-200 hidden md:flex"
+    >
+      <img :src="props.isSidebarCollapsed ? ArrowRight : ArrowLeft" alt="Toggle" class="w-4 h-4" />
+    </button>
+
+    <div class="pt-10 pb-6 px-4 mt-6 flex flex-col items-center space-y-1">
       <RouterLink to="/" class="flex items-center space-x-2">
         <img
           src="../assets/img/Logo.png"
@@ -48,13 +55,6 @@ const sidebarWidthClass = computed(() => {
         SumãtoSensã
       </span>
     </div>
-
-    <button
-      @click="emit('toggleSidebar')"
-      class="absolute top-4 right-2 w-8 h-8 rounded-full bg-sumato-primary text-white items-center justify-center hover:bg-sumato-primary-hover transition duration-200 hidden md:flex"
-    >
-      <img :src="props.isSidebarCollapsed ? ArrowRight : ArrowLeft" alt="Toggle" class="w-4 h-4" />
-    </button>
 
     <nav class="flex-1 w-full px-4 space-y-2">
       <SidebarItem :icon="Home" label="Ma Maison" to="/" />

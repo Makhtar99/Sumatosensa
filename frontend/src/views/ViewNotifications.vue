@@ -12,13 +12,13 @@ const filteredNotifList = computed(() => {
 })
 
 const importanceStyle: Record<string, string> = {
-  info: 'border-[var(--color-sumato-info)] bg-[var(--color-sumato-light)] text-[var(--color-sumato-info)]',
-  warning: 'border-[var(--color-sumato-warning)] bg-yellow-50 text-[var(--color-sumato-warning)]',
-  critical: 'border-[var(--color-sumato-danger)] bg-red-50 text-[var(--color-sumato-danger)]'
+   info:     'border-[var(--notif-info-border)] bg-[var(--notif-info-bg)] text-[var(--notif-info-text)]',
+  warning:  'border-[var(--notif-warning-border)] bg-[var(--notif-warning-bg)] text-[var(--notif-warning-text)]',
+  critical: 'border-[var(--notif-critical-border)] bg-[var(--notif-critical-bg)] text-[var(--notif-critical-text)]',
 }
 
 const typeStyle: Record<string, string> = {
-  Système: 'bg-[var(--color-sumato-neutral)] text-[var(--color-text)]',
+  Système: 'bg-[var(--color-sumato-neutral)] text-[var(--color-sumato-text)]',
   Température: 'bg-[var(--color-sumato-card-temp)] text-[var(--color-sumato-danger)]',
   Humidité: 'bg-[var(--color-sumato-card-humidity)] text-blue-700',
   Pression: 'bg-[var(--color-sumato-card-pressure)] text-yellow-700',
@@ -32,11 +32,11 @@ const typeStyle: Record<string, string> = {
     <h1 class="title mb-6">🔔 Notifications & Alertes</h1>
 
     <div class="mb-6 max-w-sm">
-      <label for="importanceFilter" class="block mb-2 text-sm font-medium text-[var(--color-text)]">Filtrer par importance :</label>
+      <label for="importanceFilter" class="block mb-2 text-sm font-medium text-[var(--color-sumato-text)]">Filtrer par importance :</label>
       <select
         id="importanceFilter"
         v-model="importanceFilter"
-        class="block w-full p-2 border border-[var(--color-sumato-border)] rounded-md bg-white text-[var(--color-text)]"
+        class="block w-full p-2 border border-[var(--color-sumato-border)] rounded-md bg-white text-[var(--color-sumato-text)]"
       >
         <option value="all">Toutes</option>
         <option value="critical">Critique</option>
@@ -53,7 +53,7 @@ const typeStyle: Record<string, string> = {
         :class="importanceStyle[notif.importance] || importanceStyle.info"
       >
         <div class="flex-1">
-          <p class="font-semibold text-base md:text-lg leading-snug">
+          <p class="font-semibold text-base md:text-lg text-[var(--color-sumato-text)]">
             {{ notif.alerte_message }}
           </p>
           <span class="text-sm opacity-70 mt-1 block">{{ notif.date }}</span>

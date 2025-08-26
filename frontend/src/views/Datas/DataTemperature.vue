@@ -18,20 +18,20 @@ const getIcon = () => {
     return LowTemp;
 }
 
-onMounted(async () => {
-    try {
-        loading.value = true;
-        const data = await fetchSensorData();
-        temperature.value = data.temperature;
-        timestamp.value = data.timestamp;
-    } catch (err) {
-        loading.value = false;
-        console.error(err);
-        error.value = "Erreur lors de la récupération de la température.";
-    } finally {
-        loading.value = false;
-    }
-});
+// onMounted(async () => {
+//     try {
+//         loading.value = true;
+//         const data = await fetchSensorData();
+//         temperature.value = data.temperature;
+//         timestamp.value = data.timestamp;
+//     } catch (err) {
+//         loading.value = false;
+//         console.error(err);
+//         error.value = "Erreur lors de la récupération de la température.";
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <template>
@@ -42,7 +42,7 @@ onMounted(async () => {
         :value="temperature ?? 'N/A'"
         unit="°C"
         :timestamp="timestamp ?? ''"
-        color="var(--color-sumato-comfort)"
+        color="var(--color-sumato-card-temp)"
     />
     <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
         {{ error }}

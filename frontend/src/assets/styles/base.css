@@ -8,7 +8,7 @@
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
+  color: var(--color-sumato-text);
   background: var(--color-background);
   transition:
     color 0.5s,
@@ -35,49 +35,139 @@ body {
 
 :root {
 /* old */
-  --color-background: #FFF2D6; /* background */
-  --color-sumato-ivoiry: #FAF8F4; /* ivoire */
-  --color-sumato-coral: #FF6B5E; /* corail */
-  --color-sumato-anthracite: #2E2E2E; /* writing */
-  --color-sumato-comfort: #62C370; /* green */
-  --color-sumato-alert: #F25C54; /* red */
-  --color-sumato-neutral: #ACD0CD; /* blue */
-  --color-sumato-light-orange: #F9E0BD; /* avatar */
-  --color-sumato-background: #FFF2D6; /* background */
-  --color-sumato-orange: #E25B2A; /* orange */
-  --color-sumato-orange-hover: #F07A4D; /* orange hover */
-  --color-sumato-pressure: #FCD490; /* pressure */
-  --color-sumato-connected-devices: #F5DEB4; /* connected devices */
+  /* --color-background: #FFF2D6; background */
+  /* --color-sumato-ivoiry: #FAF8F4; ivoire */
+  /* --color-sumato-coral: #FF6B5E; corail */
+  /* --color-sumato-anthracite: #2E2E2E; writing */
+  /* --color-sumato-comfort: #62C370; green */
+  /* --color-sumato-alert: #F25C54; red */
+  /* --color-sumato-neutral: #ACD0CD; blue */
+  /* --color-sumato-light-orange: #F9E0BD; avatar */
+  /* --color-sumato-background: #FFF2D6; background */
+  /* --color-sumato-orange: #E25B2A; orange */
+  /* --color-sumato-orange-hover: #F07A4D; orange hover */
+  /* --color-sumato-pressure: #FCD490; pressure */
+  /* --color-sumato-connected-devices: #F5DEB4; connected devices */
 
 /* new */
+
   --color-background: #F9FAFB;
-  --color-primary: #3B82F6;
   --color-surface: #FFFFFF;
-  --color-text: #1F2937;
-  
-  --color-sumato-border: #E5E7EB;
-  --color-sumato-text: #1F2937;
+
+  --color-sumato-text: #1F2937;       /* texte */
+  --color-sumato-border: #E5E7EB;      /* bordures */
+
   --color-sumato-light: #F9FAFB;
-  --color-sumato-dark: #1F2937;
 
-  --color-sumato-primary-hover: #2563EB;
-  --color-sumato-success: #10B981;
-  --color-sumato-danger: #EF4444;
-  --color-sumato-warning: #F59E0B;
-  --color-sumato-info: #0EA5E9;
-
-  --color-sumato-ivory: #FAF8F4;
+  /* Accents / Marque (inchangés ou ajustés au besoin) */
+  --color-primary: #3B82F6;
   --color-sumato-comfort: #62C370;
   --color-sumato-alert: #F25C54;
   --color-sumato-neutral: #ACD0CD;
   --color-sumato-orange: #E25B2A;
   --color-sumato-orange-hover: #F07A4D;
 
-  --color-sumato-card-temp: #FEE2E2;
-  --color-sumato-card-humidity: #DBEAFE;
-  --color-sumato-card-pressure: #FEF9C3;
-  --color-sumato-card-exterior: #DCFCE7;
-  --color-sumato-card-default: #F3F4F6;
-  --color-sumato-connected: #F5DEB4;
 
+--color-sumato-ivory: #FAF8F4;
+
+--color-sumato-primary-hover: #2563EB;
+--color-sumato-success: #10B981;
+--color-sumato-danger: #EF4444;
+--color-sumato-warning: #F59E0B;
+--color-sumato-info: #0EA5E9;
+
+--color-sumato-card-temp: #FEE2E2;
+--color-sumato-card-humidity: #DBEAFE;
+--color-sumato-card-pressure: #FCD490;
+--color-sumato-card-exterior: #DCFCE7;
+--color-sumato-card-default: #F3F4F6;
+--color-sumato-connected: #F5DEB4;
+
+--notif-info-bg:    #E0F2FE; /* sky-100 */
+  --notif-info-border:#38BDF8; /* sky-400 */
+  --notif-info-text:  #075985; /* sky-800 */
+
+  --notif-warning-bg:    #FEF3C7; /* amber-100 */
+  --notif-warning-border:#F59E0B; /* amber-500 */
+  --notif-warning-text:  #92400E; /* amber-800 */
+
+  --notif-critical-bg:    #FEE2E2; /* red-100 */
+  --notif-critical-border:#EF4444; /* red-500 */
+  --notif-critical-text:  #7F1D1D; /* red-900 */
+
+  --tag-system-bg:       #E5E7EB; /* gray-200 */
+  --tag-system-text:     #1F2937; /* gray-800 */
+
+  --tag-temperature-bg:  #FEE2E2; /* red-100 */
+  --tag-temperature-text:#B91C1C; /* red-700 */
+
+  --tag-humidity-bg:     #DBEAFE; /* blue-100 */
+  --tag-humidity-text:   #1D4ED8; /* blue-700 */
+
+  --tag-pressure-bg:     #FEF9C3; /* yellow-100 */
+  --tag-pressure-text:   #B45309; /* amber-700 */
+
+  --tag-connection-bg:   #F5DEB4; /* existant */
+  --tag-connection-text: #9A3412; /* orange-800 */
+
+  --tag-general-bg:      #E5E7EB; /* gray-200 */
+  --tag-general-text:    #374151; /* gray-700 */
+
+}
+
+:root[data-theme="dark"] {
+  --color-background: #121212;
+  --color-surface: #1E1E1E;
+
+  --color-sumato-text: #fff;
+  --color-sumato-border: #fff;
+
+  --color-sumato-dark: #1F2937;
+
+  --color-sumato-ivory: #2A2925;
+
+  --color-primary: #3B82F6;
+  --color-sumato-comfort: #5BD48B;
+  --color-sumato-alert: #FF6B66;
+  --color-sumato-neutral: #88C3C0;
+  --color-sumato-orange: #FF784E;
+  --color-sumato-orange-hover: #FF916C;
+
+  --color-sumato-connected: #3B2E21;
+
+   --color-sumato-primary-hover: #3B82F6;
+  --color-sumato-success: #34D399;
+  --color-sumato-danger: #F87171;
+  --color-sumato-warning: #FBBF24;
+  --color-sumato-info: #38BDF8;
+
+  --notif-info-bg:    #19698a;  /* bleu nuit doux */
+  --notif-info-border:#38BDF8;  /* sky-400 */
+  --notif-info-text:  #7DD3FC;  /* sky-300 */
+
+  --notif-warning-bg:    #ab8239; /* ambre très sombre */
+  --notif-warning-border:#FBBF24; /* amber-400 */
+  --notif-warning-text:  #FCD34D; /* amber-300 */
+
+  --notif-critical-bg:    #7c1717; /* rouge sombre */
+  --notif-critical-border:#F87171; /* red-400 */
+  --notif-critical-text:  #FCA5A5; /* red-300 */
+
+   --tag-system-bg:       #2A2A2A;
+  --tag-system-text:     #E5E7EB;
+
+  --tag-temperature-bg:  #3B0B0B;
+  --tag-temperature-text:#FCA5A5; /* red-300 */
+
+  --tag-humidity-bg:     #0B2447; /* bleu nuit */
+  --tag-humidity-text:   #93C5FD; /* blue-300 */
+
+  --tag-pressure-bg:     #2A2105; /* ambre nuit */
+  --tag-pressure-text:   #FDE68A; /* amber-200 */
+
+  --tag-connection-bg:   #2B1A0A; /* orange nuit */
+  --tag-connection-text: #FDBA74; /* orange-300 */
+
+  --tag-general-bg:      #30363D; /* gris GitHub-like */
+  --tag-general-text:    #E5E7EB;
 }

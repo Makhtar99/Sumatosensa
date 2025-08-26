@@ -72,7 +72,7 @@ const filteredData = computed(() => {
               'px-4 py-2 rounded-lg font-medium',
               selectedTab === tab
                 ? 'bg-[var(--color-primary)] text-white'
-                : 'bg-[var(--color-sumato-border)] text-[var(--color-text)]'
+                : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
             ]"
           >
             {{ tab }}
@@ -103,7 +103,7 @@ const filteredData = computed(() => {
             'px-4 py-2 rounded-lg font-medium',
             selectedPlace === place
               ? 'bg-[var(--color-primary)] text-white'
-              : 'bg-[var(--color-sumato-border)] text-[var(--color-text)]'
+              : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
           ]"
         >
           {{ place }}
@@ -111,7 +111,7 @@ const filteredData = computed(() => {
       </div>
 
       <!-- <div class="flex gap-4">
-  <label class="text-[var(--color-text)] font-medium">Filtrer par :</label>
+  <label class="text-[var(--color-sumato-text)] font-medium">Filtrer par :</label>
   <select v-model="selectedTimeFilter" class="border border-[var(--color-sumato-border)] rounded-lg px-3 py-1">
     <option value="all">Tous</option>
     <option value="morning">Matin (6h–12h)</option>
