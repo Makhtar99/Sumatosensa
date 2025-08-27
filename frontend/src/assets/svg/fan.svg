@@ -1,0 +1,31 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#4B4B4B" stroke-width="3.5" fill="#CFCFCF" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- cercle extérieur -->
+    <circle cx="60" cy="60" r="40" fill="#E0E0E0" stroke="#4B4B4B"/>
+
+    <!-- moyeu central -->
+    <circle cx="60" cy="60" r="6" fill="#A0A0A0" stroke="#4B4B4B"/>
+
+    <!-- pale 1 -->
+    <path d="M60 60 L100 58 Q102 60 100 62 L60 64 Z" fill="#D3D3D3" stroke="#4B4B4B"/>
+
+    <!-- pale 2 -->
+    <path d="M60 60 L62 20 Q60 18 58 20 L58 60 Z" fill="#D3D3D3" stroke="#4B4B4B"/>
+
+    <!-- pale 3 -->
+    <path d="M60 60 L22 62 Q20 60 22 58 L60 56 Z" fill="#D3D3D3" stroke="#4B4B4B"/>
+
+    <!-- pale 4 -->
+    <path d="M60 60 L58 100 Q60 102 62 100 L62 60 Z" fill="#D3D3D3" stroke="#4B4B4B"/>
+
+    <!-- socle bas -->
+    <rect x="50" y="100" width="20" height="10" rx="2" ry="2" fill="#B0B0B0" stroke="#4B4B4B"/>
+
+    <!-- "signal" wifi en haut à droite -->
+    <path d="M82 30 Q88 24 94 30" stroke="#4B4B4B" stroke-width="2" fill="none"/>
+    <path d="M85 33 Q88 30 91 33" stroke="#4B4B4B" stroke-width="2" fill="none"/>
+    <circle cx="88" cy="36" r="1.5" fill="#4B4B4B" />
+
+  </g>
+</svg>

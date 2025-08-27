@@ -6,7 +6,15 @@ class Settings:
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_HOURS: int = 8
     
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/sumatosensa")
+    @property
+    def DATABASE_URL(self) -> str:
+        db_url = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/sumatosensa")
+        # Convert postgres:// to postgresql+asyncpg:// for async SQLAlchemy
+        if db_url.startswith("postgres://"):
+            db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif db_url.startswith("postgresql://") and "asyncpg" not in db_url:
+            db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return db_url
     
     MQTT_BROKER_HOST: str = os.getenv("MQTT_BROKER_HOST", "localhost")
     MQTT_BROKER_PORT: int = int(os.getenv("MQTT_BROKER_PORT", "1883"))

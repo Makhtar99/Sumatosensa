@@ -31,7 +31,6 @@
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="px-4 py-6 sm:px-0">
-        <!-- Statistiques -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
@@ -122,7 +121,6 @@
           </div>
         </div>
 
-        <!-- Liste des utilisateurs -->
         <div class="bg-white shadow overflow-hidden sm:rounded-md">
           <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900">

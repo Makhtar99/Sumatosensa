@@ -1,32 +1,29 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
 import { isAuthenticated } from '@/services/AuthService'
 
-import AppLayout from '@/layout/AppLayout.vue'
+import AppLayout from '../layout/AppLayout.vue'
 
-import LoginForm from '@/views/LoginForm.vue'
-import RegisterForm from '@/views/RegisterForm.vue'
+import LoginForm from '../views/LoginForm.vue'
+import RegisterForm from '../views/RegisterForm.vue'
 
-import Dashboard from '@/views/Dashboard.vue'
-import Settings from '@/views/Settings.vue'
-import ExportView from '@/views/ExportView.vue'
-import Management from '@/views/Management.vue'
-import History from '@/views/History.vue'
-import devices from '@/views/Devices.vue'
+import Dashboard from '../views/ViewDashboard.vue'
+import Settings from '../views/ViewSettings.vue'
+import Management from '../views/ViewManagement.vue'
+import devices from '../views/ViewDevices.vue'
+import Notifications from '../views/ViewNotifications.vue'
+import Energy from '../views/ViewEnergy.vue'
 
 import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
-
-
-
 
 // Routes de l'application
 const routes = [
   {
     path: '/',
+    redirect: '/dashboard',
     component: AppLayout,
     children: [
       {
-        path: '',
+        path: '/',
         name: 'Dashboard',
         component: Dashboard,
         meta: { requiresAuth: false },
@@ -35,32 +32,50 @@ const routes = [
         path: 'settings',
         name: 'Settings',
         component: Settings,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
-      {
-        path: 'export',
-        name: 'Export',
-        component: ExportView,
-        meta: { requiresAuth: false },
-      },
+      // {
+      //   path: 'export',
+      //   name: 'Export',
+      //   component: ExportView,
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: 'management',
         name: 'Management',
         component: Management,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
-      {
-        path: 'history',
-        name: 'History',
-        component: History,
-        meta: { requiresAuth: false },
-      },
+      // {
+      //   path: 'history',
+      //   name: 'History',
+      //   component: History,
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: 'devices',
         name: 'Devices',
         component: devices,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
+      // {
+      //   path: 'alerts',
+      //   name: 'Alertes',
+      //   component: Alertes,
+      //   meta: { requiresAuth: true },
+      // },
+      {
+        path: 'notifications',
+        name: 'Notifications',
+        component: Notifications,
+        meta: { requiresAuth: true },
+      },
+      {
+        path: 'energy',
+        name: 'Energy',
+        component: Energy,
+        meta: { requiresAuth: true },
+      }
     ],
   },
   {
@@ -75,12 +90,11 @@ const routes = [
     component: RegisterForm,
     meta: { requiresAuth: false },
   },
-  
   {
     path: '/admin',
     name: 'Admin',
     component: AdminExampleView,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true, isAdmin: true },
   },
 
 
@@ -92,11 +106,7 @@ const router = createRouter({
   routes,
 })
 
-// Navigation guards
 router.beforeEach((to, from, next) => {
-  console.log("➡️ Navigation vers :", to.path)
-  console.log("🔐 Auth requis ?", to.meta.requiresAuth)
-  console.log("🧾 Authentifié ?", isAuthenticated())
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth && !isAuthenticated()) {

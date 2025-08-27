@@ -1,0 +1,26 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#2E1D0E" stroke-width="4" fill="#A985D2" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Cercle extérieur -->
+    <circle cx="60" cy="60" r="54" fill="none" />
+
+    <!-- Corps du déshumidificateur -->
+    <rect x="38" y="30" width="44" height="60" rx="8" fill="#A985D2" />
+
+    <!-- Grille d'aération -->
+    <line x1="44" y1="40" x2="76" y2="40" stroke-width="2"/>
+    <line x1="44" y1="46" x2="76" y2="46" stroke-width="2"/>
+    <line x1="44" y1="52" x2="76" y2="52" stroke-width="2"/>
+
+    <!-- Goutte d'humidité -->
+    <path d="M60 70 
+             Q66 80 60 88 
+             Q54 80 60 70Z" fill="#A985D2" stroke="#2E1D0E" />
+
+    <!-- Signal connecté -->
+    <path d="M82 34 Q88 28 94 34" stroke-width="2" fill="none"/>
+    <path d="M85 37 Q88 34 91 37" stroke-width="2" fill="none"/>
+    <circle cx="88" cy="40" r="1.5" fill="#2E1D0E" />
+
+  </g>
+</svg>

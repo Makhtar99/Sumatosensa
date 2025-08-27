@@ -50,6 +50,7 @@ services:
       SECRET_KEY: ${JWT_SECRET_KEY:-your-super-secret-jwt-key-change-this-in-production}
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_HOURS: 8
+      PORT: 8000
     volumes:
       - ./backend:/app
       - backend_reports:/app/reports
@@ -65,10 +66,13 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        CACHE_BUSTER: ${CACHE_BUSTER:-1}
     container_name: sumatosensa_frontend
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
       VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:8000/ws}
+      PORT: 80
     ports:
       - "5173:5173"
     volumes:
@@ -79,6 +83,7 @@ services:
     networks:
       - sumatosensa_network
     restart: unless-stopped
+
 
 volumes:
   timescaledb_data:

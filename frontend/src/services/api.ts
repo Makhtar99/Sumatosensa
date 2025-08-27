@@ -34,14 +34,79 @@ export interface AdminDashboard {
   total_users: number
 }
 
-export interface RegisterRequest {
-  username: string
-  email: string
-  password: string
+export interface Sensor {
+  id: number
+  mac_address: string
+  name: string
+  is_active: boolean
+  battery_level: number | null
+  firmware_version: string | null
+  last_seen: string | null
+  created_at: string
+  updated_at: string
+  last_measurement: {
+    temperature: number | null
+    humidity: number | null
+    pressure: number | null
+    battery_voltage: number | null
+    time: string | null
+  } | null
 }
 
-export interface RegisterResponse {
-  message: string
+export interface Measurement {
+  time: string
+  temperature: number | null
+  humidity: number | null
+  pressure: number | null
+  acceleration_x: number | null
+  acceleration_y: number | null
+  acceleration_z: number | null
+  rssi: number | null
+  battery_voltage: number | null
+  movement_counter: number | null
+}
+
+export interface SensorMeasurementsResponse {
+  sensor_id: number
+  sensor_name: string
+  sensor_mac: string
+  measurement_count: number
+  measurements: Measurement[]
+}
+
+export interface SensorLatestResponse {
+  sensor_id: number
+  sensor_name: string
+  sensor_mac: string
+  measurement: (Measurement & { age_seconds: number }) | null
+  message?: string
+}
+
+export interface SensorStatsResponse {
+  sensor_id: number
+  sensor_name: string
+  period_hours: number
+  measurement_count: number
+  statistics: {
+    temperature: {
+      average: number
+      minimum: number
+      maximum: number
+    }
+    humidity: {
+      average: number
+      minimum: number
+      maximum: number
+    }
+    pressure: {
+      average: number
+      minimum: number
+      maximum: number
+    }
+    battery: {
+      average: number
+    }
+  }
 }
 
 class ApiService {
@@ -68,9 +133,9 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     }
 
     if (this.token) {
@@ -123,11 +188,42 @@ class ApiService {
     return this.request<{ status: string }>('/health')
   }
 
-  async register(data: RegisterRequest): Promise<RegisterResponse> {
-    return this.request<RegisterResponse>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+  // Sensors API endpoints
+  async getSensors(activeOnly: boolean = true): Promise<Sensor[]> {
+    return this.request<Sensor[]>(`/sensors?active_only=${activeOnly}`)
+  }
+
+  async getSensor(sensorId: number): Promise<Sensor> {
+    return this.request<Sensor>(`/sensors/${sensorId}`)
+  }
+
+  async getSensorMeasurements(
+    sensorId: number,
+    options: {
+      limit?: number
+      hours?: number
+      startDate?: string
+      endDate?: string
+    } = {}
+  ): Promise<SensorMeasurementsResponse> {
+    const params = new URLSearchParams()
+    if (options.limit) params.append('limit', options.limit.toString())
+    if (options.hours) params.append('hours', options.hours.toString())
+    if (options.startDate) params.append('start_date', options.startDate)
+    if (options.endDate) params.append('end_date', options.endDate)
+    
+    const queryString = params.toString()
+    const endpoint = `/sensors/${sensorId}/measurements${queryString ? `?${queryString}` : ''}`
+    
+    return this.request<SensorMeasurementsResponse>(endpoint)
+  }
+
+  async getSensorLatest(sensorId: number): Promise<SensorLatestResponse> {
+    return this.request<SensorLatestResponse>(`/sensors/${sensorId}/latest`)
+  }
+
+  async getSensorStats(sensorId: number, hours: number = 24): Promise<SensorStatsResponse> {
+    return this.request<SensorStatsResponse>(`/sensors/${sensorId}/stats?hours=${hours}`)
   }
 }
 
