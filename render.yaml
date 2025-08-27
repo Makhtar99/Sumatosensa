@@ -1,0 +1,43 @@
+databases:
+  - name: sumatosensa-db
+    databaseName: sumatosensa
+    user: sumatosensa_user
+    plan: free
+
+services:
+  - type: web
+    name: sumatosensa-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sumatosensa-db
+          property: connectionString
+      - key: MQTT_BROKER_HOST
+        value: test.mosquitto.org
+      - key: MQTT_BROKER_PORT
+        value: 1883
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_HOURS
+        value: 8
+      - key: PORT
+        value: 8000
+
+  - type: web
+    name: sumatosensa-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        value: https://sumatosensa-backend.onrender.com
+      - key: VITE_WS_URL
+        value: wss://sumatosensa-backend.onrender.com/ws

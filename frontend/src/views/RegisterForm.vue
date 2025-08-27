@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { apiService } from '@/services/api'
 import { z } from 'zod'
 import { register } from '../services/AuthService'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
 
-// Schéma de validation Zod
 const registerSchema = z.object({
   username: z.string().min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
   email: z.string().email("Email invalide"),
@@ -18,8 +17,6 @@ const registerSchema = z.object({
   path: ["confirmPassword"]
 })
 
-
-// Formulaire réactif
 const form = reactive({
   username: '',
   email: '',
@@ -27,7 +24,6 @@ const form = reactive({
   confirmPassword: ''
 })
 
-// 3. Gestion des erreurs
 const errors = reactive({
   username: '',
   email: '',
@@ -36,47 +32,37 @@ const errors = reactive({
   general: ''
 })
 
-
-// 4. Fonction soumise à l'envoi
 const onSubmit = async () => {
-  // Réinitialiser les erreurs
-  errors.username = ''
-  errors.email = ''
-  errors.password = ''
-  errors.confirmPassword = ''
-  errors.general = ''
+  Object.keys(errors).forEach((key) => errors[key as keyof typeof errors] = '')
 
-  // Validation avec Zod
   const result = registerSchema.safeParse(form)
-  console.log(result)
 
   if (!result.success) {
-    console.log("❌ Erreurs de validation Zod :", result.error.issues)
-    result.error.errors.forEach(err => {
-      const field = err.path[0]
-      if (field in errors) {
-        errors[field] = err.message
-      }
-    })
+   console.error('Validation error:', result.error)
     return
   }
 
-  // 6. Requête vers le backend
-    try {
-      await register(result.data.username, result.data.email, result.data.password)
+  try {
+    await register(result.data.username, result.data.email, result.data.password)
 
-      
-      // Redirige vers zone privée (admin par exemple)
-      router.push('/')
-    } catch (error: any) {
-      errors.general = error.message || 'Erreur lors de l’inscription.'
+    const authStore = useAuthStore()
+    const credentials = {
+      username: result.data.username,
+      password: result.data.password
     }
+    await authStore.login(credentials)
 
-    console.log("📤 Formulaire soumis :", form)
-    console.log("✅ Validation réussie :", result.data)
-    console.log("📡 Envoi vers /register")
-    console.log("✅ Utilisateur inscrit, redirection vers dashboard")
+    router.push('/')
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      errors.general = error.message || 'Erreur lors de l’inscription.'
+    } else {
+      errors.general = 'Erreur lors de l’inscription.'
+    }
   }
+}
+
+
 </script>
 
 <template>
@@ -87,7 +73,6 @@ const onSubmit = async () => {
       <form @submit.prevent="onSubmit" class="max-w-md m-auto space-y-6">
         <div class="flex flex-col gap-4">
           
-          <!-- Champ username -->
           <div>
             <input
               v-model="form.username"
@@ -98,7 +83,6 @@ const onSubmit = async () => {
             />
             <p v-if="errors.username" class="text-red-500 text-sm mt-1">{{ errors.username }}</p>
           </div>
-          <!-- Champ email -->
           <div>
             <input
               v-model="form.email"
@@ -110,7 +94,6 @@ const onSubmit = async () => {
             <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
           </div>
 
-          <!-- Mot de passe -->
           <div>
             <input
               v-model="form.password"
@@ -122,7 +105,6 @@ const onSubmit = async () => {
             <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
           </div>
 
-          <!-- Confirmation -->
           <div>
             <input
               v-model="form.confirmPassword"
@@ -134,8 +116,7 @@ const onSubmit = async () => {
             <p v-if="errors.confirmPassword" class="text-red-500 text-sm mt-1">{{ errors.confirmPassword }}</p>
           </div>
 
-          <!-- Bouton -->
-          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-text); background: var(--color-coral);">
+          <button type="submit" class="w-full py-2 px-4 rounded-xl cursor-pointer" style="color: var(--color-sumato-text); background: var(--color-coral);">
             Créer un compte
           </button>
 
@@ -144,7 +125,6 @@ const onSubmit = async () => {
           </RouterLink>
         </div>
 
-        <!-- Erreur serveur -->
         <p v-if="errors.general" class="text-red-500 text-sm text-center mt-4">
           {{ errors.general }}
         </p>

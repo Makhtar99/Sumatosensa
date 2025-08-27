@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import  Optional
 import paho.mqtt.client as mqtt
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.database import get_async_session
+from app.database import AsyncSessionLocal
 from app.models import Sensor, Measurement
 import os
 
@@ -60,7 +60,13 @@ class MQTTClient:
             topic = msg.topic
             payload = msg.payload.decode('utf-8')
             
-            asyncio.run(self.process_message(topic, payload))
+            import threading
+            def run_async():
+                asyncio.run(self.process_message(topic, payload))
+            
+            thread = threading.Thread(target=run_async)
+            thread.daemon = True
+            thread.start()
             
         except Exception as e:
             logger.error(f"Error processing MQTT message: {e}")
@@ -95,7 +101,7 @@ class MQTTClient:
 
     async def handle_ruuvitag_data(self, sensor_id: str, measurement_type: str, payload: str):
         try:
-            async with get_async_session() as session:
+            async with AsyncSessionLocal() as session:
                 sensor = await self.get_or_create_sensor(session, sensor_id)
                 
                 if measurement_type == "data":
@@ -127,7 +133,7 @@ class MQTTClient:
             source_endpoint = data.get("source_endpoint", "unknown")
             sensor_data = data.get("data", {})
             
-            async with get_async_session() as session:
+            async with AsyncSessionLocal() as session:
                 sensor_id = f"hetic_{source_endpoint}"
                 sensor = await self.get_or_create_sensor(session, sensor_id)
                 
@@ -147,7 +153,7 @@ class MQTTClient:
         try:
             data = json.loads(payload)
             
-            async with get_async_session() as session:
+            async with AsyncSessionLocal() as session:
                 sensor = await self.get_or_create_sensor(session, sensor_id)
                 
                 await self.store_measurement(
@@ -175,7 +181,7 @@ class MQTTClient:
             if not sensor_data or "trace_options" in sensor_data:
                 return
             
-            async with get_async_session() as session:
+            async with AsyncSessionLocal() as session:
                 sensor_id = f"wirepas_{source_address}"
                 sensor = await self.get_or_create_sensor(session, sensor_id)
                 
