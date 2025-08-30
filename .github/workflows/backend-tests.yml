@@ -43,18 +43,18 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         volumes:
-          - /tmp/mosquitto.conf:/mosquitto/config/mosquitto.conf
+          - ${{ github.workspace }}/mosquitto-ci.conf:/mosquitto/config/mosquitto.conf
 
     steps:
     - uses: actions/checkout@v4
     
     - name: Create mosquitto config
       run: |
-        sudo mkdir -p /tmp
-        sudo tee /tmp/mosquitto.conf > /dev/null <<EOF
+        cat > mosquitto-ci.conf <<EOF
         listener 1883
         allow_anonymous true
         persistence false
+        log_dest stdout
         EOF
     
     - name: Set up Python
