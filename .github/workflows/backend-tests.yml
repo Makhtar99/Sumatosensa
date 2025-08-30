@@ -61,7 +61,6 @@ jobs:
       run: |
         sleep 10
         nc -z localhost 5432
-        nc -z localhost 1883
     
     - name: Run backend tests
       env:
