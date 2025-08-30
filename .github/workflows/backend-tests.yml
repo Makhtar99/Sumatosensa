@@ -33,29 +33,19 @@ jobs:
         ports:
           - 5432:5432
 
-      mosquitto:
-        image: eclipse-mosquitto:2.0
-        ports:
-          - 1883:1883
-        options: >-
-          --health-cmd "timeout 5 mosquitto_pub -h localhost -t test -m 'health' || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        volumes:
-          - ${{ github.workspace }}/mosquitto-ci.conf:/mosquitto/config/mosquitto.conf
-
     steps:
     - uses: actions/checkout@v4
     
-    - name: Create mosquitto config
+    - name: Start Mosquitto MQTT Broker
       run: |
-        cat > mosquitto-ci.conf <<EOF
+        mkdir -p mosquitto-config
+        cat > mosquitto-config/mosquitto.conf <<EOF
         listener 1883
         allow_anonymous true
         persistence false
         log_dest stdout
         EOF
+        docker run -d --name mosquitto-ci --network github_network_${{ github.run_id }} -p 1883:1883 -v ${{ github.workspace }}/mosquitto-config:/mosquitto/config eclipse-mosquitto:2.0
     
     - name: Set up Python
       uses: actions/setup-python@v4
