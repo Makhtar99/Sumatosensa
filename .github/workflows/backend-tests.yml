@@ -38,7 +38,16 @@ jobs:
     
     - name: Start Mosquitto MQTT Broker
       run: |
-        docker run -d --name mosquitto-ci -p 1883:1883 eclipse-mosquitto:1.6 mosquitto -c /dev/null
+        mkdir -p mosquitto-config
+        cat > mosquitto-config/mosquitto.conf <<EOF
+        listener 1883
+        protocol mqtt
+        allow_anonymous true
+        connection_messages true
+        log_timestamp true
+        log_dest stdout
+        EOF
+        docker run -d --name mosquitto-ci -p 1883:1883 -v ${{ github.workspace }}/mosquitto-config:/mosquitto/config eclipse-mosquitto:2.0 mosquitto -c /mosquitto/config/mosquitto.conf
     
     - name: Set up Python
       uses: actions/setup-python@v4
