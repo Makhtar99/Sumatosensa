@@ -1,29 +1,14 @@
-FROM node:22 AS builder
+FROM node:22
 
 WORKDIR /app
 
-# Copie package.json uniquement
-COPY package.json .
+COPY package*.json ./
 
-# Copie séparée du lockfile, ce qui casse la couche si l'un OU l'autre change
-COPY package-lock.json .
+RUN npm install
 
-# Petite astuce : on force l'exécution de npm install à chaque build
-# en utilisant une variable "build arg" qui change tout le temps
-ARG CACHE_BUSTER=1
-RUN echo "Reinstalling node modules - $CACHE_BUSTER" && npm install
+EXPOSE 5173
 
-# Ensuite le reste du code
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf.template
-
-EXPOSE $PORT
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
 
 # Commandes pour ajouter les packages nécessaires
