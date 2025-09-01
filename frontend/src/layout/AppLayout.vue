@@ -10,7 +10,7 @@ const isSidebarCollapsed = ref(false)
 const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const contentMargin = computed(() => {
-  if (isTelephone.value) return 'ml-[80px]'
+  if (isTelephone.value) return 'ml-[0px]'
   return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-[256px]'
 })
 
@@ -19,11 +19,10 @@ const contentMargin = computed(() => {
 <template>
   <div class="flex h-screen bg-[var(--color-sumato-surface)] transition-colors duration-300">
     <Sidebar v-model:isSidebarCollapsed="isSidebarCollapsed" />
-    />
 
     <div
       class="flex-1 flex flex-col bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] transition-all duration-300 ease-in-out"
-      :class="contentMargin"
+      :class="[contentMargin, { 'overflow-y-auto mb-[80px]': isTelephone }]"
     >
       <Topbar />
 

@@ -59,8 +59,8 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div :class="[isTelephone ? 'p-0' : 'p-6']">
-    <h2 class="title !mt-0 mb-6">Export de données</h2>
+  <div class="p-6">
+    <h2 class="title !mt-0 mb-6">Export des données</h2>
 
     <div class="flex flex-col gap-4 my-6">
       <div class="flex flex-col" :class="[isTelephone ? 'items-start' : 'justify-between']">

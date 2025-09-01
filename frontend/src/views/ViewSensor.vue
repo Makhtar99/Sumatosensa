@@ -13,7 +13,7 @@ const selectedSensor = ref<'sensor1' | 'sensor2' | 'sensor3' | 'all'>('all')
 <template>
   <div :class="[isTelephone ? 'p-2' : 'p-6']">
 
-    <h1 class="title !mt-0 mb-6">Données des capteurs</h1>
+    <h1 class="title !mt-0 mb-6" :class="[ isTelephone ? 'flex justify-center' : '' ]">Données des capteurs</h1>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
 
       <button

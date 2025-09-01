@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { apiService, type User, type AdminDashboard } from '@/services/api'
 import { useMediaQuery } from '@vueuse/core'
 import DarkModeButton from '@/views/Components/DarkModeButton.vue'
-
-const router = useRouter()
 
 const dashboard = ref<AdminDashboard | null>(null)
 const users = ref<User[]>([])

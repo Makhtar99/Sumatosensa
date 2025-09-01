@@ -29,8 +29,8 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div :class="[isTelephone ? 'pt-6' : 'p-6']">
-    <h2 class="title !mt-0 mb-6">Historique des données</h2>
+  <div class="p-6">
+    <h2 class="title !mt-0 mb-6" :class="[ isTelephone ? 'flex justify-center' : '' ]">Historique des données</h2>
 
     <div :class="[ isTelephone ? 'flex justify-around items-center pb-3 ' : 'flex justify-between items-center my-6' ]">
         <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">

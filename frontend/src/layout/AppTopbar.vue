@@ -72,26 +72,27 @@ const onLogout = async () => {
     <div v-else>
       <template v-if="isAuthenticated">
         <div class="flex items-center gap-3">
-          <DarkModeButton />
           <button @click="showDropdown = !showDropdown">
             <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full w-[40px] h-[40px]" />
           </button>
-          <router-link v-if="!isAdmin" to="/admin" class="bg-[var(--color-primary)] px-2 py-1 rounded-xl">
-            Admin
-          </router-link>
         </div>
 
         <transition>
           <div
             v-if="showDropdown"
             class="fixed top-0 right-0 mt-14 mr-4 w-56 bg-[var(--color-background)] border rounded shadow-lg z-50">
-            <div class="px-4 py-2 text-sm text-[var(--color-sumato-text)]">Connecté</div>
+          <div class="flex flex-col gap-3 p-3 m-auto">
+            <DarkModeButton />
+            <router-link v-if="isAdmin" to="/admin" class="bg-[var(--color-primary)] px-2 py-1 rounded-xl">
+              Admin
+            </router-link>
             <button @click="onLogout" class="w-full text-left px-4 py-2 hover:bg-red-100 text-[var(--color-sumato-danger)]">
               Déconnexion
             </button>
             <RouterLink v-if="isAdmin" to="/admin" class="block px-4 py-2 hover:bg-gray-100">
               Admin
             </RouterLink>
+          </div>
           </div>
         </transition>
       </template>

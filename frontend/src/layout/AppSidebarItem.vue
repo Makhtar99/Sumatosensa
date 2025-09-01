@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core'
+
+const isTelephone = useMediaQuery('(max-width: 768px)')
 
 defineProps({
   icon: String,
@@ -18,7 +21,8 @@ defineProps({
     :class="[
       'flex items-center gap-3 p-3 rounded-xl transition hover:bg-[var(--color-sumato-primary-hover)]',
       (to === '/' ? isExactActive : isActive) ? 'bg-[var(--color-primary)] font-semibold' : '',
-      isSidebarCollapsed ? 'justify-center' : 'justify-start'
+      isSidebarCollapsed ? 'justify-center' : 'justify-start',
+      isTelephone ? 'flex flex-col' : ''
     ]"
   >
     <img :src="icon" :alt="label" class="w-5 h-5 sidebarIcon" />
