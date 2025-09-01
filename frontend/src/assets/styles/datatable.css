@@ -8,7 +8,7 @@
 .p-datatable {
   border: 1px solid var(--color-sumato-border);
   border-radius: 0.75rem;
-  background-color: var(--color-surface);
+  background-color: var(--color-sumato-surface);
   color: var(--color-sumato-text);
   font-size: 0.95rem;
 }
@@ -43,7 +43,7 @@
 }
 
 .p-paginator {
-  padding: 1rem;
+  padding: 1rem !important;
   background-color: var(--color-sumato-light);
   border: none !important;
   border-radius: 0 0 0.75rem 0.75rem;

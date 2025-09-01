@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import DarkModeButton from './Components/DarkModeButton.vue'
 
 const username = ref('NomUtilisateur')
 const email = ref('utilisateur@exemple.com')
 
-const theme = ref('Clair')
 const tempUnit = ref('Celsius')
 const pressureUnit = ref('hPa')
 const humidityUnit = ref('%')
@@ -13,19 +13,21 @@ const lang = ref('fr')
 
 const alertHumidite = ref(30)
 const alertTemperature = ref(28)
-const alertByEmail = ref(true)
-const alertFrequency = ref('Une fois par heure')
+const alertByEmail = ref(false)
+const alertFrequency = ref('En temps réel')
+
+
 </script>
 
 <template>
   <div class="p-6">
-    <h2 class="title">⚙️ Paramètres</h2>
+    <h1 class="title !mt-0 mb-6">Paramètres</h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+    <div class="grid grid-cols-1 gap-6 mt-6">
 
       <div class="md:col-span-2 space-y-6">
 
-        <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
+        <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
           <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">👤 Profil utilisateur</h3>
           <p class="mb-2 text-[var(--color-sumato-text)]"><span class="font-medium">Nom :</span> {{ username }}</p>
           <p class="mb-4 text-[var(--color-sumato-text)]"><span class="font-medium">Email :</span> {{ email }}</p>
@@ -39,15 +41,12 @@ const alertFrequency = ref('Une fois par heure')
           </div>
         </section>
 
-        <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
+        <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
           <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">🌐 Préférences générales</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block font-medium mb-1">Thème :</label>
-              <select v-model="theme" class="w-full px-3 py-2 rounded-lg bg-[var(--color-sumato-light)] border border-[var(--color-sumato-border)]">
-                <option>Clair</option>
-                <option>Sombre</option>
-              </select>
+                <dark-mode-button class="w-full" />
             </div>
             <div>
               <label class="block font-medium mb-1">Langue :</label>
@@ -59,7 +58,7 @@ const alertFrequency = ref('Une fois par heure')
           </div>
         </section>
 
-        <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
+        <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
           <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">📊 Affichage & données</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -93,7 +92,7 @@ const alertFrequency = ref('Une fois par heure')
           </div>
         </section>
 
-        <section class="bg-[var(--color-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
+        <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
           <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">🔔 Notifications & alertes</h3>
           <div class="space-y-4">
             <div>
@@ -136,14 +135,6 @@ const alertFrequency = ref('Une fois par heure')
             </div>
           </div>
         </section>
-      </div>
-
-      <div class="hidden md:block">
-        <img
-          src="../assets/img/setting_boy.png"
-          alt="Illustration"
-          class="w-full h-auto rounded-xl object-cover border border-[var(--color-sumato-border)]"
-        />
       </div>
     </div>
   </div>

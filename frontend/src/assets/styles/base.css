@@ -1,11 +1,3 @@
-/* *,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: normal;
-} */
-
 body {
   min-height: 100vh;
   color: var(--color-sumato-text);
@@ -34,28 +26,12 @@ body {
 }
 
 :root {
-/* old */
-  /* --color-background: #FFF2D6; background */
-  /* --color-sumato-ivoiry: #FAF8F4; ivoire */
-  /* --color-sumato-coral: #FF6B5E; corail */
-  /* --color-sumato-anthracite: #2E2E2E; writing */
-  /* --color-sumato-comfort: #62C370; green */
-  /* --color-sumato-alert: #F25C54; red */
-  /* --color-sumato-neutral: #ACD0CD; blue */
-  /* --color-sumato-light-orange: #F9E0BD; avatar */
-  /* --color-sumato-background: #FFF2D6; background */
-  /* --color-sumato-orange: #E25B2A; orange */
-  /* --color-sumato-orange-hover: #F07A4D; orange hover */
-  /* --color-sumato-pressure: #FCD490; pressure */
-  /* --color-sumato-connected-devices: #F5DEB4; connected devices */
-
-/* new */
 
   --color-background: #F9FAFB;
-  --color-surface: #FFFFFF;
+  --color-sumato-surface: #FFFFFF;
 
-  --color-sumato-text: #1F2937;       /* texte */
-  --color-sumato-border: #E5E7EB;      /* bordures */
+  --color-sumato-text: #1F2937;
+  --color-sumato-border: #E5E7EB;
 
   --color-sumato-light: #F9FAFB;
 
@@ -69,7 +45,7 @@ body {
 
   --color-sumato-ivory: #FAF8F4;
 
-  --color-sumato-primary-hover: #2563EB;
+  --color-sumato-primary-hover: #DBEAFE;
   --color-sumato-success: #10B981;
   --color-sumato-danger: #EF4444;
   --color-sumato-warning: #F59E0B;
@@ -81,6 +57,8 @@ body {
   --color-sumato-card-exterior: #DCFCE7;
   --color-sumato-card-default: #F3F4F6;
   --color-sumato-connected: #F5DEB4;
+
+  /* COULEURS POUR LES NOTIFS */
 
   --notif-info-bg:    #E0F2FE; /* sky-100 */
   --notif-info-border:#38BDF8; /* sky-400 */
@@ -116,7 +94,7 @@ body {
 
 :root[data-theme="dark"] {
   --color-background: #121212;
-  --color-surface: #1E1E1E;
+  --color-sumato-surface: #1E1E1E;
 
   --color-sumato-text: #fff;
   --color-sumato-border: #fff;
@@ -134,11 +112,18 @@ body {
 
   --color-sumato-connected: #3B2E21;
 
-   --color-sumato-primary-hover: #3B82F6;
+  --color-sumato-primary-hover: #93C5FD;
   --color-sumato-success: #34D399;
   --color-sumato-danger: #F87171;
   --color-sumato-warning: #FBBF24;
   --color-sumato-info: #38BDF8;
+
+  --color-sumato-card-temp:     #7F1D1D; /* rouge profond (température)   */
+  --color-sumato-card-humidity: #1E3A8A; /* bleu nuit (humidité)          */
+  --color-sumato-card-pressure: #78350F; /* ambre brun (pression)         */
+  --color-sumato-card-exterior: #14532D; /* vert forêt (extérieur)
+
+  /* COULEURS POUR LES NOTIFS DARK */
 
   --notif-info-bg:    #19698a;  /* bleu nuit doux */
   --notif-info-border:#38BDF8;  /* sky-400 */

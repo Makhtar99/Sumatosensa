@@ -41,25 +41,26 @@ const onCityChange = () => {
 
 
 <template>
-  <div class="outside flex flex-col gap-3">
+  <div class="flex flex-col gap-3 bg-[var(--color-sumato-card-exterior)] rounded-xl">
     <DataCard
         :title="'Météo à ' + selectedCity"
         :icon="getIcon()"
         :value="temperature ?? 'N/A'"
         unit="°C"
         :timestamp="timestamp ?? ''"
-        color="var(--color-sumato-weather)"
+        color="var(--color-sumato-card-exterior)"
     />
 
     <div v-if="loading" class="text-sumato-500">Chargement...</div>
     <div v-else-if="error" class="text-sumato-warning">{{ error }}</div>
 
-    <div v-else class="flex flex-col gap-2">
+    <div v-else class="flex items-center justify-center pb-2">
+      <label for="city" class="sr-only">Choisir une ville</label>
     <select
         id="city"
         v-model="selectedCity"
         @change="onCityChange"
-        class="px-3 py-2 rounded-lg border border-sumato-300 focus:outline-none focus:ring-2 focus:ring-sumato-primary text-sumato-700 transition"
+        class="pb-2 w-[90%] rounded-lg border transition"
       >
         <option v-for="c in cities" :key="c" :value="c">{{ c }}</option>
       </select>

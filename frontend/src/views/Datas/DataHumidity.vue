@@ -22,7 +22,7 @@ const getIcon = () => {
 //         timestamp.value = data.timestamp;
 //     } catch (err) {
 //         loading.value = false;
-//         console.log(err);
+//         console.error(err);
 //         error.value = "Erreur lors de la récupération de l'humidité.";
 //     } finally {
 //         loading.value = false;
@@ -40,7 +40,7 @@ const getIcon = () => {
         :timestamp="timestamp ?? ''"
         color="var(--color-sumato-card-humidity)"
     />
-    <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
+    <div v-else class="p-4 bg-red-100 text-[var(--color-sumato-danger)] rounded-lg">
         {{ error }}
     </div>
 </template>

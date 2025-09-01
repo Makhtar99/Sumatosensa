@@ -20,21 +20,18 @@ const currentSensor = computed(() =>
 const getBatteryColor = (batterie: number) => {
   if (batterie > 50) return 'text-green-600'
   if (batterie > 20) return 'text-yellow-600'
-  return 'text-red-600'
+  return 'text-[var(--color-sumato-danger)]'
 }
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="title mb-6">Salon</h1>
-  </div>
 
-  <div class="bg-[var(--color-surface)] shadow-lg rounded-xl p-6 space-y-4">
-    <h2 class="text-lg font-semibold">{{ currentSensor.piece }}</h2>
+  <div class="bg-[var(--color-surface)] border border-[var(--color-sumato-border)] rounded-xl p-6 space-y-4">
+    <h2 class="text-lg !mt-0 font-semibold">{{ currentSensor.piece }}</h2>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="text-center">
-        <p class="text-2xl font-bold text-sumato-primary">{{ currentSensor.temperature }}°C</p>
+        <p class="text-2xl font-bold text-[var(--color-sumato-primary)">{{ currentSensor.temperature }}°C</p>
         <span class="text-sm opacity-70">Température</span>
       </div>
       <div class="text-center">
@@ -58,7 +55,7 @@ const getBatteryColor = (batterie: number) => {
         :class="{
           'text-green-600': currentSensor.statut === 'connecté',
           'text-yellow-600': currentSensor.statut === 'batterie faible',
-          'text-red-600': currentSensor.statut === 'hors ligne',
+          'text-[var(--color-sumato-danger)]': currentSensor.statut === 'hors ligne',
         }"
       >
         ● {{ currentSensor.statut }}

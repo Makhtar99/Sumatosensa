@@ -9,7 +9,6 @@ import Config from '../assets/svg/configuration.svg'
 import Export from '../assets/svg/export.svg'
 import Devices from '../assets/svg/devices.svg'
 import Notif from '../assets/svg/ph_bell.svg'
-import Energie from '../assets/svg/energy.svg'
 
 import ArrowLeft from '../assets/svg/ph_arrow-circle-left.svg'
 import ArrowRight from '../assets/svg/ph_arrow-circle-right.svg'
@@ -17,7 +16,11 @@ import ArrowRight from '../assets/svg/ph_arrow-circle-right.svg'
 const props = defineProps({
   isSidebarCollapsed: Boolean
 })
-const emit = defineEmits(['toggleSidebar'])
+const emit = defineEmits<{
+  (e: 'update:isSidebarCollapsed', value: boolean): void
+}>()
+
+const toggle = () => emit('update:isSidebarCollapsed', !props.isSidebarCollapsed)
 
 const isTelephone = useMediaQuery('(max-width: 768px)')
 
@@ -29,12 +32,12 @@ const sidebarWidthClass = computed(() => {
 
 <template>
   <aside
-    class="fixed top-0 left-0 z-50 h-screen bg-[var(--color-surface)] text-[var(--color-sumato-text)] shadow-lg transition-all duration-300 ease-in-out overflow-y-auto"
+    class="fixed top-0 left-0 z-50 h-screen bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] shadow-lg transition-all duration-300 ease-in-out overflow-y-auto"
     :class="sidebarWidthClass"
   >
 
   <button
-      @click="emit('toggleSidebar')"
+      @click="toggle"
       class="absolute top-4 right-2 w-8 h-8 rounded-full bg-[var(--color-primary)] text-[var(--color-sumato-text)] items-center justify-center hover:bg-sumato-primary-hover transition duration-200 hidden md:flex"
     >
       <img :src="props.isSidebarCollapsed ? ArrowRight : ArrowLeft" alt="Toggle" class="w-4 h-4" />
@@ -57,12 +60,11 @@ const sidebarWidthClass = computed(() => {
     </div>
 
     <nav class="flex-1 w-full px-4 space-y-2">
-      <SidebarItem :icon="Home" label="Ma Maison" to="/" />
-      <SidebarItem :icon="Devices" label="Mes capteurs" to="/devices" />
+      <SidebarItem :icon="Home" label="Ma maison" to="/dashboard" />
+      <SidebarItem :icon="Devices" label="Mes capteurs" to="/sensors" />
       <SidebarItem :icon="Notif" label="Notifications" to="/notifications" />
-      <SidebarItem :icon="Config" label="Paramètres" to="/settings" />
-      <SidebarItem :icon="Energie" label="Énergie" to="/energy" />
       <SidebarItem :icon="Export" label="Gestion" to="/management" />
+      <SidebarItem :icon="Config" label="Paramètres" to="/settings" />
     </nav>
 
     <div class="absolute right-0 top-4 bottom-4 w-[3px] bg-sumato-connected-devices rounded"></div>

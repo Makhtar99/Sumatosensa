@@ -38,7 +38,7 @@ const getIcon = () => {
         :timestamp="timestamp ?? ''"
         color="var(--color-sumato-card-pressure)"
     />
-    <div v-else class="p-4 bg-red-100 text-red-600 rounded-lg">
+    <div v-else class="p-4 bg-red-100 text-[var(--color-sumato-danger)] rounded-lg">
         {{ error }}
     </div>
 </template>

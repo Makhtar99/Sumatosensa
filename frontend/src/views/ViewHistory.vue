@@ -7,7 +7,7 @@ import temperatureData from '../assets/json/temperature_data.json'
 import humidityData from '../assets/json/humidity_data.json'
 import pressureData from '../assets/json/pressure_data.json'
 
-const tabs = ['Température', 'Humidité', 'Pression'] as const
+const tabs = ['Température', 'Humidité', 'Pression']
 type TabName = typeof tabs[number]
 const selectedTab = ref<TabName>('Température')
 
@@ -27,7 +27,7 @@ const filteredData = computed(() => {
 
 <template>
   <div class="p-6">
-    <h2 class="title">Historique des données</h2>
+    <h2 class="title !mt-0 mb-6">Historique des données</h2>
 
     <div class="flex justify-between items-center my-6">
         <div class="flex flex-wrap gap-4">
@@ -38,8 +38,8 @@ const filteredData = computed(() => {
             :class="[
             'px-4 py-2 rounded-lg font-medium transition',
             selectedTab === tab
-                ? 'bg-[var(--color-primary)] text-white'
-                : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
+                ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
+                : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
             ]"
         >
             {{ tab }}
@@ -53,8 +53,8 @@ const filteredData = computed(() => {
                 :class="[
                 'px-4 py-2 rounded-lg font-medium transition',
                 selectedPlace === place
-                    ? 'bg-[var(--color-primary)] text-white'
-                    : 'bg-[var(--color-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
+                    ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
+                    : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
                 ]"
             >
                 {{ place }}
