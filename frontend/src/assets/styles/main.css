@@ -72,24 +72,6 @@
   padding: 0;
 }
 
-/* .dashboard_data img, .connected-devices img {
-  width: 100px;
-  height: 100px;
-} */
-
-/* .temp {
-  background-color: #FEE2E2;
-}
-.humidity {
-  background-color: #DBEAFE;
-}
-.pressure {
-  background-color: #FEF9C3;
-}
-.outside {
-  background-color: #DCFCE7;
-} */
-
 .temperature-data, .outside-data, .pressure-data, .humidity-data {
   display: flex;
   flex-direction: column;
@@ -97,22 +79,11 @@
   text-align: center;
 }
 
-/* .temp {
-  background-color: #fbe3c0;
-  border-radius: 10px;
-}
-
-.outside {
-  background-color: #F1E9C6;
-  border-radius: 10px;
-  padding: 1rem;
-} */
-
 .connected-devices {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease-in-out;
@@ -205,6 +176,3 @@ button:hover {
 
 [data-theme="dark"] .img_light { display: none; }
 [data-theme="light"] .img_dark { display: none; }
-
-/* [data-theme="dark"] .outside { background-color: var(--color-sumato-card-exterior); }
-[data-theme="dark"] .outside { background-color: var(--color-sumato-card-exterior); } */
