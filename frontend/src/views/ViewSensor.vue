@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 
 import Sensor1 from '../views/Datas/DataSensor1.vue'
 import Sensor2 from '../views/Datas/DataSensor2.vue'
 import Sensor3 from '../views/Datas/DataSensor3.vue'
 
+const isTelephone = useMediaQuery('(max-width: 768px)')
 const selectedSensor = ref<'sensor1' | 'sensor2' | 'sensor3' | 'all'>('all')
 </script>
 
 <template>
-  <div class="p-6">
+  <div :class="[isTelephone ? 'p-2' : 'p-6']">
 
     <h1 class="title !mt-0 mb-6">Données des capteurs</h1>
-
-    <div class="flex gap-4 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
 
       <button
         @click="selectedSensor = 'all'"

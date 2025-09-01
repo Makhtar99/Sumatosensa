@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 
 import ExportView from './ViewExport.vue'
 import HistoryView from './ViewHistory.vue'
 
 const selectedView = ref<'history' | 'export'>('history')
+const isTelephone = useMediaQuery('(max-width: 768px)')
 </script>
 
 <template>
-  <div class="p-6">
+  <div :class="[isTelephone ? '' : 'p-6']">
     <h1 class="title !mt-0 mb-6">Gestion des données</h1>
 
     <div class="flex gap-4">

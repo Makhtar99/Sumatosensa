@@ -27,7 +27,7 @@ const contentMargin = computed(() => {
     >
       <Topbar />
 
-      <main class="w-full p-4 flex-1 overflow-y-auto max-h-full">
+      <main class="flex-1 overflow-y-auto max-h-full" :class="[isTelephone ? 'p-0' : 'p-4 w-full']">
         <RouterView />
       </main>
     </div>

@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import DarkModeButton from './Components/DarkModeButton.vue'
-
-const username = ref('NomUtilisateur')
-const email = ref('utilisateur@exemple.com')
 
 const tempUnit = ref('Celsius')
 const pressureUnit = ref('hPa')
@@ -16,6 +14,32 @@ const alertTemperature = ref(28)
 const alertByEmail = ref(false)
 const alertFrequency = ref('En temps réel')
 
+const auth = useAuthStore()
+const user = reactive({ username: '', email: '' })
+
+onMounted(async () => {
+  if (!auth.user) {
+    try { await auth.getCurrentUser() } catch {}
+  }
+  user.username = auth.user?.username ?? ''
+  user.email = auth.user?.email ?? ''
+})
+
+const username = computed(() => user.username)
+const email = computed(() => user.email)
+
+const isDirty = computed(() =>
+  user.username !== (auth.user?.username ?? '') ||
+  user.email    !== (auth.user?.email ?? '')
+)
+
+// const onSubmit = async () => {
+//   try {
+//     await auth.putCurrentUser({ username: user.username, email: user.email })
+//   } catch (e) {
+//     console.error("Erreur lors de la mise à jour du profil :", e)
+//   }
+// }
 
 </script>
 
@@ -28,18 +52,42 @@ const alertFrequency = ref('En temps réel')
       <div class="md:col-span-2 space-y-6">
 
         <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
-          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">👤 Profil utilisateur</h3>
-          <p class="mb-2 text-[var(--color-sumato-text)]"><span class="font-medium">Nom :</span> {{ username }}</p>
-          <p class="mb-4 text-[var(--color-sumato-text)]"><span class="font-medium">Email :</span> {{ email }}</p>
-          <div class="flex flex-col sm:flex-row gap-4 mt-4">
-            <button class="px-4 py-2 bg-[var(--color-sumato-primary)] hover:bg-[var(--color-sumato-primary-hover)] text-white rounded-lg">
-              Modifier le profil
-            </button>
-            <button class="px-4 py-2 bg-[var(--color-sumato-danger)] hover:bg-red-600 text-white rounded-lg">
-              Modifier le mot de passe
-            </button>
-          </div>
-        </section>
+  <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">👤 Profil utilisateur</h3>
+
+  <p class="mb-2 text-[var(--color-sumato-text)]"><span class="font-medium">Nom :</span> {{ username }}</p>
+  <p class="mb-4 text-[var(--color-sumato-text)]"><span class="font-medium">Email :</span> {{ email }}</p>
+
+  <div class="flex flex-col sm:flex-row gap-4 mt-4">
+    <input
+      id="username"
+      name="username"
+      v-model="user.username"
+      type="text"
+      autocomplete="username"
+      class="w-full p-2 rounded-xl !text-[var(--color-sumato-text)]"
+      style="border: 1px solid lightgray"
+      placeholder="Modifier votre nom d’utilisateur"
+    />
+    <input
+      id="email"
+      name="email"
+      v-model="user.email"
+      type="email"
+      autocomplete="email"
+      class="w-full p-2 rounded-xl !text-[var(--color-sumato-text)]"
+      style="border: 1px solid lightgray"
+      placeholder="Modifier votre email"
+    />
+  </div>
+
+  <button
+    @click="onSubmit"
+    :disabled="!isDirty || auth.isLoading"
+    class="mt-4 w-full px-4 py-2 bg-[var(--color-sumato-accent)] text-white rounded-lg disabled:opacity-50"
+  >
+    {{ auth.isLoading ? 'Enregistrement…' : 'Enregistrer les modifications' }}
+  </button>
+</section>
 
         <section class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]">
           <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">🌐 Préférences générales</h3>

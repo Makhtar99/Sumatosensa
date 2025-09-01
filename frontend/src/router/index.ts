@@ -12,7 +12,7 @@ import Management from '../views/ViewManagement.vue'
 import Devices from '../views/ViewSensor.vue'
 import Notifications from '../views/ViewNotifications.vue'
 
-import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
+import AdminExampleView from '@/views/ViewAdminListUser.vue'
 
 const routes = [
   {
@@ -68,8 +68,7 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: AdminExampleView,
-    // meta: { requiresAuth: true, isAdmin: true },
-    meta: { requiresAuth: true, isAdmin: false },
+    meta: { requiresAuth: true, isAdmin: true },
   },
 ]
 

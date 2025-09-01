@@ -44,9 +44,8 @@ const onLogout = async () => {
       <span>Retour</span>
     </button>
 
-    <div class="text-sm text-[var(--color-sumato-text)]">{{ date }}</div>
+    <div class="text-sm text-[var(--color-sumato-text)]" :class="[isTelephone ? 'max-w-[130px]' : '']">{{ date }}</div>
 
-    <!-- Desktop -->
     <div v-if="!isTelephone" class="flex items-center gap-4">
       <template v-if="isAuthenticated">
         <div class="flex items-center gap-2">
@@ -70,13 +69,17 @@ const onLogout = async () => {
       </template>
     </div>
 
-    <!-- Mobile -->
     <div v-else>
       <template v-if="isAuthenticated">
-        <DarkModeButton />
-        <button @click="showDropdown = !showDropdown">
-          <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full w-[40px] h-[40px]" />
-        </button>
+        <div class="flex items-center gap-3">
+          <DarkModeButton />
+          <button @click="showDropdown = !showDropdown">
+            <img src="../assets/img/avatar.png" alt="Avatar" class="rounded-full w-[40px] h-[40px]" />
+          </button>
+          <router-link v-if="!isAdmin" to="/admin" class="bg-[var(--color-primary)] px-2 py-1 rounded-xl">
+            Admin
+          </router-link>
+        </div>
 
         <transition>
           <div

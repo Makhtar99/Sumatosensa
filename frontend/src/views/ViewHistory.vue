@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 
@@ -14,6 +15,8 @@ const selectedTab = ref<TabName>('Température')
 const places = ['Salon', 'Grenier', 'Cuisine']
 const selectedPlace = ref('Salon')
 
+const isTelephone = useMediaQuery('(max-width: 768px)')
+
 const dataMap: Record<TabName, { date: string; room: string; value: number }[]> = {
   Température: temperatureData,
   Humidité: humidityData,
@@ -26,11 +29,11 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-6">
+  <div :class="[isTelephone ? 'pt-6' : 'p-6']">
     <h2 class="title !mt-0 mb-6">Historique des données</h2>
 
-    <div class="flex justify-between items-center my-6">
-        <div class="flex flex-wrap gap-4">
+    <div :class="[ isTelephone ? 'flex justify-around items-center pb-3 ' : 'flex justify-between items-center my-6' ]">
+        <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
         <button
             v-for="tab in tabs"
             :key="tab"
@@ -45,7 +48,7 @@ const filteredData = computed(() => {
             {{ tab }}
         </button>
         </div>
-        <div class="flex flex-wrap gap-4">
+        <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
             <button
                 v-for="place in places"
                 :key="place"

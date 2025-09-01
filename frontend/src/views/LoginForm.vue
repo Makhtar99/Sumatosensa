@@ -14,7 +14,7 @@ const loginSchema = z.object({
 
 const form = reactive({ username: '', password: '' })
 const errors = reactive({ username: '', password: '', server: '' })
-const errorMessages = ref<string[]>([]) // tableau de messages contextuels
+const errorMessages = ref<string[]>([])
 
 const auth = useAuthStore()
 const { isLoading, error: authError } = storeToRefs(auth)
