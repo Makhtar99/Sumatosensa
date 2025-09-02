@@ -5,7 +5,6 @@ import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { useMediaQuery } from '@vueuse/core'
 
-import { getFormattedDateTime } from '../assets/functions/FormatedDate'
 import DarkModeButton from '../views/Components/DarkModeButton.vue'
 
 const date = ref('')
@@ -15,6 +14,18 @@ const router = useRouter()
 
 const auth = useAuthStore()
 const { isAuthenticated, isAdmin } = storeToRefs(auth)
+
+function getFormattedDateTime() {
+  const now = new Date();
+  const date = now.toLocaleDateString('fr-FR', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+  const time = now.toLocaleTimeString('fr-FR', {
+    hour: '2-digit', minute: '2-digit', hour12: false
+  });
+  return `${date.replace(/^\w/, c => c.toUpperCase())} - ${time}`;
+}
+
 
 onMounted(async () => {
   await auth.initializeAuth().catch(() => {})
@@ -35,7 +46,7 @@ const onLogout = async () => {
 
 
 <template>
-  <header class="p-4 flex items-center justify-between max-w-screen">
+  <header class="p-6 flex items-center justify-between max-w-screen">
     <button
       v-if="!isTelephone"
       @click="goback"
@@ -44,7 +55,7 @@ const onLogout = async () => {
       <span>Retour</span>
     </button>
 
-    <div class="text-sm text-[var(--color-sumato-text)]" :class="[isTelephone ? 'max-w-[130px]' : '']">{{ date }}</div>
+    <div class="text-sm text-[var(--color-sumato-text)]">{{ date }}</div>
 
     <div v-if="!isTelephone" class="flex items-center gap-4">
       <template v-if="isAuthenticated">
@@ -80,7 +91,7 @@ const onLogout = async () => {
         <transition>
           <div
             v-if="showDropdown"
-            class="fixed top-0 right-0 mt-14 mr-4 w-56 bg-[var(--color-background)] border rounded shadow-lg z-50">
+            class="fixed top-0 right-0 mt-14 mr-4 w-56 bg-[var(--color-sumato-surface)] border rounded shadow-lg z-50">
           <div class="flex flex-col gap-3 p-3 m-auto">
             <DarkModeButton />
             <router-link v-if="isAdmin" to="/admin" class="bg-[var(--color-primary)] px-2 py-1 rounded-xl">
@@ -105,7 +116,7 @@ const onLogout = async () => {
         <transition>
           <div
             v-if="showDropdown"
-            class="flex flex-col items-start justify-center gap-3 fixed top-0 right-0 mt-14 mr-4 p-3 w-30 bg-[var(--color-background)] border rounded shadow-lg z-50">
+            class="flex flex-col items-start justify-center gap-3 fixed top-0 right-0 mt-14 mr-4 p-3 w-30 bg-[var(--color-sumato-surface)] border rounded shadow-lg z-50">
             <RouterLink to="/login" class="rounded px-2 py-1 mr-2 button">Connexion</RouterLink>
             <RouterLink to="/register" class="rounded px-2 py-1 button">Inscription</RouterLink>
             <DarkModeButton />

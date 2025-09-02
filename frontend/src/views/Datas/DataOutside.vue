@@ -12,10 +12,6 @@ const timestamp = ref<string | null>(null);
 
 import Garage from '../../assets/svg/garage.svg';
 
-const getIcon = () => {
-    return Garage;
-}
-
 const loadWeather = async () => {
     loading.value = true;
     error.value = null;
@@ -44,7 +40,7 @@ const onCityChange = () => {
   <div class="flex flex-col gap-3 bg-[var(--color-sumato-card-exterior)] rounded-xl">
     <DataCard
         :title="'Météo à ' + selectedCity"
-        :icon="getIcon()"
+        :icon="Garage"
         :value="temperature ?? 'N/A'"
         unit="°C"
         :timestamp="timestamp ?? ''"

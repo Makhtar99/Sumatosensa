@@ -38,13 +38,13 @@ const isDirty = computed(
   () => user.username !== (auth.user?.username ?? '') || user.email !== (auth.user?.email ?? ''),
 )
 
-const onSubmit = async () => {
-  try {
-    await auth.putCurrentUser({ username: user.username, email: user.email })
-  } catch (e) {
-    console.error('Erreur lors de la mise à jour du profil :', e)
-  }
-}
+// const onSubmit = async () => {
+//   try {
+//     await auth.putCurrentUser({ username: user.username, email: user.email })
+//   } catch (e) {
+//     console.error('Erreur lors de la mise à jour du profil :', e)
+//   }
+// }
 </script>
 
 <template>
@@ -83,8 +83,8 @@ const onSubmit = async () => {
             />
           </div>
 
+          <!-- @click="onSubmit" -->
           <button
-            @click="onSubmit"
             :disabled="!isDirty || auth.isLoading"
             class="mt-4 w-full px-4 py-2 bg-[var(--color-sumato-accent)] text-white rounded-lg disabled:opacity-50"
           >

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
+import { fetchSensor } from '@/services/sensorService'
 
 import Sensor1 from '../views/Datas/DataSensor1.vue'
 import Sensor2 from '../views/Datas/DataSensor2.vue'
@@ -8,6 +9,11 @@ import Sensor3 from '../views/Datas/DataSensor3.vue'
 
 const isTelephone = useMediaQuery('(max-width: 768px)')
 const selectedSensor = ref<'sensor1' | 'sensor2' | 'sensor3' | 'all'>('all')
+
+onMounted(async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const sensors = await fetchSensor()
+})
 </script>
 
 <template>

@@ -85,11 +85,5 @@ const param = computed(() => (isTelephone.value ? 'Param' : 'Paramètres'))
       <SidebarItem :icon="Config"  :label="param"        to="/settings" />
     </nav>
 
-    <div class="absolute right-0 top-4 bottom-4 w-[3px] bg-sumato-connected-devices rounded hidden md:block" :class="[ isTelephone ? 'flex-col' : '' ]">
-      <ConnectedDeviceCard />
-      <ConnectedDeviceCard />
-      <ConnectedDeviceCard />
-      <ConnectedDeviceCard />
-    </div>
   </aside>
 </template>
