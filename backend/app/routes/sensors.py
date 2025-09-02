@@ -4,6 +4,7 @@ from sqlalchemy import select, desc, and_
 from typing import List, Optional
 from datetime import datetime, timedelta
 import logging
+from datetime import datetime, timezone
 
 from app.database import get_db
 from app.models import Sensor, Measurement, AlertThreshold
@@ -173,13 +174,25 @@ async def get_latest_measurement(
                 "measurement": None,
                 "message": "Aucune mesure disponible"
             }
-        
+
+        # --- normalisation timezone-safe pour age_seconds
+        age_seconds = 0
+        mt = measurement.time
+        if mt is not None:
+            if mt.tzinfo is None:
+                mt_aware = mt.replace(tzinfo=timezone.utc)
+            else:
+                mt_aware = mt.astimezone(timezone.utc)
+            now = datetime.now(timezone.utc)
+            age_seconds = int((now - mt_aware).total_seconds())
+
         return {
             "sensor_id": sensor_id,
             "sensor_name": sensor.name,
             "sensor_mac": sensor.mac_address,
             "measurement": {
-                "time": measurement.time,
+                # sérialiser proprement le timestamp
+                "time": measurement.time.isoformat() if measurement.time else None,
                 "temperature": measurement.temperature,
                 "humidity": measurement.humidity,
                 "pressure": measurement.pressure,
@@ -189,7 +202,7 @@ async def get_latest_measurement(
                 "rssi": measurement.rssi,
                 "battery_voltage": measurement.battery_voltage,
                 "movement_counter": measurement.movement_counter,
-"age_seconds": int((datetime.utcnow() - measurement.time).total_seconds()) if measurement.time else 0
+                "age_seconds": age_seconds,
             }
         }
         

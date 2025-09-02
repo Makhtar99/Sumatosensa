@@ -1,14 +1,8 @@
- <template>
-  <div class="flex justify-center items-center space-x-2">
-    <button type="button" @click="toggle">
-    {{ isDark ? 'Mode clair' : 'Mode sombre' }}
-  </button>
-  
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import Sun from '@/assets/svg/sun.svg'
+import Moon from '@/assets/svg/moon.svg'
+
 const isDark = ref(false)
 
 const readTheme = () => document.documentElement.getAttribute('data-theme') === 'dark'
@@ -24,3 +18,12 @@ onMounted(() => {
   isDark.value = readTheme()
 })
 </script>
+
+ <template>
+  <div>
+    <button type="button" @click="toggle" class="flex justify-center items-center space-x-2 gap-2">
+      <img :src="isDark ? Sun : Moon" alt="Toggle Dark Mode" class="w-5 h-5" />
+      {{ isDark ? 'Clair' : 'Sombre' }}
+    </button>
+  </div>
+</template>

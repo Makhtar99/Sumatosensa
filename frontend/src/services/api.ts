@@ -18,6 +18,19 @@ export interface LoginResponse {
   }
 }
 
+export interface RegisterRequest {
+  username: string
+  email: string
+  password: string
+}
+
+export interface RegisterResponse {
+  message?: string
+  user?: User
+  access_token?: string
+  token_type?: string
+}
+
 export interface User {
   id: number
   username: string
@@ -164,6 +177,15 @@ class ApiService {
     return response
   }
 
+  async register(payload: RegisterRequest): Promise<RegisterResponse> {
+    const res = await this.request<RegisterResponse>('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+    if (res.access_token) this.setToken(res.access_token)
+    return res
+  }
+
   async logout(): Promise<void> {
     try {
       await this.request('/auth/logout', { method: 'POST' })
@@ -188,7 +210,6 @@ class ApiService {
     return this.request<{ status: string }>('/health')
   }
 
-  // Sensors API endpoints
   async getSensors(activeOnly: boolean = true): Promise<Sensor[]> {
     return this.request<Sensor[]>(`/sensors?active_only=${activeOnly}`)
   }
@@ -211,10 +232,10 @@ class ApiService {
     if (options.hours) params.append('hours', options.hours.toString())
     if (options.startDate) params.append('start_date', options.startDate)
     if (options.endDate) params.append('end_date', options.endDate)
-    
+
     const queryString = params.toString()
     const endpoint = `/sensors/${sensorId}/measurements${queryString ? `?${queryString}` : ''}`
-    
+
     return this.request<SensorMeasurementsResponse>(endpoint)
   }
 

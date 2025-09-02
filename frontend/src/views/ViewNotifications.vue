@@ -18,18 +18,19 @@ const importanceStyle: Record<string, string> = {
 }
 
 const typeStyle: Record<string, string> = {
-  Système: 'bg-[var(--color-sumato-neutral)] text-[var(--color-sumato-text)]',
-  Température: 'bg-[var(--color-sumato-card-temp)] text-[var(--color-sumato-danger)]',
-  Humidité: 'bg-[var(--color-sumato-card-humidity)] text-blue-700',
+  Système: 'bg-[var(--notif-info-border)] text-[var(--color-sumato-text)]',
+  Température: 'bg-[var(--notif-critical-border)] text-[var(--color-sumato-danger)]',
+  Humidité: 'bg-[var(--notif-warning-border)] text-blue-700',
   Pression: 'bg-[var(--color-sumato-card-pressure)] text-yellow-700',
   Connexion: 'bg-[var(--color-sumato-connected)] text-orange-700',
-  Général: 'bg-gray-200 text-gray-700'
+  Général: 'bg-gray-200 text-gray-700',
+  Batterie: 'bg-[var(--tag-general-bg)]',
 }
 </script>
 
 <template>
   <div class="p-6">
-    <h1 class="title mb-6">🔔 Notifications & Alertes</h1>
+    <h1 class="title !mt-0 mb-6">Notifications & Alertes</h1>
 
     <div class="mb-6 max-w-sm">
       <label for="importanceFilter" class="block mb-2 text-sm font-medium text-[var(--color-sumato-text)]">Filtrer par importance :</label>
@@ -56,7 +57,18 @@ const typeStyle: Record<string, string> = {
           <p class="font-semibold text-base md:text-lg text-[var(--color-sumato-text)]">
             {{ notif.alerte_message }}
           </p>
-          <span class="text-sm opacity-70 mt-1 block">{{ notif.date }}</span>
+          <div class="flex flex-row w-full">
+            <p class="font-medium text-[var(--color-sumato-text)] whitespace-nowrap">
+              Reçue le 
+                <span us>
+                  {{ notif.date }}
+                </span>
+              à
+                <span us>
+                  {{ notif.hour }}
+                </span>
+            </p>
+          </div>
         </div>
 
         <span

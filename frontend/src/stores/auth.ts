@@ -1,6 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { apiService, type LoginRequest, type User } from '@/services/api'
+import {
+  apiService,
+  type LoginRequest,
+  type User,
+  type RegisterRequest,
+} from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
@@ -13,7 +18,6 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(credentials: LoginRequest) {
     isLoading.value = true
     error.value = null
-    
     try {
       const response = await apiService.login(credentials)
       user.value = response.user
@@ -29,10 +33,10 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout() {
     isLoading.value = true
     error.value = null
-    
     try {
       await apiService.logout()
     } catch (err) {
+      // on log sans bloquer la déconnexion côté client
       console.error('Erreur lors de la déconnexion:', err)
     } finally {
       user.value = null
@@ -43,7 +47,6 @@ export const useAuthStore = defineStore('auth', () => {
   async function getCurrentUser() {
     isLoading.value = true
     error.value = null
-    
     try {
       const currentUser = await apiService.getCurrentUser()
       user.value = currentUser
@@ -57,22 +60,6 @@ export const useAuthStore = defineStore('auth', () => {
       isLoading.value = false
     }
   }
-
-  // async function deleteUser(userId: number) {
-  //   isLoading.value = true
-  //   error.value = null
-  //   try {
-  //     await apiService.deleteUser(userId)
-  //     if (user.value?.id === userId) {
-  //       user.value = null
-  //     }
-  //   } catch (err) {
-  //     error.value = err instanceof Error ? err.message : 'Erreur de suppression utilisateur'
-  //     throw err
-  //   } finally {
-  //     isLoading.value = false
-  //   }
-  // }
 
   async function initializeAuth() {
     const token = localStorage.getItem('access_token')
@@ -91,6 +78,20 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
   }
 
+  async function registerAndLogin(payload: RegisterRequest) {
+    isLoading.value = true
+    error.value = null
+    try {
+      await apiService.register(payload)
+      await login({ username: payload.username, password: payload.password })
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Erreur d'inscription"
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     user,
     isLoading,
@@ -101,6 +102,7 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     getCurrentUser,
     initializeAuth,
-    clearError
+    clearError,
+    registerAndLogin,
   }
 })

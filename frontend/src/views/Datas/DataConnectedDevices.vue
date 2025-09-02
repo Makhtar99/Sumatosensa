@@ -14,7 +14,7 @@ const devices = ref([
 <template>
   <div class="connected-devices">
     <li v-for="device in devices" :key="device.name">
-      <div class="connected-device">
+      <div class="connected-device border border-[var(--color-sumato-border)]">
         <img :src="device.icon" alt="Device Icon" class="w-25 h-25" />
         <h4>{{ device.name }}</h4>
         <p>{{ device.status }}</p>
