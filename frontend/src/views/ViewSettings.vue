@@ -16,6 +16,10 @@ const alertTemperature = ref(28)
 const alertByEmail = ref(false)
 const alertFrequency = ref('En temps réel')
 
+const sensor1name = ref('Salon')
+const sensor2name = ref('Chambre parentale')
+const sensor3name = ref('Grenier')
+
 const auth = useAuthStore()
 const user = reactive({ username: '', email: '' })
 const isTelephone = useMediaQuery('(max-width: 768px)')
@@ -108,6 +112,55 @@ const onSubmit = async () => {
                 <option value="fr">Français</option>
                 <option value="en">Anglais</option>
               </select>
+            </div>
+          </div>
+        </section>
+        
+        <section
+          class="bg-[var(--color-sumato-surface)] p-6 rounded-xl shadow border border-[var(--color-sumato-border)]"
+        >
+          <h3 class="text-lg font-semibold mb-4 text-[var(--color-sumato-text)]">
+            🌐 Nom des capteurs
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-medium mb-1">Capteur 1 :</label>
+              <input
+              id="sensor1"
+              name="sensor1"
+              v-model="sensor1name"
+              type="text"
+              autocomplete="sensor1"
+              class="w-full p-2 rounded-xl !text-[var(--color-sumato-text)]"
+              style="border: 1px solid lightgray"
+              placeholder="Modifier le nom du capteur 1"
+            />
+            </div>
+            <div>
+              <label class="block font-medium mb-1">Capteur 2 :</label>
+              <input
+              id="sensor2"
+              name="sensor2"
+              v-model="sensor2name"
+              type="text"
+              autocomplete="sensor2"
+              class="w-full p-2 rounded-xl !text-[var(--color-sumato-text)]"
+              style="border: 1px solid lightgray"
+              placeholder="Modifier le nom du capteur 2"
+            />
+            </div>
+            <div>
+              <label class="block font-medium mb-1">Capteur 3 :</label>
+              <input
+              id="sensor3"
+              name="sensor3"
+              v-model="sensor3name"
+              type="text"
+              autocomplete="sensor3"
+              class="w-full p-2 rounded-xl !text-[var(--color-sumato-text)]"
+              style="border: 1px solid lightgray"
+              placeholder="Modifier le nom du capteur 3"
+            />
             </div>
           </div>
         </section>
