@@ -21,7 +21,7 @@ class Sensor(Base):
     __tablename__ = "sensors"
     
     id = Column(Integer, primary_key=True)
-    mac_address = Column(String(17), unique=True, nullable=False)
+    source_address = Column(String(17), unique=True, nullable=False)
     name = Column(String(100), nullable=False)
     is_active = Column(Boolean, default=True)
     battery_level = Column(Float)

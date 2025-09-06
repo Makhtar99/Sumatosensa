@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class RuuviTagSimulator:
-    def __init__(self, mac_address: str, location: str):
-        self.mac_address = mac_address
+    def __init__(self, source_address: str, location: str):
+        self.source_address = source_address
         self.location = location
         self.base_temperature = random.uniform(20.0, 24.0)
         self.base_humidity = random.uniform(40.0, 60.0)
@@ -62,7 +62,7 @@ class RuuviTagSimulator:
             "battery_voltage": round(self.battery_voltage, 3),
             "movement_counter": self.movement_counter,
             "timestamp": datetime.utcnow().isoformat(),
-            "mac_address": self.mac_address,
+            "source_address": self.source_address,
             "location": self.location
         }
 
@@ -125,7 +125,7 @@ class MQTTSimulator:
             
     def publish_sensor_data(self, sensor: RuuviTagSimulator, data: Dict):
         """Publie les données d'un capteur sur différents topics MQTT"""
-        mac = sensor.mac_address
+        mac = sensor.source_address
         
         # Topic principal avec toutes les données
         self.client.publish(f"sensors/ruuvitag/{mac}/data", json.dumps(data))
@@ -164,7 +164,7 @@ class MQTTSimulator:
                     data = sensor.generate_realistic_data()
                     self.publish_sensor_data(sensor, data)
                     
-                    logger.info(f"📊 Données envoyées - {sensor.location} ({sensor.mac_address}): "
+                    logger.info(f"📊 Données envoyées - {sensor.location} ({sensor.source_address}): "
                               f"T={data['temperature']}°C, H={data['humidity']}%, P={data['pressure']}hPa")
                     
                     # Petit délai entre chaque capteur
@@ -240,7 +240,7 @@ async def main():
         print("✅ Simulateur démarré. Appuyez sur Ctrl+C pour arrêter.")
         print("📊 Surveillance des topics MQTT:")
         for sensor in simulator.sensors:
-            print(f"   - sensors/ruuvitag/{sensor.mac_address}/*")
+            print(f"   - sensors/ruuvitag/{sensor.source_address}/*")
         print()
         
         # Attente infinie

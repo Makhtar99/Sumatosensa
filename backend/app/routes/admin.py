@@ -51,13 +51,13 @@ async def get_admin_dashboard(
 # CRUD DEVICES (Admin only)
 @router.post("/sensors", response_model=SensorResponse)
 async def create_sensor(
-    mac_address: str,
+    source_address: str,
     name: str,
     current_user: User = Depends(get_current_admin_user),
     db: AsyncSession = Depends(get_db)
 ):
     sensor = Sensor(
-        mac_address=mac_address,
+        source_address=source_address,
         name=name,
         is_active=True,
         created_at=datetime.utcnow(),
