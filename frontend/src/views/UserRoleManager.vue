@@ -150,8 +150,8 @@ async function fetchUsers() {
       currentUserId.value = currentUser.id
     }
     
-  } catch (err: any) {
-    error.value = err.message || 'Erreur lors du chargement des utilisateurs'
+  } catch (err: unknown) {
+    error.value = (err as Error).message || 'Erreur lors du chargement des utilisateurs'
     console.error('Erreur:', err)
   } finally {
     loading.value = false
@@ -184,8 +184,8 @@ async function updateUserRole(user: User) {
     // Success feedback
     console.log(`Rôle de ${user.username} mis à jour: ${user.role}`)
     
-  } catch (err: any) {
-    error.value = err.message || 'Erreur lors de la mise à jour du rôle'
+  } catch (err: unknown) {
+    error.value = (err as Error).message || 'Erreur lors de la mise à jour du rôle'
     console.error('Erreur:', err)
     // Revert the change
     await fetchUsers()
@@ -217,8 +217,8 @@ async function toggleUserStatus(user: User) {
 
     user.is_active = !user.is_active
     
-  } catch (err: any) {
-    error.value = err.message || 'Erreur lors de la mise à jour du statut'
+  } catch (err: unknown) {
+    error.value = (err as Error).message || 'Erreur lors de la mise à jour du statut'
     console.error('Erreur:', err)
   }
 }
@@ -250,8 +250,8 @@ async function deleteUser(user: User) {
     // Remove user from list
     users.value = users.value.filter(u => u.id !== user.id)
     
-  } catch (err: any) {
-    error.value = err.message || 'Erreur lors de la suppression de l\'utilisateur'
+  } catch (err: unknown) {
+    error.value = (err as Error).message || 'Erreur lors de la suppression de l\'utilisateur'
     console.error('Erreur:', err)
   }
 }
