@@ -14,6 +14,7 @@ import Notifications from '../views/ViewNotifications.vue'
 import Energy from '../views/ViewEnergy.vue'
 
 import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
+import UserRoleManager from '../views/UserRoleManager.vue'
 
 // Routes de l'application
 const routes = [
@@ -94,6 +95,12 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: AdminExampleView,
+    meta: { requiresAuth: true, isAdmin: true },
+  },
+  {
+    path: '/admin/users',
+    name: 'UserRoleManager',
+    component: UserRoleManager,
     meta: { requiresAuth: true, isAdmin: true },
   },
 

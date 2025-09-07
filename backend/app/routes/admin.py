@@ -7,7 +7,7 @@ from datetime import datetime
 from app.auth import get_current_admin_user
 from app.database import get_db
 from app.models import User, Sensor, Alert, Measurement
-from app.schemas import UserResponse, SensorResponse
+from app.schemas import UserResponse, SensorResponse, UserUpdate
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -19,6 +19,50 @@ async def get_all_users(
     result = await db.execute(select(User))
     users = result.scalars().all()
     return [UserResponse.model_validate(user) for user in users]
+
+@router.put("/users/{user_id}", response_model=UserResponse)
+async def update_user(
+    user_id: int,
+    user_update: UserUpdate,
+    current_user: User = Depends(get_current_admin_user),
+    db: AsyncSession = Depends(get_db)
+):
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    update_data = user_update.model_dump(exclude_unset=True)
+    
+    if update_data:
+        for field, value in update_data.items():
+            setattr(user, field, value)
+        
+        user.updated_at = datetime.utcnow()
+        await db.commit()
+        await db.refresh(user)
+    
+    return UserResponse.model_validate(user)
+
+@router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: int,
+    current_user: User = Depends(get_current_admin_user),
+    db: AsyncSession = Depends(get_db)
+):
+    if user_id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot delete your own account")
+    
+    result = await db.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    await db.execute(delete(User).where(User.id == user_id))
+    await db.commit()
+    return {"message": "User deleted successfully"}
 
 @router.get("/dashboard")
 async def get_admin_dashboard(
