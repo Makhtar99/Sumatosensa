@@ -8,7 +8,7 @@ import logging
 from app.database import get_db
 from app.models import Sensor, Measurement, AlertThreshold
 from app.auth import get_current_user
-from app.schemas import SensorResponse, MeasurementResponse, SensorListResponse
+from app.schemas import SensorResponse
 
 router = APIRouter(prefix="/sensors", tags=["sensors"])
 logger = logging.getLogger(__name__)
@@ -122,12 +122,6 @@ async def get_sensor_measurements(
                 "temperature": measurement.temperature,
                 "humidity": measurement.humidity,
                 "pressure": measurement.pressure,
-                "acceleration_x": measurement.acceleration_x,
-                "acceleration_y": measurement.acceleration_y,
-                "acceleration_z": measurement.acceleration_z,
-                "rssi": measurement.rssi,
-                "battery_voltage": measurement.battery_voltage,
-                "movement_counter": measurement.movement_counter
             }
             formatted_measurements.append(measurement_dict)
         
@@ -183,13 +177,7 @@ async def get_latest_measurement(
                 "temperature": measurement.temperature,
                 "humidity": measurement.humidity,
                 "pressure": measurement.pressure,
-                "acceleration_x": measurement.acceleration_x,
-                "acceleration_y": measurement.acceleration_y,
-                "acceleration_z": measurement.acceleration_z,
-                "rssi": measurement.rssi,
-                "battery_voltage": measurement.battery_voltage,
-                "movement_counter": measurement.movement_counter,
-"age_seconds": int((datetime.utcnow() - measurement.time).total_seconds()) if measurement.time else 0
+                "age_seconds": int((datetime.utcnow() - measurement.time).total_seconds()) if measurement.time else 0
             }
         }
         
