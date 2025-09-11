@@ -13,6 +13,8 @@ import Devices from '../views/ViewSensor.vue'
 import Notifications from '../views/ViewNotifications.vue'
 
 import AdminExampleView from '@/views/ViewAdminListUser.vue'
+// import AdminExampleView from '@/views/TestBack/AdminExampleView.vue'
+// import UserRoleManager from '../views/UserRoleManager.vue'
 
 const routes = [
   {
@@ -70,6 +72,14 @@ const routes = [
     component: AdminExampleView,
     meta: { requiresAuth: true, isAdmin: true },
   },
+  {
+    path: '/admin/users',
+    name: 'UserRoleManager',
+    component: UserRoleManager,
+    meta: { requiresAuth: true, isAdmin: true },
+  },
+
+
 ]
 
 const router = createRouter({
