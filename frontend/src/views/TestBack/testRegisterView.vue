@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
 
@@ -13,11 +13,13 @@ const register = async () => {
     const response = await axios.post('http://localhost:8000/auth/register', form.value)
     console.log('✅ Utilisateur enregistré :', response.data)
     alert('Utilisateur enregistré avec succès')
-  } catch (error) {
-    console.error('❌ Erreur:', error.response?.data?.detail || error.message)
-    alert('Erreur: ' + (error.response?.data?.detail || error.message))
+  } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error(error.message);
+  } else {
+    console.error(String(error));
   }
-}
+}}
 </script>
 
 <template>

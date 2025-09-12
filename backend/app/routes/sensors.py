@@ -1,135 +1,261 @@
-import asyncio
-import logging
-from typing import List
-from datetime import datetime
-from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, and_
+from typing import List, Optional
+from datetime import datetime, timedelta
+import logging
 
-from app.database import get_async_session
-from app.models import Sensor, Measurement
-from app.mqtt_client import mqtt_client
-from app.schemas import SensorResponse, SensorRenameRequest, SensorCreateRequest
+from app.database import get_db
+from app.models import Sensor, Measurement, AlertThreshold
+from app.auth import get_current_user
+from app.schemas import SensorResponse
 
-logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/sensors", tags=["sensors"])
+logger = logging.getLogger(__name__)
 
-class IncomingSensorData(BaseModel):
-    source_address: int
-    data: dict
-
-@router.post("/from-mqtt", response_model=SensorResponse)
-async def create_sensor_from_mqtt(
-    payload: IncomingSensorData,
-    session: AsyncSession = Depends(get_async_session)
+@router.get("/", response_model=List[SensorResponse])
+async def get_all_sensors(
+    active_only: bool = Query(True, description="Filtrer uniquement les capteurs actifs"),
+    session: AsyncSession = Depends(get_db)
 ):
-    mac_address = str(payload.source_address)
-    firmware = payload.data.get("firmware_stack")
+    try:
+        query = select(Sensor)
+        if active_only:
+            query = query.where(Sensor.is_active == True)
+        
+        result = await session.execute(query.order_by(Sensor.name))
+        sensors = result.scalars().all()
+        
+        sensor_data = []
+        for sensor in sensors:
+            last_measurement_query = select(Measurement).where(
+                Measurement.sensor_id == sensor.id
+            ).order_by(desc(Measurement.time)).limit(1)
+            
+            last_measurement_result = await session.execute(last_measurement_query)
+            last_measurement = last_measurement_result.scalar_one_or_none()
+            
+            sensor_dict = {
+                "id": sensor.id,
+                "mac_address": sensor.mac_address,
+                "name": sensor.name,
+                "is_active": sensor.is_active,
+                "battery_level": sensor.battery_level,
+                "firmware_version": sensor.firmware_version,
+                "last_seen": sensor.last_seen,
+                "created_at": sensor.created_at,
+                "updated_at": sensor.updated_at,
+                "last_measurement": {
+                    "temperature": last_measurement.temperature if last_measurement else None,
+                    "humidity": last_measurement.humidity if last_measurement else None,
+                    "pressure": last_measurement.pressure if last_measurement else None,
+                    "battery_voltage": last_measurement.battery_voltage if last_measurement else None,
+                    "time": last_measurement.time if last_measurement else None
+                } if last_measurement else None
+            }
+            sensor_data.append(sensor_dict)
+            
+        return sensor_data
+        
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des capteurs: {e}")
+        raise HTTPException(status_code=500, detail="Erreur interne du serveur")
 
-    existing = await session.execute(select(Sensor).where(Sensor.mac_address == mac_address))
-    sensor = existing.scalar_one_or_none()
-
-    if sensor:
-        sensor.last_seen = datetime.utcnow()
-        sensor.firmware_version = firmware
-    else:
-        sensor = Sensor(
-            mac_address=mac_address,
-            name=f"Sensor-{mac_address}",
-            firmware_version=firmware,
-            is_active=True
-        )
-        session.add(sensor)
-
-    await session.commit()
-    await session.refresh(sensor)
-
-    return sensor
-
-
-@router.get("/infos", response_model=List[SensorResponse])
-async def get_latest_measurements(session: AsyncSession = Depends(get_async_session)):
-    logger.info("Route /sensors/infos called")
-
-    await mqtt_client.request_refresh()
-    await asyncio.sleep(2)
-
-    sensors = await session.execute(select(Sensor))
-    sensors = sensors.scalars().all()
-    results = []
-
-    for sensor in sensors:
-        stmt = (
-            select(Measurement)
-            .where(Measurement.sensor_id == sensor.id)
-            .order_by(desc(Measurement.time))   
-            .limit(1)
-        )
-        measurement = await session.execute(stmt)
-        measurement = measurement.scalar_one_or_none()
-        results.append({
-            "sensor_id": sensor.id,
-            "mac_address": sensor.mac_address,
-            "temperature": measurement.temperature if measurement else None,
-            "humidity": measurement.humidity if measurement else None,
-            "pressure": measurement.pressure if measurement else None,
-        })
-        last_result = results[-1]  # le dictionnaire que tu viens d'ajouter
-    logger.info(f"Storing measurement: temp={last_result['temperature']}, hum={last_result['humidity']}, pres={last_result['pressure']} for sensor {last_result['sensor_id']}")
-    
-    return results
-
-
-@router.post("/register", response_model=SensorResponse)
-async def register_sensor(
-    request: SensorCreateRequest,
-    session: AsyncSession = Depends(get_async_session)
+@router.get("/{sensor_id}", response_model=SensorResponse)
+async def get_sensor(
+    sensor_id: int,
+    session: AsyncSession = Depends(get_db)
 ):
-    sensor = Sensor(
-        mac_address=request.mac_address,
-        name=request.name,
-        firmware_version=request.firmware_version,
-        battery_level=request.battery_level,
-    )
-    session.add(sensor)
-    await session.commit()
-    await session.refresh(sensor)
-    return sensor
+    try:
+        query = select(Sensor).where(Sensor.id == sensor_id)
+        result = await session.execute(query)
+        sensor = result.scalar_one_or_none()
+        
+        if not sensor:
+            raise HTTPException(status_code=404, detail="Capteur introuvable")
+            
+        return sensor
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération du capteur {sensor_id}: {e}")
+        raise HTTPException(status_code=500, detail="Erreur interne du serveur")
 
+@router.get("/{sensor_id}/measurements")
+async def get_sensor_measurements(
+    sensor_id: int,
+    limit: int = Query(100, ge=1, le=1000, description="Nombre de mesures à récupérer"),
+    hours: Optional[int] = Query(None, ge=1, le=8760, description="Dernières X heures"),
+    start_date: Optional[datetime] = Query(None, description="Date de début (ISO format)"),
+    end_date: Optional[datetime] = Query(None, description="Date de fin (ISO format)"),
+    session: AsyncSession = Depends(get_db)
+):
+    try:
+        sensor_query = select(Sensor).where(Sensor.id == sensor_id)
+        sensor_result = await session.execute(sensor_query)
+        sensor = sensor_result.scalar_one_or_none()
+        
+        if not sensor:
+            raise HTTPException(status_code=404, detail="Capteur introuvable")
+        
+        query = select(Measurement).where(Measurement.sensor_id == sensor_id)
+        
+        if hours:
+            cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+            query = query.where(Measurement.time >= cutoff_time)
+        elif start_date or end_date:
+            if start_date:
+                query = query.where(Measurement.time >= start_date)
+            if end_date:
+                query = query.where(Measurement.time <= end_date)
+        
+        query = query.order_by(desc(Measurement.time)).limit(limit)
+        
+        result = await session.execute(query)
+        measurements = result.scalars().all()
+        
+        formatted_measurements = []
+        for measurement in measurements:
+            measurement_dict = {
+                "time": measurement.time,
+                "temperature": measurement.temperature,
+                "humidity": measurement.humidity,
+                "pressure": measurement.pressure,
+            }
+            formatted_measurements.append(measurement_dict)
+        
+        return {
+            "sensor_id": sensor_id,
+            "sensor_name": sensor.name,
+            "sensor_mac": sensor.mac_address,
+            "measurement_count": len(formatted_measurements),
+            "measurements": formatted_measurements
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération des mesures du capteur {sensor_id}: {e}")
+        raise HTTPException(status_code=500, detail="Erreur interne du serveur")
 
-@router.put("/{sensor_id}/rename", response_model=SensorResponse)
-async def rename_sensor(sensor_id: int, data: SensorRenameRequest, session: AsyncSession = Depends(get_async_session)):
-    result = await session.execute(select(Sensor).where(Sensor.id == sensor_id))
-    sensor = result.scalar_one_or_none()
+@router.get("/{sensor_id}/latest")
+async def get_latest_measurement(
+    sensor_id: int,
+    session: AsyncSession = Depends(get_db)
+):
+    try:
+        sensor_query = select(Sensor).where(Sensor.id == sensor_id)
+        sensor_result = await session.execute(sensor_query)
+        sensor = sensor_result.scalar_one_or_none()
+        
+        if not sensor:
+            raise HTTPException(status_code=404, detail="Capteur introuvable")
+        
+        query = select(Measurement).where(
+            Measurement.sensor_id == sensor_id
+        ).order_by(desc(Measurement.time)).limit(1)
+        
+        result = await session.execute(query)
+        measurement = result.scalar_one_or_none()
+        
+        if not measurement:
+            return {
+                "sensor_id": sensor_id,
+                "sensor_name": sensor.name,
+                "sensor_mac": sensor.mac_address,
+                "measurement": None,
+                "message": "Aucune mesure disponible"
+            }
+        
+        return {
+            "sensor_id": sensor_id,
+            "sensor_name": sensor.name,
+            "sensor_mac": sensor.mac_address,
+            "measurement": {
+                "time": measurement.time,
+                "temperature": measurement.temperature,
+                "humidity": measurement.humidity,
+                "pressure": measurement.pressure,
+                "age_seconds": int((datetime.utcnow() - measurement.time).total_seconds()) if measurement.time else 0
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur lors de la récupération de la dernière mesure du capteur {sensor_id}: {e}")
+        raise HTTPException(status_code=500, detail="Erreur interne du serveur")
 
-    if not sensor:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-
-    sensor.name = data.name
-    await session.commit()
-    await session.refresh(sensor)
-
-    return sensor
-
-
-@router.delete("/{sensor_id}", status_code=204)
-async def delete_sensor(sensor_id: int, session: AsyncSession = Depends(get_async_session)):
-    result = await session.execute(select(Sensor).where(Sensor.id == sensor_id))
-    sensor = result.scalar_one_or_none()
-
-    if not sensor:
-        raise HTTPException(status_code=404, detail="Sensor not found")
-
-    await session.delete(sensor)
-    await session.commit()
-    return Response(status_code=204)
-
-
-@router.get("/debug")
-async def debug_measurements(session: AsyncSession = Depends(get_async_session)):
-    results = await session.execute(select(Measurement).order_by(desc(Measurement.timestamp)).limit(10))
-    measurements = results.scalars().all()
-    for m in measurements:
-        logger.info(f"{m.timestamp} - Sensor {m.sensor_id}: temp={m.temperature}, hum={m.humidity}, pres={m.pressure}")
-    return {"count": len(measurements)}
+@router.get("/{sensor_id}/stats")
+async def get_sensor_stats(
+    sensor_id: int,
+    hours: int = Query(24, ge=1, le=8760, description="Période pour les statistiques en heures"),
+    session: AsyncSession = Depends(get_db)
+):
+    try:
+        from sqlalchemy import func
+        
+        sensor_query = select(Sensor).where(Sensor.id == sensor_id)
+        sensor_result = await session.execute(sensor_query)
+        sensor = sensor_result.scalar_one_or_none()
+        
+        if not sensor:
+            raise HTTPException(status_code=404, detail="Capteur introuvable")
+        
+        cutoff_time = datetime.utcnow() - timedelta(hours=hours)
+        
+        stats_query = select(
+            func.count(Measurement.time).label('count'),
+            func.avg(Measurement.temperature).label('avg_temp'),
+            func.min(Measurement.temperature).label('min_temp'),
+            func.max(Measurement.temperature).label('max_temp'),
+            func.avg(Measurement.humidity).label('avg_humidity'),
+            func.min(Measurement.humidity).label('min_humidity'),
+            func.max(Measurement.humidity).label('max_humidity'),
+            func.avg(Measurement.pressure).label('avg_pressure'),
+            func.min(Measurement.pressure).label('min_pressure'),
+            func.max(Measurement.pressure).label('max_pressure'),
+            func.avg(Measurement.battery_voltage).label('avg_battery')
+        ).where(
+            and_(
+                Measurement.sensor_id == sensor_id,
+                Measurement.time >= cutoff_time
+            )
+        )
+        
+        result = await session.execute(stats_query)
+        stats = result.first()
+        
+        return {
+            "sensor_id": sensor_id,
+            "sensor_name": sensor.name,
+            "period_hours": hours,
+            "measurement_count": stats.count or 0,
+            "statistics": {
+                "temperature": {
+                    "average": round(float(stats.avg_temp or 0), 2),
+                    "minimum": round(float(stats.min_temp or 0), 2),
+                    "maximum": round(float(stats.max_temp or 0), 2)
+                },
+                "humidity": {
+                    "average": round(float(stats.avg_humidity or 0), 2),
+                    "minimum": round(float(stats.min_humidity or 0), 2),
+                    "maximum": round(float(stats.max_humidity or 0), 2)
+                },
+                "pressure": {
+                    "average": round(float(stats.avg_pressure or 0), 2),
+                    "minimum": round(float(stats.min_pressure or 0), 2),
+                    "maximum": round(float(stats.max_pressure or 0), 2)
+                },
+                "battery": {
+                    "average": round(float(stats.avg_battery or 0), 3)
+                }
+            }
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur lors du calcul des statistiques du capteur {sensor_id}: {e}")
+        raise HTTPException(status_code=500, detail="Erreur interne du serveur")

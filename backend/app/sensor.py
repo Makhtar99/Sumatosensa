@@ -5,7 +5,7 @@ class SensorRenameRequest(BaseModel):
 
 class SensorResponse(BaseModel):
     id: int
-    mac_address: str
+    source_address: str
     name: str
     is_active: bool
 

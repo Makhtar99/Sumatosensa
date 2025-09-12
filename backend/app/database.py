@@ -1,15 +1,10 @@
-import os
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from contextlib import asynccontextmanager
-
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "postgresql+asyncpg://sumatosensa_user:sumatosensa_password@sumatosensa_db:5432/sumatosensa"
-)
+from app.config import settings
 
 engine = create_async_engine(
-    DATABASE_URL,
+    settings.DATABASE_URL,
     echo=False,  # Set to True for SQL debugging
     pool_size=10,
     max_overflow=20,

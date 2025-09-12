@@ -5,14 +5,14 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(20) DEFAULT 'manager' CHECK (role IN ('admin', 'manager')),
+    role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('admin', 'user')),
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS sensors (
     id SERIAL PRIMARY KEY,
-    mac_address VARCHAR(17) UNIQUE NOT NULL, 
+    source_address VARCHAR(17) UNIQUE NOT NULL, 
     name VARCHAR(100) NOT NULL,
     is_active BOOLEAN DEFAULT true,
     battery_level FLOAT, 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE INDEX IF NOT EXISTS idx_measurements_time ON measurements (time DESC);
 CREATE INDEX IF NOT EXISTS idx_measurements_sensor_id ON measurements (sensor_id);
 CREATE INDEX IF NOT EXISTS idx_measurements_sensor_time ON measurements (sensor_id, time DESC);
-CREATE INDEX IF NOT EXISTS idx_sensors_mac_address ON sensors (mac_address);
+CREATE INDEX IF NOT EXISTS idx_sensors_source_address ON sensors (source_address);
 CREATE INDEX IF NOT EXISTS idx_alerts_sensor_id ON alerts (sensor_id);
 CREATE INDEX IF NOT EXISTS idx_alerts_created_at ON alerts (created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);

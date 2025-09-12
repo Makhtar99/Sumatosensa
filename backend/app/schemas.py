@@ -7,7 +7,6 @@ class UserBase(BaseModel):
     email: EmailStr
     role: str = "admin"
 
-
 class UserCreate(UserBase):
     password: str
 
@@ -59,19 +58,17 @@ class LoginResponse(BaseModel):
 
 class SensorResponse(BaseModel):
     sensor_id: int
-    mac_address: str
-    name: Optional[str] = None
+    source_address: int
     temperature: Optional[float] = None
     humidity: Optional[float] = None
     pressure: Optional[float] = None
 
-
 class SensorRenameRequest(BaseModel):
     name: str
 
-
 class SensorCreateRequest(BaseModel):
-    mac_address: str
+    source_address: int
     firmware_version: Optional[str] = None
     name: Optional[str] = None
     battery_level: Optional[float] = None
+    

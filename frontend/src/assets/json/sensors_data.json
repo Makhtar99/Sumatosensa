@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "piece": "Salon",
+    "temperature": 23.4,
+    "humidite": 45,
+    "pression": 1012,
+    "batterie": 78,
+    "statut": "connecté",
+    "last_update": "2025-08-26 14:32"
+  },
+  {
+    "id": 2,
+    "piece": "Chambre",
+    "temperature": 21.8,
+    "humidite": 55,
+    "pression": 1015,
+    "batterie": 65,
+    "statut": "connecté",
+    "last_update": "2025-08-26 14:31"
+  },
+  {
+    "id": 3,
+    "piece": "Grenier",
+    "temperature": 30.5,
+    "humidite": 70,
+    "pression": 1008,
+    "batterie": 25,
+    "statut": "batterie faible",
+    "last_update": "2025-08-26 14:28"
+  }
+]
