@@ -2,11 +2,14 @@
 import { ref, onMounted, computed } from 'vue'
 import { fetchSensor } from '@/services/sensorService'
 
-import { voltageToPercent } from '@/assets/functions/sensors/VoltageToPercent';
-import { formatedTimestamp } from '@/assets/functions/FormatedDate';
+import { voltageToPercent } from '@/assets/functions/sensors/VoltageToPercent'
+import { formatedTimestamp } from '@/assets/functions/FormatedDate'
 
-const error = ref<string | null>(null);
-const loading = ref<boolean>(false);
+// import de ton hook
+import { usePersistentRef, useTemperatureUnit } from '@/assets/functions/degree'
+
+const error = ref<string | null>(null)
+const loading = ref<boolean>(false)
 
 const currentSensor = ref({
   piece: 'Capteur 1',
@@ -18,6 +21,18 @@ const currentSensor = ref({
   last_update: ''
 })
 
+// unité 
+const temperatureUnit = usePersistentRef<"Celsius" | "Fahrenheit">(
+  "temperatureUnit",
+  "Celsius"
+)
+
+// conversion 
+const temperature = useTemperatureUnit(
+  computed(() => currentSensor.value.temperature),
+  temperatureUnit
+)
+
 const currentSensorStatus = computed(() => {
   if (currentSensor.value.batterie === 0) {
     return 'Hors ligne'
@@ -27,7 +42,6 @@ const currentSensorStatus = computed(() => {
   }
   return 'Connecté'
 })
-
 
 const getBatteryColor = (batterie: number) => {
   if (batterie > 50) return 'text-green-600'
@@ -40,7 +54,6 @@ onMounted(async () => {
     loading.value = true
     const resp = await fetchSensor()
     const thisSensor = ref(resp[0])
-    // console.log(thisSensor.value.last_measurement, 'measurement 1')
 
     currentSensor.value.piece = thisSensor.value.name || `Capteur ${thisSensor.value.id}`
 
@@ -67,23 +80,31 @@ onMounted(async () => {
 </script>
 
 <template>
-
   <div class="bg-[var(--color-surface)] border border-[var(--color-sumato-border)] rounded-xl p-6 space-y-4">
     <h2 class="text-lg !mt-0 font-semibold">{{ currentSensor.piece }} / Salon</h2>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- Temperature -->
       <div class="text-center">
-        <p class="text-2xl font-bold text-[var(--color-sumato-primary)]">{{ Math.round(currentSensor.temperature) }}°C</p>
+        <p class="text-2xl font-bold text-[var(--color-sumato-primary)]">
+          {{ Math.round(temperature) }}°{{ temperatureUnit }}
+        </p>
         <span class="text-sm opacity-70">Température</span>
       </div>
+
+      <!-- Humidite -->
       <div class="text-center">
         <p class="text-2xl font-bold text-blue-600">{{ Math.round(currentSensor.humidite) }}%</p>
         <span class="text-sm opacity-70">Humidité</span>
       </div>
+
+      <!-- Pression -->
       <div class="text-center">
         <p class="text-2xl font-bold text-indigo-600">{{ Math.round(currentSensor.pression) }} hPa</p>
         <span class="text-sm opacity-70">Pression</span>
       </div>
+
+      <!-- Batterie -->
       <div class="text-center">
         <p :class="['text-2xl font-bold', getBatteryColor(currentSensor.batterie)]">
           {{ currentSensor.batterie }}%
@@ -91,6 +112,7 @@ onMounted(async () => {
         <span class="text-sm opacity-70">Batterie</span>
       </div>
     </div>
+
     <div class="flex justify-between items-center mt-4">
       <span
         class="font-medium"
@@ -99,13 +121,12 @@ onMounted(async () => {
           '!text-yellow-600': currentSensorStatus === 'Batterie faible',
           '!text-[var(--color-sumato-danger)]': currentSensorStatus === 'Hors ligne',
         }"
-
       >
         ● {{ currentSensorStatus }}
       </span>
-      <span class="text-sm text-gray-500"
-        >Dernière mise à jour : {{ currentSensor.last_update }}</span
-      >
+      <span class="text-sm text-gray-500">
+        Dernière mise à jour : {{ currentSensor.last_update }}
+      </span>
     </div>
   </div>
 </template>
