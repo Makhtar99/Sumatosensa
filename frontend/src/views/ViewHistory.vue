@@ -8,7 +8,7 @@ import temperatureData from '../assets/json/temperature_data.json'
 import humidityData from '../assets/json/humidity_data.json'
 import pressureData from '../assets/json/pressure_data.json'
 
-import { usePersistentRef, useTemperatureUnit } from '@/assets/functions/degree'
+import { useUserPrefStore } from '@/stores/userpref'
 
 const tabs = ['Température', 'Humidité', 'Pression'] as const
 type TabName = typeof tabs[number]
@@ -19,7 +19,8 @@ const selectedPlace = ref('Salon')
 
 const isTelephone = useMediaQuery('(max-width: 768px)')
 
-const temperatureUnit = usePersistentRef<'Celsius' | 'Fahrenheit'>('temperatureUnit', 'Celsius')
+
+const userPref = useUserPrefStore()
 
 const dataMap: Record<TabName, { date: string; room: string; value: number }[]> = {
   Température: temperatureData,
@@ -32,14 +33,15 @@ const filteredData = computed(() => {
   return dataMap[selectedTab.value].filter(d => d.room === selectedPlace.value)
 })
 
-// conversion
+
 const displayedData = computed(() => {
   if (selectedTab.value !== 'Température') return filteredData.value
 
   return filteredData.value.map(d => {
-    const tempRef = ref(d.value)
-    const tempConverted = useTemperatureUnit(tempRef, temperatureUnit)
-    return { ...d, value: Math.round(tempConverted.value) }
+    const temp = userPref.tempUnit === 'Fahrenheit'
+      ? Math.round(d.value * 9 / 5 + 32)
+      : d.value
+    return { ...d, value: temp }
   })
 })
 </script>
