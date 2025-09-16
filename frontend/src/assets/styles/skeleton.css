@@ -17,8 +17,6 @@
         opacity: 1;
     }
 }
-
-/* Supprimé le déplacement */
 .p-skeleton::after {
     content: none;
 }

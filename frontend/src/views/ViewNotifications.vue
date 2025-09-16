@@ -104,12 +104,12 @@ const typeStyle: Record<string, string> = {
       <div
         v-for="(notif, index) in filteredNotifList"
         :key="index"
-        class="relative flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 rounded-xl p-4 shadow bg-[var(--color-surface)]"
+        class="relative flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 rounded-xl p-4 shadow"
         :class="importanceStyle[notif.importance] || importanceStyle.info"
       >
         <button
           @click="hideNotification(index)"
-          class="absolute rounded-[999px] top-2 right-4 transition !p-0.5 SumatoIcon visibleButton"
+          class="absolute rounded-[999px] top-2 right-4 transition !p-0.5 SumatoIcon"
           title="Fermer la notification"
         >
           <img :src="X" alt="Close" class="w-4 h-4" />
@@ -126,7 +126,6 @@ const typeStyle: Record<string, string> = {
           </div>
         </div>
 
-        <!-- 🏷️ Type -->
         <span
           class="mt-3 md:mt-auto px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap"
           :class="typeStyle[notif.type] || typeStyle['Général']"
@@ -141,9 +140,3 @@ const typeStyle: Record<string, string> = {
     </div>
   </div>
 </template>
-
-<style scoped>
-.visibleButton:hover {
-  background-color: transparent;
-}
-</style>

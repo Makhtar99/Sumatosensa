@@ -3,15 +3,27 @@ import { ref, watch } from 'vue'
 
 // Fonction utilitaire pour stocker dans le localStorage
 function usePersistentRef<T>(key: string, defaultValue: T) {
-    const storedValue = localStorage.getItem(key)
-    const state = ref<T>(storedValue ? JSON.parse(storedValue) : defaultValue)
+  const storedValue = localStorage.getItem(key)
+  let parsed: T
 
-    watch(state, (newValue) => {
-        localStorage.setItem(key, JSON.stringify(newValue))
-    }, { deep: true })
+  try {
+    parsed = storedValue !== null ? JSON.parse(storedValue) : defaultValue
+  } catch {
+    parsed = defaultValue
+  }
 
-    return state
-    }
+  const state = ref<T>(parsed)
+
+  watch(
+    state,
+    (newValue) => {
+      localStorage.setItem(key, JSON.stringify(newValue))
+    },
+    { deep: true }
+  )
+
+  return state
+}
 
     export const useUserPrefStore = defineStore('userPref', () => {
     // Température
@@ -51,6 +63,8 @@ function usePersistentRef<T>(key: string, defaultValue: T) {
     // form d'inscription
     const hasDoneOnboarding = usePersistentRef<boolean>("hasDoneOnboarding", false)
 
+    const userCity = usePersistentRef<string>("userCity", "Paris")
+
     return {
         tempUnit,
         pressureUnit,
@@ -75,5 +89,6 @@ function usePersistentRef<T>(key: string, defaultValue: T) {
         sensor2name,
         sensor3name,
         hasDoneOnboarding,
+        userCity
     }
 })

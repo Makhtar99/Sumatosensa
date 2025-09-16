@@ -11,7 +11,7 @@ export type User = {
 export async function onLogout() {
   const auth = useAuthStore()
   await auth.logout()
-  window.location.reload()
+  window.location.href = '/login'
 }
 
 export async function toLogin() {

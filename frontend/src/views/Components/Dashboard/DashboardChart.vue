@@ -13,18 +13,6 @@ const anomaliesContainer = ref<HTMLElement | null>(null)
 
 onMounted(() => {
   if (!anomaliesContainer.value) return
-
-  const container = anomaliesContainer.value
-  let scrollAmount = 0
-
-  const interval = setInterval(() => {
-    if (!container) return
-    scrollAmount += 1
-    if (scrollAmount >= container.scrollWidth - container.clientWidth) {
-      scrollAmount = 0
-    }
-    container.scrollLeft = scrollAmount
-  }, 30)
 })
 
 const selectedPeriod = defineModel<'today' | 'thisWeek' | 'fullMonth'>(
@@ -133,7 +121,7 @@ const anomalies = computed(() => {
   })
 })
 
-function getColor(room) {
+function getColor(room: string) {
   switch (room) {
     case 'Salon':
       return '#3b82f6'

@@ -58,9 +58,6 @@ const goback = () => router.go(-1)
       <template v-if="isAuthenticated">
         <div class="flex items-center gap-2">
           <DarkModeButton />
-          <!-- <RouterLink to="/settings">
-            <img :src="Avatar" alt="Avatar" class="w-5 h-5" />
-          </RouterLink> -->
           <RouterLink v-if="isAdmin" to="/admin" class="bg-[var(--color-primary)] px-2 py-1 rounded-xl">
             Admin
           </RouterLink>

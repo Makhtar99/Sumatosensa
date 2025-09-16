@@ -26,7 +26,7 @@ const routes = [
         path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, hasDoneOnboarding: true },
       },
       {
         path: 'management',
@@ -52,13 +52,13 @@ const routes = [
         component: Settings,
         meta: { requiresAuth: true },
       },
-      {
-        path: '/onboarding',
-        name: 'OnboardingPreferences',
-        component: () => OnboardingPreferences,
-        meta: { requiresAuth: true },
-      },
     ],
+  },
+  {
+    path: '/onboarding',
+    name: 'OnboardingPreferences',
+    component: () => OnboardingPreferences,
+    meta: { requiresAuth: true },
   },
   {
     path: '/login',
@@ -96,10 +96,6 @@ router.beforeEach(async (to) => {
   const auth = useAuthStore()
   const userPref = useUserPrefStore()
 
-  if (auth.user && !userPref.hasDoneOnboarding && to.name !== 'OnboardingPreferences') {
-    return { name: 'OnboardingPreferences' }
-  }
-
   if (!auth.user && localStorage.getItem('access_token')) {
     try {
       await auth.getCurrentUser()
@@ -108,6 +104,10 @@ router.beforeEach(async (to) => {
 
   const requiresAuth = to.matched.some((r) => r.meta.requiresAuth)
   const requiresAdmin = to.matched.some((r) => r.meta.isAdmin)
+
+  if (requiresAuth && auth.isAuthenticated && !userPref.hasDoneOnboarding && to.name !== 'OnboardingPreferences') {
+    return { name: 'OnboardingPreferences' }
+  }
 
   if (requiresAuth && !auth.isAuthenticated) {
     return { name: 'Login', query: { redirect: to.fullPath } }

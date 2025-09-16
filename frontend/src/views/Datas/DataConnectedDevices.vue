@@ -67,16 +67,13 @@ const toggleDeviceStatus = (device: Device) => {
         </label>
       </div>
 
-      <!-- Icon -->
       <img :src="device.icon" alt="Device Icon" class="w-16 h-16 mb-2" />
 
-      <!-- Text & Status -->
       <div class="flex flex-col justify-between items-center gap-3 w-full">
         <h5 class="text-lg font-semibold text-[var(--color-sumato-text)] text-center m-0">
           {{ device.name }}
         </h5>
 
-        <!-- Badge status -->
         <div
           class="px-2 text-xs font-medium rounded-md h-fit flex items-center gap-1"
           :class="{
@@ -103,6 +100,7 @@ const toggleDeviceStatus = (device: Device) => {
     </li>
   </ul>
 </template>
+
 <style scoped>
 .loader {
   border: 2px solid rgba(0, 0, 0, 0.1);

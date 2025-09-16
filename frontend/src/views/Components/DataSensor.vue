@@ -29,7 +29,7 @@ const displayPressure = computed(() => {
     case 'inHg':
       return Number((props.pression * 0.02953).toFixed(2))
     case 'bar':
-      return (props.pression / 1000).toFixed(2) // 1 bar = 1000 hPa
+      return (props.pression / 1000).toFixed(2)
     default:
       return Math.round(props.pression)
   }

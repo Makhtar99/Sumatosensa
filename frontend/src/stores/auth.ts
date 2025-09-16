@@ -36,7 +36,6 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await apiService.logout()
     } catch (err) {
-      // on log sans bloquer la déconnexion côté client
       console.error('Erreur lors de la déconnexion:', err)
     } finally {
       user.value = null

@@ -73,6 +73,11 @@ const saveSensors = () => {
   window.alert('Préférences générales enregistrées.')
 }
 
+const saveCity = () => {
+  userPref.userCity = userPref.userCity
+  window.alert('Ville enregistrée.')
+}
+
 const saveUnits = () => {
   userPref.tempUnit = units.temp
   userPref.pressureUnit = units.pressure
@@ -110,7 +115,7 @@ const saveAlerts = () => {
 
 <template>
   <div class="flex flex-col gap-6" :class="isTelephone ? 'p-4' : 'p-6'">
-    <h1 class="text-2xl font-semibold mb-2">Paramètres</h1>
+    <h1 class="flex justify-start !my-0 !p-0 text-center title">Paramètres</h1>
 
     <section class="border border-var[--color-sumato-border] rounded-xl p-6 bg-[var(--color-sumato-surface)]">
       <div class="flex flex-col md:flex-row md:items-start gap-6">
@@ -123,8 +128,7 @@ const saveAlerts = () => {
             class="w-full px-4 py-2 rounded-lg border border-gray-300" />
           <input v-model="user.email" type="email" placeholder="Adresse email"
             class="w-full px-4 py-2 rounded-lg border border-gray-300" />
-          <button :disabled="auth.isLoading"
-            class="w-full px-4 py-2 rounded-lg disabled:opacity-50 flex m-auto">
+          <button :disabled="auth.isLoading" class="px-4 py-2 rounded-lg flex m-auto">
             {{ auth.isLoading ? 'Enregistrement…' : 'Enregistrer les modifications' }}
           </button>
         </div>
@@ -152,6 +156,28 @@ const saveAlerts = () => {
         </div>
       </div>
     </section>
+
+    <section class="border border-var[--color-sumato-border] rounded-xl p-6 bg-[var(--color-sumato-surface)]">
+      <div class="flex flex-col md:flex-row md:items-start gap-6">
+        <div class="md:w-1/3">
+          <h3 class="text-base font-semibold">Ville</h3>
+          <p class="text-sm text-gray-500 mt-1">Choisissez la ville de référence pour la température extérieure.</p>
+        </div>
+        <div class="md:flex-1 space-y-4">
+          <select v-model="userPref.userCity" class="w-full px-3 py-2 rounded-lg border bg-[var(--color-sumato-light)]">
+            <option value="Paris">Paris</option>
+            <option value="Lyon">Lyon</option>
+            <option value="Marseille">Marseille</option>
+            <option value="Bordeaux">Bordeaux</option>
+            <option value="Lille">Lille</option>
+          </select>
+          <button @click="saveCity" class="mt-4 px-4 py-2 rounded-lg flex m-auto">
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </section>
+
 
     <section class="border border-var[--color-sumato-border] rounded-xl p-6 bg-[var(--color-sumato-surface)]">
       <div class="flex flex-col md:flex-row md:items-start gap-6">
@@ -277,7 +303,7 @@ const saveAlerts = () => {
           <h3 class="text-base font-semibold">Gestion du compte</h3>
           <p class="text-sm text-gray-500 mt-1">Déconnectez-vous ou supprimez définitivement votre compte.</p>
         </div>
-        <div class="md:flex-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="md:flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <button @click="onLogout" class="px-4 py-2 rounded-lg buttonUser flex items-center justify-center gap-2">
             <img :src="LogOut" alt="Logout" class="w-5 h-5" /> Déconnexion
           </button>
