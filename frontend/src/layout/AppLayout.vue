@@ -1,34 +1,34 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import Sidebar from './AppSidebar.vue'
 import Topbar from './AppTopbar.vue'
-
-import { useMediaQuery } from '@vueuse/core'
+import Footer from './AppFooter.vue'
 
 const isSidebarCollapsed = ref(false)
-
 const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const contentMargin = computed(() => {
   if (isTelephone.value) return 'ml-[0px]'
-  return isSidebarCollapsed.value ? 'ml-[80px]' : 'ml-[256px]'
+  return isSidebarCollapsed.value ? 'ml-[76px]' : 'ml-[256px]'
 })
 
 </script>
 
 <template>
-  <div class="flex h-screen bg-[var(--color-sumato-surface)] transition-colors duration-300">
+  <div class="flex h-screen transition-colors duration-300 max-w-full overflow-hidden">
     <Sidebar v-model:isSidebarCollapsed="isSidebarCollapsed" />
 
     <div
-      class="flex-1 flex flex-col bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] transition-all duration-300 ease-in-out"
-      :class="[contentMargin, { 'overflow-y-auto mb-[80px]': isTelephone }]"
+      class="flex-1 flex flex-col transition-all duration-300 ease-in-out"
+      :class="[contentMargin, { 'overflow-y-auto mb-[76px]': isTelephone }]"
     >
       <Topbar />
 
-      <main class="flex-1 overflow-y-auto max-h-full" :class="[isTelephone ? 'p-0' : 'p-4 w-full']">
+      <main class="flex-1 overflow-y-scroll mb-10 max-h-full max-w-full" :class="[isTelephone ? 'p-0' : 'p-4 w-full']">
         <RouterView />
       </main>
     </div>
+    <Footer class="fixed bottom-0" />
   </div>
 </template>

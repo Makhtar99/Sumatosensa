@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useUserPrefStore } from '@/stores/userpref'
 
 import AppLayout from '../layout/AppLayout.vue'
-
-import LoginForm from '../views/LoginForm.vue'
-import RegisterForm from '../views/RegisterForm.vue'
+import LoginForm from '../views/Auth/LoginForm.vue'
+import RegisterForm from '../views/Auth/RegisterForm.vue'
 
 import Dashboard from '../views/ViewDashboard.vue'
 import Settings from '../views/ViewSettings.vue'
 import Management from '../views/ViewManagement.vue'
 import Devices from '../views/ViewSensor.vue'
 import Notifications from '../views/ViewNotifications.vue'
+import OnboardingPreferences from '@/views/OnboardingPreferences.vue'
 
 import AdminExampleView from '@/views/ViewAdminListUser.vue'
 import UserRoleManager from '../views/UserRoleManager.vue'
@@ -25,31 +26,37 @@ const routes = [
         path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'management',
         name: 'Management',
         component: Management,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'sensors',
         name: 'Devices',
         component: Devices,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'notifications',
         name: 'Notifications',
         component: Notifications,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
       },
       {
         path: 'settings',
         name: 'Settings',
         component: Settings,
-        meta: { requiresAuth: false },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/onboarding',
+        name: 'OnboardingPreferences',
+        component: () => OnboardingPreferences,
+        meta: { requiresAuth: true },
       },
     ],
   },
@@ -77,8 +84,6 @@ const routes = [
     component: UserRoleManager,
     meta: { requiresAuth: true, isAdmin: true },
   },
-
-
 ]
 
 const router = createRouter({
@@ -86,14 +91,19 @@ const router = createRouter({
   routes,
 })
 
+
 router.beforeEach(async (to) => {
   const auth = useAuthStore()
+  const userPref = useUserPrefStore()
+
+  if (auth.user && !userPref.hasDoneOnboarding && to.name !== 'OnboardingPreferences') {
+    return { name: 'OnboardingPreferences' }
+  }
 
   if (!auth.user && localStorage.getItem('access_token')) {
     try {
       await auth.getCurrentUser()
-    } catch {
-    }
+    } catch {}
   }
 
   const requiresAuth = to.matched.some((r) => r.meta.requiresAuth)

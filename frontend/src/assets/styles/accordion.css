@@ -1,0 +1,109 @@
+/* Accordion personnalisé pour anomalies (Sumātosensā) */
+
+.p-accordionpanel {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--color-sumato-border);
+}
+
+.p-accordionheader {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.125rem;
+  font-weight: 600;
+  background-color: var(--color-sumato-surface);
+  color: var(--color-sumato-text);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.p-accordionpanel:first-child > .p-accordionheader {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+
+.p-accordionpanel:last-child > .p-accordionheader,
+.p-accordionpanel:last-child.p-accordionpanel-active > .p-accordionheader {
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+.p-accordionheader-toggle-icon {
+  color: var(--color-sumato-text);
+}
+
+.p-accordionpanel:not(.p-disabled) .p-accordionheader:focus-visible {
+  outline: 1px solid var(--color-primary);
+  outline-offset: -1px;
+}
+
+.p-accordionpanel:not(.p-accordionpanel-active):not(.p-disabled) > .p-accordionheader:hover,
+.p-accordionpanel:not(.p-disabled).p-accordionpanel-active > .p-accordionheader:hover {
+  background-color: var(--color-sumato-light);
+  color: var(--color-sumato-text);
+}
+
+.p-accordionpanel:not(.p-disabled) > .p-accordionheader:hover .p-accordionheader-toggle-icon,
+.p-accordionpanel:not(.p-disabled).p-accordionpanel-active > .p-accordionheader .p-accordionheader-toggle-icon {
+  color: var(--color-sumato-text);
+}
+
+.p-accordioncontent-content {
+  background-color: var(--notif-critical-bg);
+  color: var(--notif-critical-text);
+  padding: 0 1.125rem 1.125rem;
+  border-left: 1px solid var(--notif-critical-border);
+  border-right: 1px solid var(--notif-critical-border);
+  border-bottom: 1px solid var(--notif-critical-border);
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+}
+
+.anomaly-badge {
+  display: inline-flex;
+  height: 1.25rem;
+  width: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: var(--notif-critical-border);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.anomaly-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+  border-bottom: 1px dashed var(--notif-critical-border);
+}
+
+.anomaly-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Dark mode */
+:root[data-theme="dark"] .p-accordionheader {
+  background-color: var(--color-sumato-dark);
+  color: var(--color-sumato-text);
+}
+
+:root[data-theme="dark"] .p-accordionpanel:not(.p-disabled) > .p-accordionheader:hover {
+  background-color: var(--color-sumato-dark);
+  color: var(--color-sumato-text);
+}
+
+:root[data-theme="dark"] .p-accordioncontent-content {
+  background-color: var(--notif-critical-bg);
+  color: var(--notif-critical-text);
+  border-color: var(--notif-critical-border);
+}
+
+:root[data-theme="dark"] .anomaly-badge {
+  background-color: var(--notif-critical-border);
+  color: var(--notif-critical-text);
+}

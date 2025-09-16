@@ -1,24 +1,36 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import notifications from '../assets/json/notification_data.json'
+import X from '../assets/svg/x.svg'
 
-const notifList = ref(notifications)
-
-const importanceFilter = ref<'all' | 'critical' | 'warning' | 'info'>('all')
+const notifList = ref(
+  notifications.map((n) => ({
+    ...n,
+    visible: true,
+  })),
+)
+const selectedFilter = ref<'all' | 'critical' | 'warning' | 'info'>('all')
 
 const filteredNotifList = computed(() => {
-  if (importanceFilter.value === 'all') return notifList.value
-  return notifList.value.filter(n => n.importance === importanceFilter.value)
+  return notifList.value.filter(
+    (n) => n.visible && (selectedFilter.value === 'all' || n.importance === selectedFilter.value),
+  )
 })
 
+const hideNotification = (index: number) => {
+  notifList.value[index].visible = false
+}
+
 const importanceStyle: Record<string, string> = {
-   info:     'border-[var(--notif-info-border)] bg-[var(--notif-info-bg)] text-[var(--notif-info-text)]',
-  warning:  'border-[var(--notif-warning-border)] bg-[var(--notif-warning-bg)] text-[var(--notif-warning-text)]',
-  critical: 'border-[var(--notif-critical-border)] bg-[var(--notif-critical-bg)] text-[var(--notif-critical-text)]',
+  info: 'border-[var(--notif-info-border)] bg-[var(--notif-info-bg)] text-[var(--notif-info-text)]',
+  warning:
+    'border-[var(--notif-warning-border)] bg-[var(--notif-warning-bg)] text-[var(--notif-warning-text)]',
+  critical:
+    'border-[var(--notif-critical-border)] bg-[var(--notif-critical-bg)] text-[var(--notif-critical-text)]',
 }
 
 const typeStyle: Record<string, string> = {
-  Système: 'bg-[var(--notif-info-border)] text-[var(--color-sumato-text)]',
+  Système: 'bg-[var(--notif-info-border)]',
   Température: 'bg-[var(--notif-critical-border)] text-[var(--color-sumato-danger)]',
   Humidité: 'bg-[var(--notif-warning-border)] text-blue-700',
   Pression: 'bg-[var(--color-sumato-card-pressure)] text-yellow-700',
@@ -29,50 +41,94 @@ const typeStyle: Record<string, string> = {
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="title !mt-0 mb-6">Notifications & Alertes</h1>
+  <div class="flex flex-col gap-4 p-4">
+    <h1 class="flex justify-start !my-0 !p-0 text-center title">Notifications & Alertes</h1>
 
-    <div class="mb-6 max-w-sm">
-      <label for="importanceFilter" class="block mb-2 text-sm font-medium text-[var(--color-sumato-text)]">Filtrer par importance :</label>
-      <select
-        id="importanceFilter"
-        v-model="importanceFilter"
-        class="block w-full p-2 border border-[var(--color-sumato-border)] rounded-md bg-white text-[var(--color-sumato-text)]"
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <button
+        @click="selectedFilter = 'all'"
+        :aria-pressed="selectedFilter === 'all'"
+        :class="[
+          'px-4 py-2 font-medium transition-all border',
+          'rounded-l-lg',
+          selectedFilter === 'all'
+            ? 'bg-[var(--color-primary)]'
+            : 'hover:bg-[var(--color-sumato-light)]',
+        ]"
       >
-        <option value="all">Toutes</option>
-        <option value="critical">Critique</option>
-        <option value="warning">Avertissement</option>
-        <option value="info">Information</option>
-      </select>
+        Toutes
+      </button>
+
+      <button
+        @click="selectedFilter = 'critical'"
+        :aria-pressed="selectedFilter === 'critical'"
+        :class="[
+          'px-4 py-2 font-medium transition-all border-t border-b',
+          selectedFilter === 'critical'
+            ? 'bg-[var(--color-primary)]'
+            : 'hover:bg-[var(--color-sumato-light)]',
+        ]"
+      >
+        Critique
+      </button>
+
+      <button
+        @click="selectedFilter = 'warning'"
+        :aria-pressed="selectedFilter === 'warning'"
+        :class="[
+          'px-4 py-2 font-medium transition-all border-t border-b',
+          selectedFilter === 'warning'
+            ? 'bg-[var(--color-primary)]'
+            : 'hover:bg-[var(--color-sumato-light)]',
+        ]"
+      >
+        Avertissement
+      </button>
+
+      <button
+        @click="selectedFilter = 'info'"
+        :aria-pressed="selectedFilter === 'info'"
+        :class="[
+          'px-4 py-2 font-medium transition-all border',
+          'rounded-r-lg',
+          selectedFilter === 'info'
+            ? 'bg-[var(--color-primary)]'
+            : 'hover:bg-[var(--color-sumato-light)]',
+        ]"
+      >
+        Information
+      </button>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div
         v-for="(notif, index) in filteredNotifList"
         :key="index"
-        class="flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 rounded-xl p-4 shadow bg-[var(--color-surface)]"
+        class="relative flex flex-col md:flex-row justify-between items-start md:items-center border-l-4 rounded-xl p-4 shadow bg-[var(--color-surface)]"
         :class="importanceStyle[notif.importance] || importanceStyle.info"
       >
+        <button
+          @click="hideNotification(index)"
+          class="absolute rounded-[999px] top-2 right-4 transition !p-0.5 SumatoIcon visibleButton"
+          title="Fermer la notification"
+        >
+          <img :src="X" alt="Close" class="w-4 h-4" />
+        </button>
+
         <div class="flex-1">
-          <p class="font-semibold text-base md:text-lg text-[var(--color-sumato-text)]">
+          <p class="font-semibold text-base md:text-lg w-[80%]">
             {{ notif.alerte_message }}
           </p>
           <div class="flex flex-row w-full">
-            <p class="font-medium text-[var(--color-sumato-text)] whitespace-nowrap">
-              Reçue le 
-                <span us>
-                  {{ notif.date }}
-                </span>
-              à
-                <span us>
-                  {{ notif.hour }}
-                </span>
+            <p class="font-medium whitespace-nowrap">
+              Reçue le <span>{{ notif.date }}</span> à <span>{{ notif.hour }}</span>
             </p>
           </div>
         </div>
 
+        <!-- 🏷️ Type -->
         <span
-          class="mt-3 md:mt-0 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap"
+          class="mt-3 md:mt-auto px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap"
           :class="typeStyle[notif.type] || typeStyle['Général']"
         >
           {{ notif.type || 'Général' }}
@@ -85,3 +141,9 @@ const typeStyle: Record<string, string> = {
     </div>
   </div>
 </template>
+
+<style scoped>
+.visibleButton:hover {
+  background-color: transparent;
+}
+</style>

@@ -1,6 +1,18 @@
 @import './base.css';
 @import "tailwindcss";
 @import "./datatable.css";
+@import "./skeleton.css";
+@import "./accordion.css";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-sumato-ivory);
+  color: var(--color-sumato-text);
+  overflow-y: hidden;
+  max-height: 100vh;
+}
 
 #app {
   margin: 0 auto 2rem auto;
@@ -8,97 +20,26 @@
   background-color: var(--color-sumato-surface);
 }
 
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-@media (max-width: 1441px) {
-  .app-layout {
-    max-width: 100%;
-  }
-}
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.nav-border::after {
-  position: absolute;
-  right: 0;
-  top: 10%;
-  height: 80%;
-  width: 1px;
-  background-color: var(--color-sumato-border);
-}
-
-.sidebar {
-    width: 20%;
-}
-
 .sidebarItem:hover {
   background-color: var(--color-primary);
   color: white;
 }
 
-.sidebar-is-active {
-  background-color: var(--color-primary);
+@media (max-width: 768px) {
+  .title {
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+.dot {
+  transition: transform 0.3s ease-in-out;
+}
+
+.buttonUser:hover {
+  background-color: var(--color-sumato-alert);
   color: white;
-}
-
-.avatar-background {
-  background-color: #fbe3c0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100%;
-  width: 30px;
-  height: 30px;
-}
-
-.dashboard_data {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: all 0.2s ease-in-out;
-}
-
-.dashboard_data h4, .connected-devices h4 {
-  margin: 0;
-  padding: 0;
-}
-
-.temperature-data, .outside-data, .pressure-data, .humidity-data {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.connected-devices {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-  background: transparent;
-}
-
-.connected-device {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border-radius: 10px;
-  width: 240px;
-  height: 192px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border: none;
 }
 
 /* WRITING */
@@ -132,8 +73,8 @@ h4 {
 
 h5 {
   font-size: 1.25em;
-  text-transform: uppercase;
   letter-spacing: 1px;
+  font-style: italic;
 }
 
 h6 {
@@ -171,8 +112,8 @@ button:hover {
   background: var(--color-sumato-ivory);
 }
 
-[data-theme="dark"] .sidebarIcon { filter: invert(1); }
-[data-theme="light"] .sidebarIcon { filter: invert(0); }
+[data-theme="dark"] .SumatoIcon { filter: invert(1); }
+[data-theme="light"] .SumatoIcon { filter: invert(0); }
 
 [data-theme="dark"] .img_light { display: none; }
 [data-theme="light"] .img_dark { display: none; }

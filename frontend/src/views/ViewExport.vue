@@ -59,17 +59,17 @@ const filteredData = computed(() => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h2 class="title !mt-0 mb-6">Export des données</h2>
+  <div class="p-2">
+    <h2 class="flex justify-start !my-0 !p-0 text-center title">Export des données</h2>
 
     <div class="flex flex-col gap-4 my-6">
       <div class="flex flex-col" :class="[isTelephone ? 'items-start' : 'justify-between']">
         <div>
           <div class="flex gap-4 items-center">
-            <label class="text-[var(--color-sumato-text)] font-medium">Filtrer par :</label>
+            <label class="font-medium">Filtrer par :</label>
             <select
               v-model="selectedTimeFilter"
-              class="border border-[var(--color-sumato-border)] rounded-lg px-3 py-1"
+              class="border rounded-lg px-3 py-1"
             >
               <option value="all">Tous</option>
               <option value="morning">Matin (6h–12h)</option>
@@ -82,13 +82,13 @@ const filteredData = computed(() => {
           </div>
           <div class="flex gap-4 my-4" :class="[isTelephone ? 'justify-start' : 'justify-end']">
             <button
-              class="px-4 py-2 bg-[var(--color-sumato-primary)] text-white rounded-lg hover:bg-[var(--color-sumato-primary-hover)]"
+              class="px-4 py-2 rounded-lg hover:bg-[var(--color-sumato-primary-hover)]"
               @click="exportToCSV(filteredData, selectedTab + '_' + selectedPlace + '_export')"
             >
               Exporter CSV
             </button>
             <button
-              class="px-4 py-2 bg-[var(--color-sumato-primary)] text-white rounded-lg hover:bg-[var(--color-sumato-primary-hover)]"
+              class="px-4 py-2 rounded-lg hover:bg-[var(--color-sumato-primary-hover)]"
               @click="exportToExcel(filteredData, selectedTab + '_' + selectedPlace + '_export')"
             >
               Exporter Excel
@@ -103,8 +103,8 @@ const filteredData = computed(() => {
             :class="[
               'px-4 py-2 rounded-lg font-medium',
               selectedTab === tab
-                ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
-                : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]',
+                ? 'bg-[var(--color-primary)]'
+                : 'hover:bg-[var(--color-sumato-light)]',
             ]"
           >
             {{ tab }}
@@ -118,8 +118,8 @@ const filteredData = computed(() => {
             :class="[
               'px-4 py-2 rounded-lg font-medium',
               selectedPlace === place
-                ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
-                : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]',
+                ? 'bg-[var(--color-primary)]'
+                : 'hover:bg-[var(--color-sumato-light)]',
             ]"
           >
             {{ place }}
@@ -128,7 +128,7 @@ const filteredData = computed(() => {
       </div>
     </div>
 
-    <div class="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-full">
+    <div class="m-auto w-full">
       <div class="h-[300px] w-full">
           <Line
             :data="{

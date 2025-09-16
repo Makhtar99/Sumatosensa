@@ -18,4 +18,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    allowedHosts: ['merely-noted-gannet.ngrok-free.app'],
+    host: true,
+    port: 5173,
+    strictPort: true,
+  }
 })

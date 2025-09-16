@@ -98,8 +98,7 @@ const onSubmit = async () => {
       password: result.data.password,
     })
 
-    const redirect = (router.currentRoute.value.query.redirect as string) ?? '/'
-    router.push(redirect)
+    router.push('/onboarding')
   } catch (e: unknown) {
     errors.value.general =
       e instanceof Error ? (e.message || "Erreur lors de l’inscription.") : "Erreur lors de l’inscription."

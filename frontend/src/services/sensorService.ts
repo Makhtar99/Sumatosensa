@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const API_BASE_URL = "http://localhost:8000";
+
 export interface SensorData {
   temperature: number;
   humidity: number;
@@ -7,8 +9,6 @@ export interface SensorData {
   timestamp: string;
   battery_voltage: number;
 }
-
-const API_BASE_URL = "http://localhost:8000";
 
 type SensorListItem = {
   id: number;
@@ -34,11 +34,23 @@ type LatestResponse = {
   };
 };
 
+export type CreateSensorPayload = {
+  name: string
+  // ajoute ici d'autres champs si ton backend les attend à la création
+}
+
+export type UpdateSensorPayload = {
+  name?: string
+  // ajoute ici d'autres champs éditables si besoin
+}
+
+// list
 export async function fetchSensor(): Promise<SensorListItem[]> {
   const res = await axios.get<SensorListItem[]>(`${API_BASE_URL}/sensors/`);
   const sensors = res.data;
   return sensors
 }
+
 
 async function fetchFirstSensorId(): Promise<number> {
   const res = await axios.get<SensorListItem[]>(`${API_BASE_URL}/sensors/`);
@@ -74,12 +86,35 @@ export const fetchSensorData = async (): Promise<SensorData> => {
   }
 };
 
-export const fetchLatestBySensorId = async (sensorId: number): Promise<LatestResponse> => {
+// GET ID
+export async function getSensor(sensorId: number): Promise<SensorListItem> {
+  const { data } = await axios.get<SensorListItem>(`${API_BASE_URL}/sensors/${sensorId}/`);
+  return data;
+}
+
+// CREATE
+export async function createSensor(payload: CreateSensorPayload): Promise<SensorListItem> {
+  const { data } = await axios.post<SensorListItem>(`${API_BASE_URL}/sensors/`, payload);
+  return data;
+}
+
+// UPDATE
+export const updateSensor = async (sensorId: number, data: Partial<SensorListItem>): Promise<SensorListItem> => {
   try {
-    const res = await axios.get<LatestResponse>(`${API_BASE_URL}/sensors/${sensorId}/latest`);
-    return res.data;
+    const response = await axios.put<SensorListItem>(`${API_BASE_URL}/sensors/${sensorId}/`, data);
+    return response.data;
   } catch (error) {
-    console.error(`Erreur lors de /sensors/${sensorId}/latest:`, error);
-    throw new Error(`Impossible de récupérer la dernière mesure du capteur ${sensorId}`);
+    console.error(`Erreur lors de la mise à jour du capteur ${sensorId}:`, error);
+    throw new Error(`Impossible de mettre à jour le capteur ${sensorId}`);
   }
 };
+
+// DELETE
+export async function deleteSensor(sensorId: number): Promise<void> {
+  try {
+    await axios.delete(`${API_BASE_URL}/sensors/${sensorId}/`);
+  } catch (error) {
+    console.error(`Erreur lors de la suppression du capteur ${sensorId}:`, error);
+    throw new Error(`Impossible de supprimer le capteur ${sensorId}`);
+  }
+}

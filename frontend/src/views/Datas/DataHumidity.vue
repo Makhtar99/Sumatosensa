@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import DataCard from '../Components/DataCard.vue';
 import { fetchSensorData } from '../../services/sensorService';
+
+import DataCard from '../Components/DataCard.vue';
+import Drop from '../../assets/svg/drop.png';
 
 const humidity = ref<number | null>(58);
 const timestamp = ref<string | null>("12/10/2023 14:30");
 const error = ref<string | null>(null);
 const loading = ref<boolean>(false);
-
-import Drop from '../../assets/svg/drop.png';
 
 onMounted(async () => {
     try {
@@ -28,7 +28,7 @@ onMounted(async () => {
 
 <template>
     <DataCard
-    v-if="!error"
+        v-if="!error"
         :title="'Humidité'"
         :icon="Drop"
         :value="humidity !== null ? Math.round(humidity) : 'N/A'"

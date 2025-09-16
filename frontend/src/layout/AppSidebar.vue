@@ -2,6 +2,9 @@
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useMediaQuery } from '@vueuse/core'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
+
 import SidebarItem from './AppSidebarItem.vue'
 
 import Home from '../assets/svg/home.svg'
@@ -9,6 +12,7 @@ import Config from '../assets/svg/configuration.svg'
 import Export from '../assets/svg/export.svg'
 import Devices from '../assets/svg/devices.svg'
 import Notif from '../assets/svg/ph_bell.svg'
+import User from '../assets/svg/user.svg'
 
 import ArrowLeft from '../assets/svg/ph_arrow-circle-left.svg'
 import ArrowRight from '../assets/svg/ph_arrow-circle-right.svg'
@@ -18,6 +22,9 @@ import WhiteArrowRight from '../assets/svg/white-arrow-right.svg'
 const props = defineProps({ isSidebarCollapsed: Boolean })
 const emit = defineEmits<{ (e: 'update:isSidebarCollapsed', value: boolean): void }>()
 const toggle = () => emit('update:isSidebarCollapsed', !props.isSidebarCollapsed)
+
+const auth = useAuthStore()
+const { isAdmin } = storeToRefs(auth)
 
 const isTelephone = useMediaQuery('(max-width: 768px)')
 
@@ -40,13 +47,13 @@ const arrowLeftSrc = computed(() => (isDark.value ? WhiteArrowLeft : ArrowLeft))
 const arrowRightSrc = computed(() => (isDark.value ? WhiteArrowRight : ArrowRight))
 
 const sidebarWidthClass = computed(() => {
-  if (isTelephone.value) return 'w-full h-[80px]'
-  return props.isSidebarCollapsed ? 'md:w-[80px]' : 'md:w-[256px]'
+  if (isTelephone.value) return 'w-full h-[76px]'
+  return props.isSidebarCollapsed ? 'md:w-[76px]' : 'md:w-[256px]'
 })
 
 const navClass = computed(() => {
   if (isTelephone.value) {
-    return 'w-full h-full grid grid-cols-5 place-items-center px-2 bg-[var(--color-sumato-surface)]'
+    return 'w-full h-full grid grid-cols-5 place-items-center'
   }
   return 'flex-1 w-full px-4 space-y-2'
 })
@@ -56,7 +63,7 @@ const param = computed(() => (isTelephone.value ? 'Param' : 'Paramètres'))
 
 <template>
   <aside
-    class="fixed z-50 bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] shadow-lg transition-all duration-300 ease-in-out"
+    class="fixed z-50 shadow-lg transition-all duration-300 ease-in-out" style="max-width: -webkit-fill-available;"
     :class="[ sidebarWidthClass, isTelephone ? 'bottom-0 left-0 right-0' : 'top-0 left-0 h-screen overflow-y-auto' ]"
   >
     <button
@@ -80,10 +87,11 @@ const param = computed(() => (isTelephone.value ? 'Param' : 'Paramètres'))
     <nav :class="navClass">
       <SidebarItem :icon="Home"    label="Maison"        to="/dashboard" />
       <SidebarItem :icon="Devices" label="Capteurs"      to="/sensors" />
-      <SidebarItem :icon="Notif"   label="Alertes"       to="/notifications" />
+      <SidebarItem v-if="isAdmin" :icon="User" label="Comptes"     to="/admin" />
+      <SidebarItem :icon="User" label="Comptes"     to="/admin" />
+      <SidebarItem v-if="!isTelephone" :icon="Notif"   label="Alertes"       to="/notifications" />
       <SidebarItem :icon="Export"  label="Gestion"       to="/management" />
       <SidebarItem :icon="Config"  :label="param"        to="/settings" />
     </nav>
-
   </aside>
 </template>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import Sun from '@/assets/svg/sun.svg'
 import Moon from '@/assets/svg/moon.svg'
 
 const isDark = ref(false)
+const isTelephone = useMediaQuery('(max-width: 768px)')
 
 const readTheme = () => document.documentElement.getAttribute('data-theme') === 'dark'
 const applyTheme = (dark: boolean) => {
@@ -20,10 +22,15 @@ onMounted(() => {
 </script>
 
  <template>
-  <div>
-    <button type="button" @click="toggle" class="flex justify-center items-center space-x-2 gap-2">
+  <div v-if="!isTelephone" class="flex items-center gap-2">
+    <button type="button" @click="toggle" class="flex justify-center items-center space-x-2 gap-2 w-[100px] mr-5">
       <img :src="isDark ? Sun : Moon" alt="Toggle Dark Mode" class="w-5 h-5" />
       {{ isDark ? 'Clair' : 'Sombre' }}
+    </button>
+  </div>
+  <div v-else>
+    <button type="button" @click="toggle" class="flex justify-center items-center">
+      <img :src="isDark ? Sun : Moon" alt="Toggle Dark Mode" class="w-5 h-5" />
     </button>
   </div>
 </template>

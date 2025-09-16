@@ -47,43 +47,40 @@ const displayedData = computed(() => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h2 class="title !mt-0 mb-6" :class="[ isTelephone ? 'flex justify-center' : '' ]">
-      Historique des données
-    </h2>
+  <div class="p-2 flex flex-col gap-4">
+    <h2 class="flex justify-start !my-0 !p-0 text-center title">Historique des données</h2>
 
-    <div :class="[ isTelephone ? 'flex justify-around items-center pb-3 ' : 'flex justify-between items-center my-6' ]">
-      <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
+    <div :class="[ isTelephone ? 'flex justify-around items-center pb-3 ' : 'flex justify-between items-center' ]">
+        <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
         <button
-          v-for="tab in tabs"
-          :key="tab"
-          @click="selectedTab = tab"
-          :class="[
-            'px-4 py-2 rounded-lg font-medium transition',
+            v-for="tab in tabs"
+            :key="tab"
+            @click="selectedTab = tab"
+            :class="[
+            'px-4 rounded-lg font-medium transition',
             selectedTab === tab
-              ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
-              : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
-          ]"
+                ? 'bg-[var(--color-primary)]'
+                : 'hover:bg-[var(--color-sumato-light)]'
+            ]"
         >
           {{ tab }}
         </button>
-      </div>
-
-      <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
-        <button
-          v-for="place in places"
-          :key="place"
-          @click="selectedPlace = place"
-          :class="[
-            'px-4 py-2 rounded-lg font-medium transition',
-            selectedPlace === place
-              ? 'bg-[var(--color-primary)] text-[var(--color-sumato-text)]'
-              : 'bg-[var(--color-sumato-surface)] text-[var(--color-sumato-text)] hover:bg-[var(--color-sumato-light)]'
-          ]"
-        >
-          {{ place }}
-        </button>
-      </div>
+        </div>
+        <div :class="[ isTelephone ? 'flex flex-col gap-4' : 'flex flex-wrap gap-4' ]">
+            <button
+                v-for="place in places"
+                :key="place"
+                @click="selectedPlace = place"
+                :class="[
+                'px-4 rounded-lg font-medium transition',
+                selectedPlace === place
+                    ? 'bg-[var(--color-primary)]'
+                    : 'hover:bg-[var(--color-sumato-light)]'
+                ]"
+            >
+                {{ place }}
+            </button>
+        </div>
     </div>
 
     <DataTable

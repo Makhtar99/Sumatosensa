@@ -36,9 +36,9 @@ onMounted(async () => {
 
 
 <template>
-  <div class="min-h-screen bg-[var(--color-surface)] text-[var(--color-sumato-text)]">
+  <div class="min-h-screen bg-[var(--color-surface)]">
 
-    <header class="bg-[var(--color-sumato-surface)] border-b border-[var(--color-sumato-border)]">
+    <header class="border-b ">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div v-if="!isTelephone" class="flex justify-between items-center py-6">
@@ -80,11 +80,11 @@ onMounted(async () => {
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="px-4 py-6 sm:px-0">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div class="bg-[var(--color-sumato-surface)] border border-[var(--color-sumato-border)] rounded-xl shadow">
+          <div class="border rounded-xl shadow">
             <div class="p-5">
               <div class="flex items-center gap-4">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--color-primary)]">
-                  <span class="text-white font-bold">S</span>
+                  <span class="font-bold">S</span>
                 </div>
                 <dl class="w-0 flex-1">
                   <dt class="text-sm opacity-80 truncate">Capteurs totaux</dt>
@@ -94,11 +94,11 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="bg-[var(--color-sumato-surface)] border border-[var(--color-sumato-border)] rounded-xl shadow">
+          <div class="border rounded-xl shadow">
             <div class="p-5">
               <div class="flex items-center gap-4">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--color-sumato-accent)]">
-                  <span class="text-white font-bold">A</span>
+                  <span class="font-bold">A</span>
                 </div>
                 <dl class="w-0 flex-1">
                   <dt class="text-sm opacity-80 truncate">Capteurs actifs</dt>
@@ -108,11 +108,11 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="bg-[var(--color-sumato-surface)] border border-[var(--color-sumato-border)] rounded-xl shadow">
+          <div class="border rounded-xl shadow">
             <div class="p-5">
               <div class="flex items-center gap-4">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--color-sumato-danger)]">
-                  <span class="text-white font-bold">!</span>
+                  <span class="font-bold">!</span>
                 </div>
                 <dl class="w-0 flex-1">
                   <dt class="text-sm opacity-80 truncate">Alertes non résolues</dt>
@@ -122,11 +122,11 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="bg-[var(--color-sumato-surface)] border border-[var(--color-sumato-border)] rounded-xl shadow">
+          <div class="border rounded-xl shadow">
             <div class="p-5">
               <div class="flex items-center gap-4">
                 <div class="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--notif-warning-text)]">
-                  <span class="text-white font-bold">U</span>
+                  <span class="font-bold">U</span>
                 </div>
                 <dl class="w-0 flex-1">
                   <dt class="text-sm opacity-80 truncate">Utilisateurs</dt>
@@ -137,7 +137,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="bg-[var(--color-sumato-surface)] border border-[var(--color-sumato-border)] shadow rounded-xl overflow-hidden">
+        <div class="border shadow rounded-xl overflow-hidden">
           <div class="px-4 py-5 sm:px-6">
             <h3 class="text-lg !mt-0 font-semibold">Utilisateurs</h3>
             <p class="mt-1 text-sm opacity-80">Liste des utilisateurs du système</p>
@@ -156,7 +156,7 @@ onMounted(async () => {
               >
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-4">
-                    <div class="h-10 w-10 rounded-full bg-[var(--color-sumato-light)] border border-[var(--color-sumato-border)] flex items-center justify-center">
+                    <div class="h-10 w-10 rounded-full bg-[var(--color-sumato-light)] border flex items-center justify-center">
                       <span class="font-medium opacity-90">
                         {{ user.username.charAt(0).toUpperCase() }}
                       </span>
@@ -177,7 +177,7 @@ onMounted(async () => {
                         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
                         user.role === 'admin'
                           ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
-                          : 'border-[var(--color-sumato-border)] opacity-90'
+                          : ' opacity-90'
                       ]"
                     >
                       {{ user.role }}

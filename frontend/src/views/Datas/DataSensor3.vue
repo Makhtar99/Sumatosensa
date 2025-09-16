@@ -1,132 +1,66 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { fetchSensor } from '@/services/sensorService'
+import { useUserPrefStore } from '@/stores/userpref'
+import { computeSensorStatus, computeSensorAlert, voltageToPercent } from '@/assets/functions/sensors/SensorFunctions'
 
-import { voltageToPercent } from '@/assets/functions/sensors/VoltageToPercent'
-import { formatedTimestamp } from '@/assets/functions/FormatedDate'
-
-// import de ton hook
-import { usePersistentRef, useTemperatureUnit } from '@/assets/functions/degree'
+import DataSensor from '../Components/DataSensor.vue'
 
 const error = ref<string | null>(null)
-const loading = ref<boolean>(false)
+const loading = ref(false)
+const userPref = useUserPrefStore()
 
 const currentSensor = ref({
-  piece: 'Capteur 3',
+  piece: 'Capteur 2',
+  location: 'Chambre parentale',
   temperature: 0,
   humidite: 0,
   pression: 0,
   batterie: 0,
-  statut: '',
   last_update: ''
 })
 
-// unité 
-const temperatureUnit = usePersistentRef<"Celsius" | "Fahrenheit">(
-  "temperatureUnit",
-  "Celsius"
-)
+const status = computed(() => computeSensorStatus(currentSensor.value.batterie))
 
-// conversion 
-const temperature = useTemperatureUnit(
-  computed(() => currentSensor.value.temperature),
-  temperatureUnit
-)
-
-const currentSensorStatus = computed(() => {
-  if (currentSensor.value.batterie === 0) {
-    return 'Hors ligne'
-  }
-  if (currentSensor.value.batterie < 20) {
-    return 'Batterie faible'
-  }
-  return 'Connecté'
-})
-
-const getBatteryColor = (batterie: number) => {
-  if (batterie > 50) return 'text-green-600'
-  if (batterie > 20) return 'text-yellow-600'
-  return 'text-[var(--color-sumato-danger)]'
-}
+const alertMessage = computed(() => computeSensorAlert(currentSensor.value))
 
 onMounted(async () => {
   try {
     loading.value = true
     const resp = await fetchSensor()
-    const thisSensor = ref(resp[0])
+    const sensor = resp[2]
 
-    currentSensor.value.piece = thisSensor.value.name || `Capteur ${thisSensor.value.id}`
+    currentSensor.value.piece = userPref.sensor3name
 
-    if (thisSensor.value.last_measurement) {
-      const m = thisSensor.value.last_measurement
+    if (sensor.last_measurement) {
+      const m = sensor.last_measurement
       currentSensor.value.temperature = m.temperature
       currentSensor.value.humidite = m.humidity
       currentSensor.value.pression = m.pressure
-      currentSensor.value.last_update = formatedTimestamp(m.time)
       currentSensor.value.batterie = voltageToPercent(m.battery_voltage)
-      error.value = null
+      currentSensor.value.last_update = m.time
     } else {
-      currentSensor.value.statut = 'En ligne'
-      currentSensor.value.last_update = ''
-      error.value = "Aucune mesure disponible pour le capteur 1."
+      error.value = "Aucune mesure disponible pour le capteur."
     }
   } catch (e) {
     console.error(e)
-    error.value = "Erreur lors de la récupération des données du capteur 1."
+    error.value = "Erreur lors de la récupération des données."
   } finally {
     loading.value = false
   }
 })
 </script>
 
+
 <template>
-  <div class="bg-[var(--color-surface)] border border-[var(--color-sumato-border)] rounded-xl p-6 space-y-4">
-    <h2 class="text-lg !mt-0 font-semibold">{{ currentSensor.piece }} / Grenier</h2>
+  <DataSensor
+    v-if="!error"
+    v-bind="currentSensor"
+    :status="status"
+    :message-alert="alertMessage"
+  />
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <!-- Temperature -->
-      <div class="text-center">
-        <p class="text-2xl font-bold text-[var(--color-sumato-primary)]">
-          {{ Math.round(temperature) }}°{{ temperatureUnit }}
-        </p>
-        <span class="text-sm opacity-70">Température</span>
-      </div>
-
-      <!-- Humidite -->
-      <div class="text-center">
-        <p class="text-2xl font-bold text-blue-600">{{ Math.round(currentSensor.humidite) }}%</p>
-        <span class="text-sm opacity-70">Humidité</span>
-      </div>
-
-      <!-- Pression -->
-      <div class="text-center">
-        <p class="text-2xl font-bold text-indigo-600">{{ Math.round(currentSensor.pression) }} hPa</p>
-        <span class="text-sm opacity-70">Pression</span>
-      </div>
-
-      <!-- Batterie -->
-      <div class="text-center">
-        <p :class="['text-2xl font-bold', getBatteryColor(currentSensor.batterie)]">
-          {{ currentSensor.batterie }}%
-        </p>
-        <span class="text-sm opacity-70">Batterie</span>
-      </div>
-    </div>
-
-    <div class="flex justify-between items-center mt-4">
-      <span
-        class="font-medium"
-        :class="{
-          '!text-green-600': currentSensorStatus === 'Connecté',
-          '!text-yellow-600': currentSensorStatus === 'Batterie faible',
-          '!text-[var(--color-sumato-danger)]': currentSensorStatus === 'Hors ligne',
-        }"
-      >
-        ● {{ currentSensorStatus }}
-      </span>
-      <span class="text-sm text-gray-500">
-        Dernière mise à jour : {{ currentSensor.last_update }}
-      </span>
-    </div>
+  <div v-else class="p-4 bg-red-100 text-[var(--color-sumato-danger)] rounded-lg">
+    {{ error }}
   </div>
 </template>

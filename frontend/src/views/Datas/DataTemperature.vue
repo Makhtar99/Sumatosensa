@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
-import DataCard from '../Components/DataCard.vue';
 import { fetchSensorData } from '../../services/sensorService';
+import { usePersistentRef, useTemperatureUnit } from '@/assets/functions/degree';
 
+import DataCard from '../Components/DataCard.vue';
 import HighTemp from '../../assets/svg/high_temp.png';
 import NormalTemp from '../../assets/svg/normal_temp.png';
 import LowTemp from '../../assets/svg/low_temp.png';
-
-import { usePersistentRef, useTemperatureUnit } from '@/assets/functions/degree';
 
 const rawTemperature = ref<number | null>(null);
 const timestamp = ref<string | null>(null);

@@ -1,12 +1,17 @@
-<!-- src/views/GestionSensor.vue -->
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { fetchSensor, createSensor, updateSensor, deleteSensor, type Sensor } from '@/services/sensorService'
+import { ref, onMounted } from 'vue'
+import { useUserPrefStore } from '@/stores/userpref'
+import {
+  fetchSensor,
+  createSensor,
+  deleteSensor,
+  type Sensor
+} from '@/services/sensorService'
 
 const loading = ref(false)
-const savingAll = ref(false)
 const error = ref<string | null>(null)
 const sensors = ref<Sensor[]>([])
+const userPref = useUserPrefStore()
 
 const originalNames = ref<Map<number, string>>(new Map())
 const newName = ref('')
@@ -17,7 +22,6 @@ const loadSensors = async () => {
   try {
     const data = await fetchSensor()
     sensors.value = data
-    // reset snapshot
     const snap = new Map<number, string>()
     for (const s of data) snap.set(s.id, s.name ?? '')
     originalNames.value = snap
@@ -31,32 +35,19 @@ const loadSensors = async () => {
 
 onMounted(loadSensors)
 
-const isRowDirty = (s: Sensor) => originalNames.value.get(s.id) !== s.name
-const hasDirty = computed(() => sensors.value.some(isRowDirty))
-
-const saveRow = async (s: Sensor) => {
-  if (!isRowDirty(s)) return
-  try {
-    const updated = await updateSensor(s.id, { name: s.name })
-    originalNames.value.set(s.id, updated.name ?? '')
-  } catch (e: unknown) {
-    console.error(`Capteur ${s.id}: échec de la mise à jour`, e)
-  }
+const saveSensors = () => {
+  userPref.sensor1name = sensors.value[0].name
+  userPref.sensor2name = sensors.value[1].name
+  userPref.sensor3name = sensors.value[2].name
+  window.alert('Préférences générales enregistrées.')
 }
 
-const saveAll = async () => {
-  if (!hasDirty.value || savingAll.value) return
-  savingAll.value = true
+const removeSensor = async (id: number) => {
   try {
-    const promises = sensors.value
-      .filter(isRowDirty)
-      .map(s => updateSensor(s.id, { name: s.name }))
-    const updated = await Promise.all(promises)
-    for (const u of updated) originalNames.value.set(u.id, u.name)
+    await deleteSensor(id)
+    await loadSensors()
   } catch (e: unknown) {
-    console.error('Erreur lors de l’enregistrement global', e)
-  } finally {
-    savingAll.value = false
+    console.error(`Erreur lors de la suppression du capteur ${id}`, e)
   }
 }
 
@@ -72,20 +63,17 @@ const addSensor = async () => {
   }
 }
 
-const removeSensor = async (id: number) => {
-  try {
-    await deleteSensor(id)
-    await loadSensors()
-  } catch (e: unknown) {
-    console.error(`Erreur lors de la suppression du capteur ${id}`, e)
-  }
+const getModel = (s: Sensor) => {
+  if (s.id === 1) return userPref.sensor1name
+  if (s.id === 2) return userPref.sensor2name
+  if (s.id === 3) return userPref.sensor3name
+  return s.name
 }
 </script>
 
+
 <template>
-  <div class="flex flex-col gap-3 p-4 md:p-6">
-    
-    <h2 class="flex justify-center !mt-0 !p-0 mb-4">Gestion des capteurs</h2>
+  <div class="flex flex-col gap-3 p-2">
 
     <div class="p-4 rounded-xl border mb-4">
       <h3 class="font-medium mb-2">Ajouter un capteur</h3>
@@ -109,21 +97,9 @@ const removeSensor = async (id: number) => {
     <div class="p-4 rounded-xl border">
       <div class="flex items-center justify-between mb-3">
         <h3 class="font-medium">Capteurs existants</h3>
-        <div class="flex items-center gap-2">
-          <button
-            class="px-4 py-2 rounded-lg bg-[var(--color-sumato-accent)] disabled:opacity-50"
-            :disabled="!hasDirty || savingAll"
-            @click="saveAll"
-          >
-            {{ savingAll ? 'Enregistrement…' : 'Enregistrer les noms modifiés' }}
-          </button>
-          <button
-            class="px-3 py-2 rounded-lg border"
-            @click="loadSensors"
-          >
-            Recharger
-          </button>
-        </div>
+        <button class="px-3 py-2 rounded-lg border" @click="loadSensors">
+          Recharger
+        </button>
       </div>
 
       <div v-if="loading" class="text-sm opacity-70">Chargement…</div>
@@ -136,9 +112,15 @@ const removeSensor = async (id: number) => {
           class="flex flex-col md:flex-row items-stretch md:items-center gap-2 p-3 rounded-lg border"
         >
           <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">Nom du capteur #{{ s.id }}</label>
+            <label class="block text-sm font-medium mb-1">Capteur #{{ s.id }}</label>
             <input
-              v-model="s.name"
+              :value="getModel(s)"
+              @input="val => {
+                if (s.id === 1) userPref.sensor1name = val.target.value
+                else if (s.id === 2) userPref.sensor2name = val.target.value
+                else if (s.id === 3) userPref.sensor3name = val.target.value
+                else s.name = val.target.value
+              }"
               type="text"
               class="w-full p-2 rounded-lg border"
               placeholder="Nom du capteur"
@@ -147,9 +129,8 @@ const removeSensor = async (id: number) => {
 
           <div class="flex gap-2 justify-end">
             <button
-              class="px-4 py-2 rounded-lg bg-[var(--color-primary)] disabled:opacity-50"
-              :disabled="!isRowDirty(s)"
-              @click="saveRow(s)"
+              class="px-4 py-2 rounded-lg bg-[var(--color-primary)]"
+              @click="saveSensors()"
             >
               Enregistrer
             </button>
@@ -163,9 +144,10 @@ const removeSensor = async (id: number) => {
           </div>
         </div>
 
-        <div v-if="!sensors.length" class="text-sm opacity-70">Aucun capteur pour le moment.</div>
+        <div v-if="!sensors.length" class="text-sm opacity-70">
+          Aucun capteur pour le moment.
+        </div>
       </div>
     </div>
-
   </div>
 </template>

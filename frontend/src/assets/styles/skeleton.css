@@ -1,0 +1,24 @@
+.p-skeleton {
+    overflow: hidden;
+    background-color: #e0e0e0 !important;
+    border-radius: 0.75rem !important;
+    animation: pulse 1.5s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Supprimé le déplacement */
+.p-skeleton::after {
+    content: none;
+}

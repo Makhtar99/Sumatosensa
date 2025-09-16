@@ -1,47 +1,62 @@
-
 .p-datatable-table-container {
   border: 1px solid var(--color-sumato-border);
-  border-radius: 10px;
+  border-radius: 0.75rem;
   overflow: hidden;
   max-height: fit-content;
 }
+
 .p-datatable {
   border: 1px solid var(--color-sumato-border);
   border-radius: 0.75rem;
   background-color: var(--color-sumato-surface);
   color: var(--color-sumato-text);
+  font-family: inherit;
   font-size: 0.95rem;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* HEADER + FOOTER */
 .p-datatable .p-datatable-header,
 .p-datatable .p-datatable-footer {
   background-color: var(--color-sumato-light);
   color: var(--color-sumato-text);
   padding: 1rem;
   border-bottom: 1px solid var(--color-sumato-border);
+  font-weight: 600;
 }
 
+/* EN-TÊTES */
 .p-datatable .p-datatable-thead > tr > th {
   background-color: var(--color-sumato-surface);
   color: var(--color-sumato-text);
   font-weight: 600;
   border-bottom: 1px solid var(--color-sumato-border);
   padding: 0.75rem 1rem;
+  text-align: left;
+  white-space: nowrap;
 }
 
+/* LIGNES DU CORPS */
 .p-datatable .p-datatable-tbody > tr > td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--color-sumato-border);
+  vertical-align: middle;
 }
 
+/* UNE LIGNE SUR DEUX */
 .p-datatable .p-datatable-tbody > tr:nth-child(even) {
-  background-color: #f9fafb;
+  background-color: var(--color-sumato-light);
 }
 
+/* SURVOL D’UNE LIGNE */
 .p-datatable .p-datatable-tbody > tr:hover {
   background-color: var(--color-sumato-ivory);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
+/* PAGINATION */
 .p-paginator {
   padding: 1rem !important;
   background-color: var(--color-sumato-light);
@@ -49,6 +64,7 @@
   border-radius: 0 0 0.75rem 0.75rem;
   justify-content: center;
 }
+
 .p-datatable-paginator-bottom {
   border-style: none !important;
 }
@@ -58,6 +74,8 @@
   color: var(--color-sumato-text);
   border-radius: 0.5rem;
   margin: 0 0.2rem;
+  padding: 0.4rem 0.8rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
@@ -68,5 +86,54 @@
 
 .p-paginator .p-paginator-pages .p-paginator-page:hover {
   background-color: var(--color-sumato-primary-hover);
+  color: var(--color-sumato-text);
+}
+
+.p-paginator-content {
+  justify-content: space-between !important;
+  width: 100%;
+}
+
+.p-paginator-page.p-paginator-page-selected {
+  background-color: var(--color-primary) !important;
   color: white;
+  font-weight: bold;
+}
+
+.p-paginator-first, .p-paginator-prev-icon, .p-paginator-next-icon, .p-paginator-last {
+  color: var(--color-sumato-text);
+  border: 1px solid var(--color-sumato-border) !important;
+  border-radius: 0.5rem  !important;
+  padding: 0.4rem 0.8rem !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  
+}
+
+.p-paginator-first:hover, .p-paginator-prev-icon:hover, .p-paginator-next-icon:hover, .p-paginator-last:hover {
+  background-color: var(--color-sumato-primary-hover);
+  color: var(--color-sumato-text);
+}
+
+.p-paginator-content {
+  justify-content: space-between !important;
+  width: 100%;
+}
+
+.p-paginator-page.p-paginator-page-selected {
+  background-color: var(--color-primary) !important;
+  color: white;
+  font-weight: bold;
+}
+
+.p-paginator-page:hover {
+  background-color: var(--color-sumato-primary-hover) !important;
+  color: var(--color-sumato-text);
+}
+
+.p-paginator-prev, .p-paginator-next, .p-paginator-first, .p-paginator-last {
+  cursor: pointer !important;
+}
+
+.p-disabled {
+  opacity: 0.5 !important;
 }
