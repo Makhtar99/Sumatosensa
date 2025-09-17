@@ -144,7 +144,6 @@ const saveAlerts = () => {
         <div class="md:flex-1 space-y-4">
           <select v-model="generalPref.lang" class="w-full px-3 py-2 rounded-lg border">
             <option value="fr">Français</option>
-            <option value="en">Anglais</option>
           </select>
           <select v-model="generalPref.decimalDisplay" class="w-full px-3 py-2 rounded-lg border">
             <option :value="true">Oui</option>
@@ -209,11 +208,9 @@ const saveAlerts = () => {
           </select>
           <select v-model="units.pressure" class="w-full px-3 py-2 rounded-lg border">
             <option>hPa</option>
-            <option>bar</option>
           </select>
           <select v-model="units.humidity" class="w-full px-3 py-2 rounded-lg border">
             <option>%</option>
-            <option>g/m³</option>
           </select>
           <button @click="saveUnits" class="mt-4 px-4 py-2 rounded-lg flex m-auto">
             Enregistrer
