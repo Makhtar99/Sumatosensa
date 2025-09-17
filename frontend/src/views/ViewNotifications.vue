@@ -6,6 +6,7 @@ import X from '../assets/svg/x.svg'
 const notifList = ref(
   notifications.map((n) => ({
     ...n,
+    id: Math.random().toString(36).substring(2, 15),
     visible: true,
   })),
 )
@@ -18,7 +19,12 @@ const filteredNotifList = computed(() => {
 })
 
 const hideNotification = (index: number) => {
-  notifList.value[index].visible = false
+  const notif = filteredNotifList.value[index]
+  if (!notif) return
+  const notifIndex = notifList.value.findIndex(n => n.id === notif.id)
+  if (notifIndex !== -1) {
+    notifList.value[notifIndex].visible = false
+  }
 }
 
 const importanceStyle: Record<string, string> = {

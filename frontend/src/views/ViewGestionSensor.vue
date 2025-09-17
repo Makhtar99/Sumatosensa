@@ -39,7 +39,7 @@ const saveSensors = () => {
   userPref.sensor1name = sensors.value[0].name
   userPref.sensor2name = sensors.value[1].name
   userPref.sensor3name = sensors.value[2].name
-  window.alert('Préférences générales enregistrées.')
+  window.alert('Noms des capteurs enregistrées.')
 }
 
 const removeSensor = async (id: number) => {

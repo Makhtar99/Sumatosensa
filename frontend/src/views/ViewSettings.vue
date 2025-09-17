@@ -70,7 +70,7 @@ const saveSensors = () => {
   userPref.sensor1name = sensors.sensor1
   userPref.sensor2name = sensors.sensor2
   userPref.sensor3name = sensors.sensor3
-  window.alert('Préférences générales enregistrées.')
+  window.alert('Noms des capteurs enregistrées.')
 }
 
 const saveCity = () => {
@@ -82,7 +82,7 @@ const saveUnits = () => {
   userPref.tempUnit = units.temp
   userPref.pressureUnit = units.pressure
   userPref.humidityUnit = units.humidity
-  window.alert('Préférences générales enregistrées.')
+  window.alert('Préférences des unités enregistrées.')
 }
 
 const saveAlerts = () => {
@@ -109,7 +109,7 @@ const saveAlerts = () => {
     userPref.alertMinPressionInHg = alerts.minPressInHg
     userPref.alertMaxPressionInHg = alerts.maxPressInHg
   }
-  window.alert('Alertes enregistrées.')
+  window.alert('Seuils des alertes enregistrés.')
 }
 </script>
 
