@@ -10,7 +10,7 @@ export interface SensorData {
   battery_voltage: number;
 }
 
-type SensorListItem = {
+export type SensorListItem = {
   id: number;
   name?: string;
   last_measurement: null | {

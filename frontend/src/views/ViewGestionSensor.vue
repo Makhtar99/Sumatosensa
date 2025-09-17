@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useUserPrefStore } from '@/stores/userpref'
-import {
-  fetchSensor,
-  createSensor,
-  deleteSensor,
-  type Sensor
-} from '@/services/sensorService'
+import { fetchSensor, createSensor, deleteSensor, type SensorListItem } from '@/services/sensorService'
 
 const loading = ref(false)
 const error = ref<string | null>(null)
-const sensors = ref<Sensor[]>([])
+const sensors = ref<SensorListItem[]>([])
 const userPref = useUserPrefStore()
 
 const originalNames = ref<Map<number, string>>(new Map())
@@ -36,10 +31,10 @@ const loadSensors = async () => {
 onMounted(loadSensors)
 
 const saveSensors = () => {
-  userPref.sensor1name = sensors.value[0].name
-  userPref.sensor2name = sensors.value[1].name
-  userPref.sensor3name = sensors.value[2].name
-  window.alert('Noms des capteurs enregistrées.')
+  userPref.sensor1name = sensors.value[0].name ?? ''
+  userPref.sensor2name = sensors.value[1].name ?? ''
+  userPref.sensor3name = sensors.value[2].name ?? ''
+  window.alert('Préférences générales enregistrées.')
 }
 
 const removeSensor = async (id: number) => {
@@ -63,7 +58,7 @@ const addSensor = async () => {
   }
 }
 
-const getModel = (s: Sensor) => {
+const getModel = (s: SensorListItem) => {
   if (s.id === 1) return userPref.sensor1name
   if (s.id === 2) return userPref.sensor2name
   if (s.id === 3) return userPref.sensor3name
@@ -78,17 +73,9 @@ const getModel = (s: Sensor) => {
     <div class="p-4 rounded-xl border mb-4">
       <h3 class="font-medium mb-2">Ajouter un capteur</h3>
       <div class="flex gap-2 items-center">
-        <input
-          v-model="newName"
-          type="text"
-          class="flex-1 p-2 rounded-lg border"
-          placeholder="Nom du capteur (ex. Salon)"
-        />
-        <button
-          class="px-4 py-2 rounded-lg disabled:opacity-50"
-          :disabled="!newName.trim()"
-          @click="addSensor"
-        >
+        <input v-model="newName" type="text" class="flex-1 p-2 rounded-lg border"
+          placeholder="Nom du capteur (ex. Salon)" />
+        <button class="px-4 py-2 rounded-lg disabled:opacity-50" :disabled="!newName.trim()" @click="addSensor">
           Ajouter
         </button>
       </div>
@@ -106,39 +93,26 @@ const getModel = (s: Sensor) => {
       <div v-else-if="error" class="text-sm text-[var(--color-sumato-danger)]">{{ error }}</div>
 
       <div v-else class="space-y-3">
-        <div
-          v-for="s in sensors"
-          :key="s.id"
-          class="flex flex-col md:flex-row items-stretch md:items-center gap-2 p-3 rounded-lg border"
-        >
+        <div v-for="s in sensors" :key="s.id"
+          class="flex flex-col md:flex-row items-stretch md:items-center gap-2 p-3 rounded-lg border">
           <div class="flex-1">
             <label class="block text-sm font-medium mb-1">Capteur #{{ s.id }}</label>
-            <input
-              :value="getModel(s)"
-              @input="val => {
-                if (s.id === 1) userPref.sensor1name = val.target.value
-                else if (s.id === 2) userPref.sensor2name = val.target.value
-                else if (s.id === 3) userPref.sensor3name = val.target.value
-                else s.name = val.target.value
-              }"
-              type="text"
-              class="w-full p-2 rounded-lg border"
-              placeholder="Nom du capteur"
-            />
+            <input :value="getModel(s)" @input="val => {
+              const target = val.target as HTMLInputElement
+              if (!target) return
+              if (s.id === 1) userPref.sensor1name = target.value
+              else if (s.id === 2) userPref.sensor2name = target.value
+              else if (s.id === 3) userPref.sensor3name = target.value
+              else s.name = target.value
+            }" type="text" class="w-full p-2 rounded-lg border" placeholder="Nom du capteur" />
           </div>
 
           <div class="flex gap-2 justify-end">
-            <button
-              class="px-4 py-2 rounded-lg bg-[var(--color-primary)]"
-              @click="saveSensors()"
-            >
+            <button class="px-4 py-2 rounded-lg bg-[var(--color-primary)]" @click="saveSensors()">
               Enregistrer
             </button>
-            <button
-              class="px-4 py-2 rounded-lg bg-[var(--color-sumato-danger)]"
-              @click="removeSensor(s.id)"
-              title="Supprimer"
-            >
+            <button class="px-4 py-2 rounded-lg bg-[var(--color-sumato-danger)]" @click="removeSensor(s.id)"
+              title="Supprimer">
               Supprimer
             </button>
           </div>
