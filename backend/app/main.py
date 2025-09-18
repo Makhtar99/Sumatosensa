@@ -48,9 +48,6 @@ app.include_router(auth.router)
 app.include_router(admin.router)
 app.include_router(sensors.router)
 
-
-
-
 @app.post("/", response_model=dict)
 async def create_user(username: str, email: str, password: str, db: AsyncSession = Depends(get_db)):
     user = await user.create_user(db, username, email, password)

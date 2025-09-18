@@ -20,7 +20,6 @@ AsyncSessionLocal = async_sessionmaker(
 
 Base = declarative_base()
 
-@asynccontextmanager
 async def get_async_session():
     """Dependency to get async database session."""
     async with AsyncSessionLocal() as session:
@@ -34,5 +33,6 @@ async def get_async_session():
 
 async def get_db():
     """FastAPI dependency for database session."""
-    async with get_async_session() as session:
+    async for session in get_async_session():
         yield session
+         

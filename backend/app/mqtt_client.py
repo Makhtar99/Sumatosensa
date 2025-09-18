@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 from datetime import datetime
-from typing import  Optional
+from typing import Optional
 import paho.mqtt.client as mqtt
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import AsyncSessionLocal
@@ -22,7 +22,7 @@ class MQTTClient:
         self.broker_port = int(os.getenv("MQTT_BROKER_PORT", "1883"))
         
         self.hetic_broker_host = os.getenv("HETIC_MQTT_HOST", "admin-hetic.arcplex.tech")
-        self.hetic_broker_port = int(os.getenv("HETIC_MQTT_PORT", "8818"))  # Groupe 1
+        self.hetic_broker_port = int(os.getenv("HETIC_MQTT_PORT", "8818"))
         
         self.connected = False
         
@@ -32,16 +32,7 @@ class MQTTClient:
             logger.info(f"Connected to MQTT broker: {self.broker_host}:{self.broker_port}")
             
             topics = [
-                "sensors/ruuvitag/+/temperature",
-                "sensors/ruuvitag/+/humidity", 
-                "sensors/ruuvitag/+/pressure",
-                "sensors/ruuvitag/+/battery",
-                "sensors/ruuvitag/+/acceleration",
-                "sensors/ruuvitag/+/data",
-                "gw-req/get_configs/res",
-                "gw-event/received_data",
-                "sensor/+/data",
-                "wirepas-json-event/packet/+/+/+"
+                "sensors/pws-packet/+/+/+"
             ]
             
             for topic in topics:
@@ -60,7 +51,12 @@ class MQTTClient:
             topic = msg.topic
             payload = msg.payload.decode('utf-8')
             
-            # Process message synchronously for simplicity
+            logger.info(f"=== MQTT MESSAGE RECEIVED ===")
+            logger.info(f"Topic: {topic}")
+            logger.info(f"Payload length: {len(payload)}")
+            logger.info(f"Payload: '{payload}'")
+            logger.info(f"Payload (repr): {repr(payload)}")
+            
             import threading
             def run_async():
                 asyncio.run(self.process_message(topic, payload))
@@ -76,19 +72,19 @@ class MQTTClient:
         try:
             topic_parts = topic.split('/')
             
-            if len(topic_parts) >= 3 and topic_parts[0] == "sensors":
-                sensor_type = topic_parts[1]  # ruuvitag
-                sensor_id = topic_parts[2]    # MAC address or sensor ID
-                measurement_type = topic_parts[3] if len(topic_parts) > 3 else "data"
-                
-                await self.handle_ruuvitag_data(sensor_id, measurement_type, payload)
-                
-            elif topic.startswith("gw-event/received_data"):
+            if topic.startswith("gw-event/received_data"):
                 await self.handle_hetic_gateway_data(payload)
                 
             elif topic.startswith("sensor/"):
                 sensor_id = topic_parts[1]
                 await self.handle_sensor_data(sensor_id, payload)
+                
+            elif topic.startswith("pws-packet/"):
+                if len(topic_parts) >= 4:
+                    timestamp = topic_parts[1]      
+                    sink_id = topic_parts[2]        
+                    sensor_id = topic_parts[3]
+                    await self.handle_pws_packet_data(timestamp, sink_id, sensor_id, payload)
                 
             elif topic.startswith("wirepas-json-event/packet/"):
                 if len(topic_parts) >= 5:
@@ -99,33 +95,6 @@ class MQTTClient:
                 
         except Exception as e:
             logger.error(f"Error processing message from topic {topic}: {e}")
-
-    async def handle_ruuvitag_data(self, sensor_id: str, measurement_type: str, payload: str):
-        try:
-            async with AsyncSessionLocal() as session:
-                sensor = await self.get_or_create_sensor(session, sensor_id)
-                
-                if measurement_type == "data":
-                    data = json.loads(payload)
-                    await self.store_measurement(
-                        session, 
-                        sensor.id, 
-                        data.get("temperature"),
-                        data.get("humidity"),
-                        data.get("pressure"),
-                        data.get("acceleration_x"),
-                        data.get("acceleration_y"), 
-                        data.get("acceleration_z"),
-                        data.get("rssi"),
-                        data.get("battery_voltage"),
-                        data.get("movement_counter")
-                    )
-                else:
-                    value = float(payload)
-                    await self.store_partial_measurement(session, sensor.id, measurement_type, value)
-                    
-        except Exception as e:
-            logger.error(f"Error handling RuuviTag data: {e}")
 
     async def handle_hetic_gateway_data(self, payload: str):
         try:
@@ -174,6 +143,103 @@ class MQTTClient:
         except Exception as e:
             logger.error(f"Error handling sensor data: {e}")
 
+
+    async def handle_pws_packet_data(self, timestamp: str, sink_id: str, sensor_id: str, payload: str):
+        try:
+            logger.info(f"Processing pws-packet: timestamp={timestamp}, sink_id={sink_id}, sensor_id={sensor_id}")
+            logger.info(f"Raw payload: '{payload}' (length: {len(payload)})")
+            
+            if not payload or payload.strip() == "":
+                logger.warning(f"Empty payload for pws-packet sensor {sensor_id}")
+                return
+                
+            async with AsyncSessionLocal() as session:
+                full_sensor_id = f"pws_{sensor_id}"
+                sensor = await self.get_or_create_sensor(session, full_sensor_id)
+                
+                try:
+                    data = json.loads(payload)
+                    logger.info(f"JSON parsed successfully: {data}")
+                    
+                    sensor_data = data
+                    
+                    if isinstance(data, dict):
+                        if "temperature" in data or "humidity" in data or "pressure" in data:
+                            sensor_data = data
+                            logger.info("Using direct data structure")
+                        elif "data" in data and isinstance(data["data"], dict):
+                            sensor_data = data["data"]
+                            logger.info("Using nested 'data' structure")
+                        elif "payload" in data:
+                            sensor_data = data["payload"]
+                            logger.info("Using 'payload' structure")
+                        elif "sink_id" in data:
+                            sensor_data = {
+                                "temperature": data.get("temperature"),
+                                "humidity": data.get("humidity"), 
+                                "pressure": data.get("pressure"),
+                                "battery_voltage": data.get("battery_voltage"),
+                                "rssi": data.get("rssi")
+                            }
+                            logger.info("Using PWS-specific structure")
+                        else:
+                            sensor_data = data
+                            logger.info("Using fallback data structure")
+                    
+                    await self.store_measurement(
+                        session, 
+                        sensor.id, 
+                        sensor_data.get("temperature"),
+                        sensor_data.get("humidity"),
+                        sensor_data.get("pressure"),
+                        sensor_data.get("acceleration_x"),
+                        sensor_data.get("acceleration_y"), 
+                        sensor_data.get("acceleration_z"),
+                        sensor_data.get("rssi"),
+                        sensor_data.get("battery_voltage"),
+                        sensor_data.get("movement_counter")
+                    )
+                    
+                    logger.info(f"Successfully stored pws-packet data for sensor {full_sensor_id}")
+                    
+                except json.JSONDecodeError as e:
+                    logger.error(f"Invalid JSON in pws-packet payload: '{payload}' - Error: {e}")
+                    
+                    logger.info("Attempting to handle as raw sensor data")
+                    
+                    try:
+                        if ":" in payload and "," in payload:
+                            raw_data = {}
+                            pairs = payload.split(",")
+                            for pair in pairs:
+                                if ":" in pair:
+                                    key, value = pair.split(":", 1)
+                                    key = key.strip().lower()
+                                    try:
+                                        if key in ["temp", "temperature"]:
+                                            raw_data["temperature"] = float(value)
+                                        elif key in ["hum", "humidity"]:
+                                            raw_data["humidity"] = float(value)
+                                        elif key in ["press", "pressure"]:
+                                            raw_data["pressure"] = float(value)
+                                    except ValueError:
+                                        continue
+                                        
+                            if raw_data:
+                                await self.store_measurement(
+                                    session, sensor.id, 
+                                    raw_data.get("temperature"),
+                                    raw_data.get("humidity"),
+                                    raw_data.get("pressure")
+                                )
+                                logger.info(f"Stored raw formatted data: {raw_data}")
+                            
+                    except Exception as raw_e:
+                        logger.error(f"Failed to parse raw data: {raw_e}")
+                
+        except Exception as e:
+            logger.error(f"Error handling pws-packet data: {e}")
+
     async def handle_wirepas_data(self, network_id: str, source_address: str, destination_endpoint: str, payload: str):
         try:
             data = json.loads(payload)
@@ -203,24 +269,33 @@ class MQTTClient:
         except Exception as e:
             logger.error(f"Error handling Wirepas data: {e}")
 
-    async def get_or_create_sensor(self, session: AsyncSession, mac_address: str) -> Sensor:
+    async def get_or_create_sensor(self, session: AsyncSession, source_address: str) -> Sensor:
         from sqlalchemy import select
         
         result = await session.execute(
-            select(Sensor).where(Sensor.mac_address == mac_address)
+            select(Sensor).where(Sensor.source_address == source_address)
         )
         sensor = result.scalar_one_or_none()
         
         if not sensor:
+            if source_address.startswith("pws_"):
+                name = f"PWS Sensor {source_address.replace('pws_', '')}"
+            elif source_address.startswith("wirepas_"):
+                name = f"Wirepas {source_address.replace('wirepas_', '')}"
+            elif source_address.startswith("hetic_"):
+                name = f"Hetic {source_address.replace('hetic_', '')}"
+            else:
+                name = f"RuuviTag {source_address}"
+                
             sensor = Sensor(
-                mac_address=mac_address,
-                name=f"RuuviTag {mac_address}",
+                source_address=source_address,
+                name=name,
                 is_active=True
             )
             session.add(sensor)
             await session.commit()
             await session.refresh(sensor)
-            logger.info(f"Created new sensor: {mac_address}")
+            logger.info(f"Created new sensor: {source_address} with name: {name}")
             
         return sensor
 
@@ -240,7 +315,7 @@ class MQTTClient:
     ):
         try:
             if not any([temperature, humidity, pressure]):
-                logger.debug("No valid sensor data to store")
+                logger.debug(f"No valid sensor data to store for sensor {sensor_id}")
                 return
                 
             measurement = Measurement(
@@ -249,24 +324,15 @@ class MQTTClient:
                 temperature=temperature,
                 humidity=humidity,
                 pressure=pressure,
-                acceleration_x=acceleration_x,
-                acceleration_y=acceleration_y,
-                acceleration_z=acceleration_z,
-                rssi=rssi,
-                battery_voltage=battery_voltage,
-                movement_counter=movement_counter
             )
             
             session.add(measurement)
             await session.commit()
-            logger.debug(f"Stored measurement for sensor {sensor_id}")
+            logger.info(f"Stored measurement for sensor {sensor_id}: T={temperature}°C, H={humidity}%, P={pressure}hPa")
             
         except Exception as e:
             logger.error(f"Error storing measurement: {e}")
             await session.rollback()
-
-    async def store_partial_measurement(self, session: AsyncSession, sensor_id: int, measurement_type: str, value: float):
-        logger.debug(f"Received partial measurement: {measurement_type}={value} for sensor {sensor_id}")
 
     async def connect(self):
         try:
@@ -281,7 +347,7 @@ class MQTTClient:
             self.client.loop_stop()
             self.client.disconnect()
             logger.info("MQTT client disconnected")
-
+    
 mqtt_client = MQTTClient()
 
 async def start_mqtt_client():
