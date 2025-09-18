@@ -1,41 +1,23 @@
 @import './base.css';
 @import "tailwindcss";
 @import "./datatable.css";
+@import "./skeleton.css";
+@import "./accordion.css";
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-sumato-ivory);
+  color: var(--color-sumato-text);
+  overflow-y: hidden;
+  max-height: 100vh;
+}
 
 #app {
   margin: 0 auto 2rem auto;
   font-weight: normal;
-  background-color: var(--color-background);
-}
-
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-@media (max-width: 1441px) {
-  .app-layout {
-    max-width: 100%;
-  }
-}
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.nav-border::after {
-  position: absolute;
-  right: 0;
-  top: 10%;
-  height: 80%;
-  width: 1px;
-  background-color: var(--color-sumato-border);
-}
-
-.sidebar {
-    width: 20%;
+  background-color: var(--color-sumato-surface);
 }
 
 .sidebarItem:hover {
@@ -43,101 +25,22 @@
   color: white;
 }
 
-.sidebar-is-active {
-  background-color: var(--color-primary);
+@media (max-width: 768px) {
+  .title {
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+.dot {
+  transition: transform 0.3s ease-in-out;
+}
+
+.buttonUser:hover {
+  background-color: var(--color-sumato-alert);
   color: white;
+  border: none;
 }
-
-.avatar-background {
-  background-color: #fbe3c0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100%;
-  width: 30px;
-  height: 30px;
-}
-
-.dashboard_data {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: all 0.2s ease-in-out;
-}
-
-.dashboard_data h4, .connected-devices h4 {
-  margin: 0;
-  padding: 0;
-}
-
-/* .dashboard_data img, .connected-devices img {
-  width: 100px;
-  height: 100px;
-} */
-
-.temp {
-  background-color: #FEE2E2;
-}
-.humidity {
-  background-color: #DBEAFE;
-}
-.pressure {
-  background-color: #FEF9C3;
-}
-.outside {
-  background-color: #DCFCE7;
-}
-
-.temperature-data, .outside-data, .pressure-data, .humidity-data {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.temp {
-  background-color: #fbe3c0;
-  border-radius: 10px;
-}
-
-.outside {
-  background-color: #F1E9C6;
-  border-radius: 10px;
-  padding: 1rem;
-}
-
-.connected-devices {
-  gap: 20px;
-  border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease-in-out;
-  background: transparent;
-}
-
-.connected-device {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border-radius: 10px;
-  width: 240px;
-  height: 192px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-.title {
-  color: var(--color-sumato-text);
-  margin-bottom: 1rem;
-  margin: 0;
-  padding: 0;
-}
-
-
 
 /* WRITING */
 
@@ -170,8 +73,8 @@ h4 {
 
 h5 {
   font-size: 1.25em;
-  text-transform: uppercase;
   letter-spacing: 1px;
+  font-style: italic;
 }
 
 h6 {
@@ -184,22 +87,21 @@ h1, h2, h3, h4, h5, h6, span {
 }
 
 /* FORM ELEMENTS */
-select {
+select, input, textarea {
   padding: 0.5rem;
   border-radius: 10px;
   border: 1px solid var(--color-sumato-neutral);
-  background-color: var(--color-sumato-ivoiry);
-  color: var(--color-sumato-anthracite);
+  background-color: var(--color-sumato-surface);
+  color: var(--color-sumato-text);
 }
 
 li {
   list-style: none;
 }
 
-button {
+button, .button {
     color: var(--color-sumato-text);
     border: 1px solid var(--color-sumato-neutral);
-    /* background: transparent; */
     padding: 5px;
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -210,5 +112,8 @@ button:hover {
   background: var(--color-sumato-ivory);
 }
 
-[data-theme="dark"] .sidebarItem { filter: invert(1); }
-[data-theme="light"] .sidebarItem { filter: invert(0); }
+[data-theme="dark"] .SumatoIcon { filter: invert(1); }
+[data-theme="light"] .SumatoIcon { filter: invert(0); }
+
+[data-theme="dark"] .img_light { display: none; }
+[data-theme="light"] .img_dark { display: none; }

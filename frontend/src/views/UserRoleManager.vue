@@ -1,6 +1,6 @@
 <template>
   <div class="p-6">
-    <h1 class="title mb-6">Gestion des rôles utilisateurs</h1>
+    <h1 class="flex justify-start my-0 p-0 text-center">Gestion des rôles utilisateurs</h1>
     
     <div v-if="loading" class="text-center">
       <p>Chargement...</p>
@@ -260,11 +260,3 @@ onMounted(() => {
   fetchUsers()
 })
 </script>
-
-<style scoped>
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1f2937;
-}
-</style>

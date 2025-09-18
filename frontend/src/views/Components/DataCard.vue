@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { formatedTimestamp } from '@/assets/functions/FormatedDate'
+import { useMediaQuery } from '@vueuse/core'
+
+const isTelephone = useMediaQuery('(max-width: 640px)')
+
 defineProps<{
   title: string
   icon: string
@@ -10,13 +15,17 @@ defineProps<{
 </script>
 
 <template>
-  <div class="p-2 rounded-xl text-white hover:transform hover:translate-y-[-2px] hover:shadow-lg" :style="{ backgroundColor: color || 'var(--color-sumato-comfort)' }">
-    <div class="flex flex-col items-center gap-4">
+  <div class="p-2 rounded-xl" :style="{ backgroundColor: color }">
+    <div class="flex flex-col items-center gap-4 justify-between">
       <img :src="icon" alt="Icon" class="w-25 h-25 object-contain" />
       <div class="text-center">
-        <h4 class="text-lg font-semibold">{{ title }}</h4>
-        <p class="text-2xl font-bold">{{ value }} {{ unit }}</p>
-        <p v-if="timestamp" class="text-xs text-white/80">Maj: {{ timestamp }}</p>
+        <h2 class="font-bold !text-4xl !p-0 !m-0">{{ value }} {{ unit }}</h2>
+      </div>
+      <div>
+        <h4 class="text-lg font-semibold !m-0">{{ title }}</h4>
+      </div>
+      <div>
+        <p v-if="timestamp"> {{ isTelephone ? '' : 'Mise à jour :' }} {{ formatedTimestamp(timestamp) }}</p>
       </div>
     </div>
   </div>

@@ -17,7 +17,7 @@ async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
+            detail="Identifiants incorrects",
             headers={"WWW-Authenticate": "Bearer"},
         )
     
@@ -46,14 +46,14 @@ async def register_user(user_data: UserCreate, db: AsyncSession = Depends(get_db
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
+            detail="Nom d'utilisateur déjà utilisé"
         )
     
     result = await db.execute(select(User).where(User.email == user_data.email))
     if result.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            detail="Email déjà enregistré"
         )
     
     hashed_password = get_password_hash(user_data.password)

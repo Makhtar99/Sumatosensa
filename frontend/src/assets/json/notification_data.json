@@ -1,56 +1,44 @@
 [
   {
-    "date": "2025-08-01 10:32",
+    "date": "2025-08-01",
+    "hour": "10:32",
     "alerte_message": "Humidité élevée détectée dans le grenier",
     "importance": "warning",
     "type": "Humidité"
   },
   {
-    "date": "2025-08-01 09:45",
-    "alerte_message": "Température anormalement basse dans la cuisine",
+    "date": "2025-08-01",
+    "hour": "09:45",
+    "alerte_message": "Température anormalement haute dans la cuisine",
     "importance": "critical",
     "type": "Température"
   },
   {
-    "date": "2025-07-31 17:20",
+    "date": "2025-07-31",
+    "hour": "17:20",
     "alerte_message": "Mise à jour des capteurs réussie",
     "importance": "info",
     "type": "Système"
   },
   {
-  "date": "2025-07-30 15:47:12",
-  "alerte_message": "Connexion capteur Grenier perdue depuis 5min",
-  "importance": "warning",
-  "type": "Connexion"
+    "date": "2025-07-30",
+    "hour": "15:47",
+    "alerte_message": "Connexion capteur Grenier perdue depuis 5min",
+    "importance": "warning",
+    "type": "Connexion"
 },
 {
-  "date": "2025-07-30 14:30",
-  "alerte_message": "Capteur de mouvement détecté dans le salon",
-  "importance": "info",
-  "type": "Sécurité"
-},
-{
-  "date": "2025-07-29 11:15",
-  "alerte_message": "Niveau d'eau de la piscine bas",
-  "importance": "warning",
-  "type": "Piscine"
-},
-{
-  "date": "2025-07-28 08:00",
-  "alerte_message": "Alerte de sécurité : porte d'entrée ouverte",
+  "date": "2025-07-26",
+  "hour": "12:30",
+  "alerte_message": "Température anormalement haute dans la chambre parentale",
   "importance": "critical",
-  "type": "Sécurité"
-},
-{
-  "date": "2025-07-27 20:05",
-  "alerte_message": "Capteur de fumée activé dans la cuisine",
-  "importance": "critical",
-  "type": "Sécurité"
-},
-{
-  "date": "2025-07-26 12:30",
-  "alerte_message": "Alerte de température élevée dans le garage",
-  "importance": "warning",
   "type": "Température"
+},
+{
+  "date": "2025-07-25",
+  "hour": "09:00",
+  "alerte_message": "Batterie faible détectée dans le grenier",
+  "importance": "info",
+  "type": "Batterie"
 }
 ]

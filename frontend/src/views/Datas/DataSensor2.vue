@@ -1,71 +1,66 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import sensors from '../../assets/json/sensors_data.json'
+import { ref, onMounted, computed } from 'vue'
+import { fetchSensor } from '@/services/sensorService'
+import { useUserPrefStore } from '@/stores/userpref'
+import { computeSensorStatus, computeSensorAlert, voltageToPercent } from '@/assets/functions/sensors/SensorFunctions'
 
-const selectedRoom = ref('Chambre')
-const sensorList = ref(sensors)
+import DataSensor from '../Components/DataSensor.vue'
 
-const currentSensor = computed(() =>
-  sensorList.value.find(sensor => sensor.piece === selectedRoom.value) ?? {
-    piece: '',
-    temperature: 0,
-    humidite: 0,
-    pression: 0,
-    batterie: 0,
-    statut: 'hors ligne',
-    last_update: ''
+const error = ref<string | null>(null)
+const loading = ref(false)
+const userPref = useUserPrefStore()
+
+const currentSensor = ref({
+  piece: 'Capteur 2',
+  location: 'Chambre parentale',
+  temperature: 0,
+  humidite: 0,
+  pression: 0,
+  batterie: 0,
+  last_update: ''
+})
+
+const status = computed(() => computeSensorStatus(currentSensor.value.batterie))
+
+const alertMessage = computed(() => computeSensorAlert(currentSensor.value))
+
+onMounted(async () => {
+  try {
+    loading.value = true
+    const resp = await fetchSensor()
+    const sensor = resp[1]
+
+    currentSensor.value.piece = userPref.sensor2name
+
+    if (sensor.last_measurement) {
+      const m = sensor.last_measurement
+      currentSensor.value.temperature = m.temperature
+      currentSensor.value.humidite = m.humidity
+      currentSensor.value.pression = m.pressure
+      currentSensor.value.batterie = voltageToPercent(m.battery_voltage)
+      currentSensor.value.last_update = m.time
+    } else {
+      error.value = "Aucune mesure disponible pour le capteur."
+    }
+  } catch (e) {
+    console.error(e)
+    error.value = "Erreur lors de la récupération des données."
+  } finally {
+    loading.value = false
   }
-)
-
-const getBatteryColor = (batterie: number) => {
-  if (batterie > 50) return 'text-green-600'
-  if (batterie > 20) return 'text-yellow-600'
-  return 'text-red-600'
-}
+})
 </script>
 
+
 <template>
-  <div class="p-6">
-    <h1 class="title mb-6">Salon</h1>
-  </div>
+  <DataSensor
+    v-if="!error"
+    v-bind="currentSensor"
+    :status="status"
+    :message-alert="alertMessage"
+  />
 
-  <div class="bg-[var(--color-surface)] shadow-lg rounded-xl p-6 space-y-4">
-    <h2 class="text-lg font-semibold">{{ currentSensor.piece }}</h2>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="text-center">
-        <p class="text-2xl font-bold text-sumato-primary">{{ currentSensor.temperature }}°C</p>
-        <span class="text-sm opacity-70">Température</span>
-      </div>
-      <div class="text-center">
-        <p class="text-2xl font-bold text-blue-600">{{ currentSensor.humidite }}%</p>
-        <span class="text-sm opacity-70">Humidité</span>
-      </div>
-      <div class="text-center">
-        <p class="text-2xl font-bold text-indigo-600">{{ currentSensor.pression }} hPa</p>
-        <span class="text-sm opacity-70">Pression</span>
-      </div>
-      <div class="text-center">
-        <p :class="['text-2xl font-bold', getBatteryColor(currentSensor.batterie)]">
-          {{ currentSensor.batterie }}%
-        </p>
-        <span class="text-sm opacity-70">Batterie</span>
-      </div>
-    </div>
-    <div class="flex justify-between items-center mt-4">
-      <span
-        class="font-medium"
-        :class="{
-          'text-green-600': currentSensor.statut === 'connecté',
-          'text-yellow-600': currentSensor.statut === 'batterie faible',
-          'text-red-600': currentSensor.statut === 'hors ligne',
-        }"
-      >
-        ● {{ currentSensor.statut }}
-      </span>
-      <span class="text-sm text-gray-500"
-        >Dernière mise à jour : {{ currentSensor.last_update }}</span
-      >
-    </div>
+  <div v-else class="p-4 bg-red-100 text-[var(--color-sumato-danger)] rounded-lg">
+    {{ error }}
   </div>
 </template>
