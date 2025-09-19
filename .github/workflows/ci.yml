@@ -38,7 +38,7 @@ jobs:
         ports:
           - 1883:1883
         options: >-
-          --health-cmd "mosquitto_sub -t test -C 1 -W 1 || exit 1"
+          --health-cmd "mosquitto_pub -h localhost -t test/healthcheck -m 'health' -u health || exit 1"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 3
@@ -66,6 +66,18 @@ jobs:
         pip install -r requirements.txt
         pip install pytest pytest-asyncio httpx pytest-cov
     
+    - name: Configure Mosquitto for CI
+      run: |
+        # Create mosquitto config that allows external connections
+        docker exec $(docker ps -q -f ancestor=eclipse-mosquitto:2.0) sh -c "
+          echo 'listener 1883 0.0.0.0' > /mosquitto/config/mosquitto.conf &&
+          echo 'allow_anonymous true' >> /mosquitto/config/mosquitto.conf &&
+          echo 'per_listener_settings false' >> /mosquitto/config/mosquitto.conf
+        " || true
+        # Restart mosquitto container to apply config
+        docker restart $(docker ps -q -f ancestor=eclipse-mosquitto:2.0)
+        sleep 5
+        
     - name: Wait for services
       run: |
         sleep 10
