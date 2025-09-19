@@ -6,10 +6,17 @@ from app.config import settings
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=False,  # Set to True for SQL debugging
-    pool_size=10,
-    max_overflow=20,
+    pool_size=5,
+    max_overflow=10,
     pool_pre_ping=True,
-    pool_recycle=3600
+    pool_recycle=1800,  # Recycle connections every 30 minutes
+    pool_reset_on_return='commit',
+    connect_args={
+        "command_timeout": 30,
+        "server_settings": {
+            "application_name": "sumatosensa_backend",
+        }
+    }
 )
 
 AsyncSessionLocal = async_sessionmaker(
@@ -33,6 +40,15 @@ async def get_async_session():
             await session.close()
 
 async def get_db():
-    """FastAPI dependency for database session."""
-    async with get_async_session() as session:
-        yield session
+    """FastAPI dependency for database session with retry logic."""
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            async with get_async_session() as session:
+                yield session
+                return
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise
+            import asyncio
+            await asyncio.sleep(0.5 * (attempt + 1))  # Progressive backoff

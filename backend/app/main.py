@@ -20,8 +20,27 @@ user = register_user
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting Sumātosensā backend...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    
+    # Retry database connection with exponential backoff
+    import asyncio
+    max_retries = 5
+    retry_delay = 2
+    
+    for attempt in range(max_retries):
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database connection established successfully")
+            break
+        except Exception as e:
+            logger.error(f"Database connection attempt {attempt + 1}/{max_retries} failed: {e}")
+            if attempt == max_retries - 1:
+                logger.error("Maximum retry attempts reached. Starting without database connection...")
+                logger.warning("Application will start but database operations will fail until connection is restored")
+                break
+            await asyncio.sleep(retry_delay)
+            retry_delay *= 2  # Exponential backoff
+    
     await start_mqtt_client()
     yield
     await stop_mqtt_client()

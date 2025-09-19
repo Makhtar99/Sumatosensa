@@ -25,6 +25,9 @@ class MQTTClient:
         self.hetic_broker_port = int(os.getenv("HETIC_MQTT_PORT", "8818"))  # Groupe 1
         
         self.connected = False
+        self.message_queue = asyncio.Queue()
+        self.processor_task = None
+        self.running = False
         
     def on_connect(self, client, userdata, flags, rc):
         if rc == 0:
@@ -60,14 +63,8 @@ class MQTTClient:
             topic = msg.topic
             payload = msg.payload.decode('utf-8')
             
-            # Process message synchronously for simplicity
-            import threading
-            def run_async():
-                asyncio.run(self.process_message(topic, payload))
-            
-            thread = threading.Thread(target=run_async)
-            thread.daemon = True
-            thread.start()
+            # Store message for async processing
+            self.message_queue.put_nowait((topic, payload))
             
         except Exception as e:
             logger.error(f"Error processing MQTT message: {e}")
@@ -121,8 +118,25 @@ class MQTTClient:
                         data.get("movement_counter")
                     )
                 else:
-                    value = float(payload)
-                    await self.store_partial_measurement(session, sensor.id, measurement_type, value)
+                    # Handle acceleration data properly
+                    if measurement_type == "acceleration":
+                        try:
+                            accel_data = json.loads(payload)
+                            await self.store_measurement(
+                                session,
+                                sensor.id,
+                                acceleration_x=accel_data.get("x"),
+                                acceleration_y=accel_data.get("y"),
+                                acceleration_z=accel_data.get("z")
+                            )
+                        except (json.JSONDecodeError, ValueError):
+                            logger.warning(f"Could not parse acceleration data: {payload}")
+                    else:
+                        try:
+                            value = float(payload)
+                            await self.store_partial_measurement(session, sensor.id, measurement_type, value)
+                        except ValueError:
+                            logger.warning(f"Could not convert {measurement_type} payload to float: {payload}")
                     
         except Exception as e:
             logger.error(f"Error handling RuuviTag data: {e}")
@@ -268,19 +282,52 @@ class MQTTClient:
     async def store_partial_measurement(self, session: AsyncSession, sensor_id: int, measurement_type: str, value: float):
         logger.debug(f"Received partial measurement: {measurement_type}={value} for sensor {sensor_id}")
 
+    async def _process_messages(self):
+        """Process messages from queue in async context"""
+        while self.running:
+            try:
+                # Wait for message with timeout
+                topic, payload = await asyncio.wait_for(
+                    self.message_queue.get(), timeout=1.0
+                )
+                await self.process_message(topic, payload)
+            except asyncio.TimeoutError:
+                continue
+            except Exception as e:
+                if self.running:  # Only log if we're not shutting down
+                    logger.error(f"Error in message processor: {e}")
+
     async def connect(self):
         try:
+            self.running = True
             self.client.connect(self.broker_host, self.broker_port, 60)
             self.client.loop_start()
+            
+            # Start message processor task
+            self.processor_task = asyncio.create_task(self._process_messages())
+            
             logger.info(f"MQTT client started for {self.broker_host}:{self.broker_port}")
         except Exception as e:
             logger.error(f"Failed to connect to MQTT broker: {e}")
 
     async def disconnect(self):
-        if self.connected:
-            self.client.loop_stop()
-            self.client.disconnect()
-            logger.info("MQTT client disconnected")
+        try:
+            self.running = False
+            
+            # Cancel processor task
+            if self.processor_task and not self.processor_task.done():
+                self.processor_task.cancel()
+                try:
+                    await self.processor_task
+                except asyncio.CancelledError:
+                    pass
+            
+            if self.connected:
+                self.client.loop_stop()
+                self.client.disconnect()
+                logger.info("MQTT client disconnected")
+        except Exception as e:
+            logger.error(f"Error during MQTT disconnect: {e}")
 
 mqtt_client = MQTTClient()
 
