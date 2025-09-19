@@ -36,6 +36,11 @@ services:
     networks:
       - sumatosensa_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_pub -h localhost -t test/healthcheck -m 'health' -u health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   backend:
     build:
@@ -58,7 +63,7 @@ services:
       timescaledb:
         condition: service_healthy
       mosquitto:
-        condition: service_started
+        condition: service_healthy
     networks:
       - sumatosensa_network
     restart: unless-stopped
