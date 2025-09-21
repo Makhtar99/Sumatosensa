@@ -33,6 +33,11 @@ class Settings:
     MQTT_USERNAME: str = os.getenv("MQTT_USERNAME", "")
     MQTT_PASSWORD: str = os.getenv("MQTT_PASSWORD", "")
     
-    CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:8080", "http://localhost:5173"]
+    CORS_ORIGINS: list = [
+        "http://localhost:3000", 
+        "http://localhost:8080", 
+        "http://localhost:5173",
+        "https://sumatosensa-frontend.onrender.com"
+    ]
 
 settings = Settings()
