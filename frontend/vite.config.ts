@@ -19,13 +19,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: [
-      'sumatosensa-frontend.onrender.com',
-      'merely-noted-gannet.ngrok-free.app',
-      '.onrender.com',
-      'localhost',
-      '127.0.0.1'
-    ],
     host: true,
     port: 5173,
     strictPort: true,
