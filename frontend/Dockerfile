@@ -1,18 +1,18 @@
-FROM node:22
+FROM node:22 AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
-EXPOSE 5173
+COPY . .
+RUN npm run build
 
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+FROM nginx:alpine
 
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Commandes pour ajouter les packages nécessaires
-    # docker compose down -v --remove-orphans
-    # export CACHE_BUSTER=$(date +%s)
-    # docker compose build --no-cache frontend
-    # docker compose up
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
