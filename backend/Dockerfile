@@ -12,6 +12,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
+RUN chmod +x start.sh
+
 RUN useradd --create-home --shell /bin/bash app \
     && chown -R app:app /app
 USER app
@@ -21,4 +23,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
-CMD python start_with_simulator.py
+CMD ./start.sh
