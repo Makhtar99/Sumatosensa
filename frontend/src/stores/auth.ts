@@ -86,7 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     error.value = null
     try {
-      const registerResponse = await apiService.register(payload)
+      await apiService.register(payload)
       const loginResponse = await apiService.login({ username: payload.username, password: payload.password })
       user.value = loginResponse.user
       localStorage.setItem('user_role', loginResponse.user.role)

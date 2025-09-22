@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { useUserPrefStore } from '@/stores/userpref'
 
 import AppLayout from '../layout/AppLayout.vue'
 import LoginForm from '../views/Auth/LoginForm.vue'
@@ -98,10 +96,6 @@ export function setupRouterGuards() {
   appInitialized = true
 }
 
-function hasDoneOnboarding(): boolean {
-  const stored = localStorage.getItem('hasDoneOnboarding')
-  return stored ? JSON.parse(stored) : false
-}
 
 function isUserLoggedIn(): boolean {
   return !!localStorage.getItem('access_token')
