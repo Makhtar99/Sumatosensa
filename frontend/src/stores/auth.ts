@@ -60,7 +60,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function initializeAuth() {
+  async function initializeAuth(): Promise<void> {
     const token = localStorage.getItem('access_token')
     if (token) {
       try {
@@ -81,8 +81,10 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     error.value = null
     try {
-      await apiService.register(payload)
-      await login({ username: payload.username, password: payload.password })
+      const registerResponse = await apiService.register(payload)
+      const loginResponse = await apiService.login({ username: payload.username, password: payload.password })
+      user.value = loginResponse.user
+      return loginResponse
     } catch (err) {
       error.value = err instanceof Error ? err.message : "Erreur d'inscription"
       throw err

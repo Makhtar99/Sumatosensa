@@ -25,10 +25,12 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  message?: string
-  user?: User
-  access_token?: string
-  token_type?: string
+  id: number
+  username: string
+  email: string
+  role: string
+  is_active: boolean
+  created_at: string
 }
 
 export interface User {
@@ -178,12 +180,10 @@ class ApiService {
   }
 
   async register(payload: RegisterRequest): Promise<RegisterResponse> {
-    const res = await this.request<RegisterResponse>('/auth/register', {
+    return this.request<RegisterResponse>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(payload),
     })
-    if (res.access_token) this.setToken(res.access_token)
-    return res
   }
 
   async logout(): Promise<void> {

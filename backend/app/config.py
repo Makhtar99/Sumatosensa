@@ -34,6 +34,8 @@ class Settings:
     MQTT_PASSWORD: str = os.getenv("MQTT_PASSWORD", "")
     
     CORS_ORIGINS: list = [
+        "http://localhost",
+        "http://localhost:80",
         "http://localhost:3000", 
         "http://localhost:8080", 
         "http://localhost:5173",

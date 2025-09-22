@@ -12,7 +12,7 @@ import DataTable from 'primevue/datatable'
 import { Skeleton } from 'primevue'
 
 import App from './App.vue'
-import router from './router'
+import router, { setupRouterGuards } from './router'
 
 const app = createApp(App)
 
@@ -24,3 +24,5 @@ app
     .use(router)
     .use(Primevue)
     .mount('#app')
+
+setupRouterGuards()

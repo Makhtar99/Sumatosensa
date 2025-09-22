@@ -92,40 +92,24 @@ const router = createRouter({
 })
 
 
-router.beforeEach(async (to) => {
-  const auth = useAuthStore()
-  const userPref = useUserPrefStore()
+let appInitialized = false
 
-  if (!auth.user && localStorage.getItem('access_token')) {
-    try {
-      await auth.getCurrentUser()
-    } catch {}
+export function setupRouterGuards() {
+  appInitialized = true
+}
+
+router.beforeEach(async (to, from, next) => {
+  if (!appInitialized) {
+    return next()
   }
 
   const requiresAuth = to.matched.some((r) => r.meta.requiresAuth)
-  const requiresAdmin = to.matched.some((r) => r.meta.isAdmin)
 
-  if (requiresAuth && auth.isAuthenticated && !userPref.hasDoneOnboarding && to.name !== 'OnboardingPreferences') {
-    return { name: 'OnboardingPreferences' }
+  if (requiresAuth && !localStorage.getItem('access_token')) {
+    return next({ name: 'Login', query: { redirect: to.fullPath } })
   }
 
-  if (requiresAuth && !auth.isAuthenticated) {
-    return { name: 'Login', query: { redirect: to.fullPath } }
-  }
-
-  if (requiresAdmin && !auth.isAdmin) {
-    return { name: 'Dashboard' }
-  }
-
-  if ((to.name === 'Login' || to.name === 'Register') && auth.isAuthenticated) {
-    return { name: 'Dashboard' }
-  }
-
-  if (to.name === undefined) {
-    return { name: 'Dashboard' }
-  }
-
-  return true
+  next()
 })
 
 export default router

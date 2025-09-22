@@ -40,15 +40,12 @@ async def get_async_session():
             await session.close()
 
 async def get_db():
-    """FastAPI dependency for database session with retry logic."""
-    max_retries = 3
-    for attempt in range(max_retries):
+    """FastAPI dependency for database session."""
+    async with AsyncSessionLocal() as session:
         try:
-            async with get_async_session() as session:
-                yield session
-                return
-        except Exception as e:
-            if attempt == max_retries - 1:
-                raise
-            import asyncio
-            await asyncio.sleep(0.5 * (attempt + 1))  # Progressive backoff
+            yield session
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
