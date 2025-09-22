@@ -88,7 +88,6 @@ const param = computed(() => (isTelephone.value ? 'Param' : 'Paramètres'))
       <SidebarItem :icon="Home"    label="Maison"        to="/dashboard" />
       <SidebarItem :icon="Devices" label="Capteurs"      to="/sensors" />
       <SidebarItem v-if="isAdmin" :icon="User" label="Comptes"     to="/admin" />
-      <SidebarItem :icon="User" label="Comptes"     to="/admin" />
       <SidebarItem v-if="!isTelephone" :icon="Notif"   label="Alertes"       to="/notifications" />
       <SidebarItem :icon="Export"  label="Gestion"       to="/management" />
       <SidebarItem :icon="Config"  :label="param"        to="/settings" />

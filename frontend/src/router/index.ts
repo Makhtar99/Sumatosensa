@@ -26,7 +26,7 @@ const routes = [
         path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard,
-        meta: { requiresAuth: true, hasDoneOnboarding: true },
+        meta: { requiresAuth: false, hasDoneOnboarding: false },
       },
       {
         path: 'management',
@@ -58,7 +58,7 @@ const routes = [
     path: '/onboarding',
     name: 'OnboardingPreferences',
     component: () => OnboardingPreferences,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
     path: '/login',
@@ -109,9 +109,9 @@ router.beforeEach(async (to) => {
     return { name: 'OnboardingPreferences' }
   }
 
-  if (requiresAuth && !auth.isAuthenticated) {
-    return { name: 'Login', query: { redirect: to.fullPath } }
-  }
+  // if (requiresAuth && !auth.isAuthenticated) {
+  //   return { name: 'Login', query: { redirect: to.fullPath } }
+  // }
 
   if (requiresAdmin && !auth.isAdmin) {
     return { name: 'Dashboard' }

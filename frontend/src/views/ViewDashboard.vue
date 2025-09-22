@@ -10,7 +10,7 @@ import Pressure from './Datas/DataPressure.vue'
 import Outside from './Datas/DataOutside.vue'
 import ConnectedDevices from './Datas/DataConnectedDevices.vue'
 import DashboardChart from './Components/Dashboard/DashboardChart.vue'
-import DarhboardSkeleton from './Components/Dashboard/DarhboardSkeleton.vue'
+// import DarhboardSkeleton from './Components/Dashboard/DarhboardSkeleton.vue'
 
 const onLoading = ref(true)
 const isConnected = ref(false)
@@ -57,10 +57,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <DarhboardSkeleton v-if="onLoading" />
+    <!-- <DarhboardSkeleton v-if="onLoading" /> -->
   </div>
 
-  <div v-if="!onLoading" class="w-full max-w-screen h-full flex flex-col justify-between gap-6"
+  <div class="w-full max-w-screen h-full flex flex-col justify-between gap-6"
     :class="[isTelephone ? 'p-4' : 'pr-[2rem] pb-8']">
     <div>
       <h1 v-if="username" class="flex justify-start !my-0 !p-0 text-center title">
