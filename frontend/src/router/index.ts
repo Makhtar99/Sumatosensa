@@ -98,15 +98,46 @@ export function setupRouterGuards() {
   appInitialized = true
 }
 
-router.beforeEach(async (to, from, next) => {
+function hasDoneOnboarding(): boolean {
+  const stored = localStorage.getItem('hasDoneOnboarding')
+  return stored ? JSON.parse(stored) : false
+}
+
+function isUserLoggedIn(): boolean {
+  return !!localStorage.getItem('access_token')
+}
+
+function getUserRole(): string | null {
+  const userRole = localStorage.getItem('user_role')
+  return userRole
+}
+
+router.beforeEach((to, from, next) => {
   if (!appInitialized) {
     return next()
   }
 
   const requiresAuth = to.matched.some((r) => r.meta.requiresAuth)
+  const requiresAdmin = to.matched.some((r) => r.meta.isAdmin)
+  const isLoggedIn = isUserLoggedIn()
 
-  if (requiresAuth && !localStorage.getItem('access_token')) {
+  if (requiresAuth && !isLoggedIn) {
     return next({ name: 'Login', query: { redirect: to.fullPath } })
+  }
+
+  if (requiresAdmin && isLoggedIn) {
+    const userRole = getUserRole()
+    if (userRole !== 'admin') {
+      return next({ name: 'Dashboard' })
+    }
+  }
+
+  if ((to.name === 'Login' || to.name === 'Register') && isLoggedIn) {
+    return next({ name: 'Dashboard' })
+  }
+
+  if (to.name === undefined) {
+    return next({ name: 'Dashboard' })
   }
 
   next()

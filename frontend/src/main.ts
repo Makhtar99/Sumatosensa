@@ -19,10 +19,13 @@ const app = createApp(App)
 app.component('DataTable', DataTable)
 app.component('PrimeSkeleton', Skeleton)
 
+const pinia = createPinia()
+
 app
-    .use(createPinia())
+    .use(pinia)
     .use(router)
     .use(Primevue)
-    .mount('#app')
 
 setupRouterGuards()
+
+app.mount('#app')

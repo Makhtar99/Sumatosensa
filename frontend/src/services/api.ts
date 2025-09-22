@@ -141,6 +141,7 @@ class ApiService {
   removeToken() {
     this.token = null
     localStorage.removeItem('access_token')
+    localStorage.removeItem('user_role')
   }
 
   private async request<T>(
