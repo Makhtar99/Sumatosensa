@@ -12,15 +12,20 @@ import DataTable from 'primevue/datatable'
 import { Skeleton } from 'primevue'
 
 import App from './App.vue'
-import router from './router'
+import router, { setupRouterGuards } from './router'
 
 const app = createApp(App)
 
 app.component('DataTable', DataTable)
 app.component('PrimeSkeleton', Skeleton)
 
+const pinia = createPinia()
+
 app
-    .use(createPinia())
+    .use(pinia)
     .use(router)
     .use(Primevue)
-    .mount('#app')
+
+setupRouterGuards()
+
+app.mount('#app')

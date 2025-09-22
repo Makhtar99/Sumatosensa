@@ -73,13 +73,13 @@ services:
       context: ./frontend
       args:
         CACHE_BUSTER: ${CACHE_BUSTER:-1}
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+        VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:8000/ws}
     container_name: sumatosensa_frontend
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
-      VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:8000/ws}
       PORT: 80
     ports:
-      - "5173:5173"
+      - "80:80"
     volumes:
       - ./frontend:/app
       - /app/node_modules

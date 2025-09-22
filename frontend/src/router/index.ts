@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
-import { useUserPrefStore } from '@/stores/userpref'
 
 import AppLayout from '../layout/AppLayout.vue'
 import LoginForm from '../views/Auth/LoginForm.vue'
@@ -92,40 +90,51 @@ const router = createRouter({
 })
 
 
-router.beforeEach(async (to) => {
-  const auth = useAuthStore()
-  const userPref = useUserPrefStore()
+let appInitialized = false
 
-  if (!auth.user && localStorage.getItem('access_token')) {
-    try {
-      await auth.getCurrentUser()
-    } catch {}
+export function setupRouterGuards() {
+  appInitialized = true
+}
+
+
+function isUserLoggedIn(): boolean {
+  return !!localStorage.getItem('access_token')
+}
+
+function getUserRole(): string | null {
+  const userRole = localStorage.getItem('user_role')
+  return userRole
+}
+
+router.beforeEach((to, from, next) => {
+  if (!appInitialized) {
+    return next()
   }
 
   const requiresAuth = to.matched.some((r) => r.meta.requiresAuth)
   const requiresAdmin = to.matched.some((r) => r.meta.isAdmin)
+  const isLoggedIn = isUserLoggedIn()
 
-  if (requiresAuth && auth.isAuthenticated && !userPref.hasDoneOnboarding && to.name !== 'OnboardingPreferences') {
-    return { name: 'OnboardingPreferences' }
+  if (requiresAuth && !isLoggedIn) {
+    return next({ name: 'Login', query: { redirect: to.fullPath } })
   }
 
-  if (requiresAuth && !auth.isAuthenticated) {
-    return { name: 'Login', query: { redirect: to.fullPath } }
+  if (requiresAdmin && isLoggedIn) {
+    const userRole = getUserRole()
+    if (userRole !== 'admin') {
+      return next({ name: 'Dashboard' })
+    }
   }
 
-  if (requiresAdmin && !auth.isAdmin) {
-    return { name: 'Dashboard' }
-  }
-
-  if ((to.name === 'Login' || to.name === 'Register') && auth.isAuthenticated) {
-    return { name: 'Dashboard' }
+  if ((to.name === 'Login' || to.name === 'Register') && isLoggedIn) {
+    return next({ name: 'Dashboard' })
   }
 
   if (to.name === undefined) {
-    return { name: 'Dashboard' }
+    return next({ name: 'Dashboard' })
   }
 
-  return true
+  next()
 })
 
 export default router
