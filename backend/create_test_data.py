@@ -21,30 +21,30 @@ async def create_test_data():
                 logger.info("Des mesures existent déjà, pas besoin de créer des données de test")
                 return
             
-            # Récupérer le premier capteur
-            result = await session.execute(select(Sensor).limit(1))
-            sensor = result.scalar_one_or_none()
+            # Récupérer tous les capteurs
+            result = await session.execute(select(Sensor))
+            sensors = result.scalars().all()
             
-            if not sensor:
+            if not sensors:
                 logger.error("Aucun capteur trouvé, impossible de créer des mesures")
                 return
             
-            # Créer une mesure de test
-            measurement = Measurement(
-                time=datetime.utcnow(),
-                sensor_id=sensor.id,
-                temperature=22.5,
-                humidity=45.2,
-                pressure=1013.2,
-                battery_voltage=2.95,
-                rssi=-65
-            )
+            # Créer une mesure de test pour chaque capteur
+            for i, sensor in enumerate(sensors):
+                measurement = Measurement(
+                    time=datetime.utcnow(),
+                    sensor_id=sensor.id,
+                    temperature=20.0 + i * 2.5,
+                    humidity=40.0 + i * 5.0,
+                    pressure=1010.0 + i * 3.0,
+                    battery_voltage=2.9 + i * 0.05,
+                    rssi=-60 - i * 5
+                )
+                
+                session.add(measurement)
+                logger.info(f"Mesure de test créée pour le capteur {sensor.id}: T={measurement.temperature}°C")
             
-            session.add(measurement)
             await session.commit()
-            await session.refresh(measurement)
-            
-            logger.info(f"Mesure de test créée pour le capteur {sensor.id}: T={measurement.temperature}°C")
             
         except Exception as e:
             logger.error(f"Erreur lors de la création des données de test: {e}")
