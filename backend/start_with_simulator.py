@@ -184,17 +184,33 @@ async def stop_simulator():
         simulator_instance = None
         logger.info("Simulateur MQTT arrêté")
 
+async def lifespan(app):
+    # Startup
+    await start_mqtt_client()
+    await asyncio.sleep(3)
+    await start_simulator()
+    
+    yield
+    
+    # Shutdown
+    await stop_simulator()
+
+# Ajouter le lifespan à l'app FastAPI
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def app_lifespan(app):
+    await start_mqtt_client()
+    await asyncio.sleep(3)
+    await start_simulator()
+    yield
+    await stop_simulator()
+
 if __name__ == "__main__":
     import logging
     
     logging.basicConfig(level=logging.INFO)
     
-    async def startup():
-        await start_mqtt_client()
-        await asyncio.sleep(5)
-        await start_simulator()
-    
-    asyncio.create_task(startup())
     uvicorn.run(
         app,
         host="0.0.0.0",
